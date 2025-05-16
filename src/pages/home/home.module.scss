@@ -1,0 +1,18 @@
+/* kontener strony głównej */
+.container {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* siatka kart */
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1800px;
+  margin: 0 auto;
+  gap: 32px;
+  padding: 0 24px 32px;
+
+  margin-top: 32px;
+  justify-content: center;
+}

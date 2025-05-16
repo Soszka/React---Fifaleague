@@ -1,0 +1,84 @@
+.auth {
+  position: relative;
+  height: 100vh;
+  background: url("../../assets/auth_photo.jpg") no-repeat center/cover;
+  z-index: 1;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: -1;
+  }
+}
+
+.authContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 550px;
+  background: #fff;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.authContent {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.authForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 0px;
+}
+
+.passwordField {
+  position: relative;
+  width: 100%;
+}
+
+.loginButton {
+  width: 140px;
+  height: 45px;
+  font-size: 20px;
+  color: #fff;
+}
+
+.adminBar {
+  width: 100%;
+}
+
+.authLogo {
+  position: absolute;
+  top: 5%;
+  left: 5%;
+
+  img {
+    width: 213px;
+    height: 223px;
+  }
+}
+
+.footer {
+  color: #fff;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  p {
+    font-size: 18px;
+
+    span {
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+  }
+}

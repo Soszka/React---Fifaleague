@@ -1,0 +1,163 @@
+{
+  "nav.menu.home": "Strona główna",
+  "nav.menu.about": "Fifa league",
+  "nav.menu.matches": "Mecze",
+  "nav.menu.stats": "Statystyki",
+  "nav.menu.table": "Tabela",
+  "nav.menu.teams": "Zespoły",
+  "nav.menu.ranking": "Ranking",
+  "nav.toolbar.menu": "Menu",
+  "nav.toolbar.language": "Język",
+  "nav.toolbar.user": "Użytkownik",
+  "nav.toolbar.notifications": "Powiadomienia",
+  "nav.actions.language.polish": "Polski",
+  "nav.actions.language.english": "English",
+  "nav.actions.user.changePhoto": "Zmień zdjęcie",
+  "nav.actions.user.logOut": "Wyloguj się",
+  "nav.actions.notofication": "Gracz Marek chce potwierdzić mecz z 01.08.2024r",
+
+  "home.title": "Stronie",
+  "home.subtitle": "Co znajdziesz na ...",
+  "home.last.matches": "OSTATNIE MECZE",
+  "home.card.about.title": "FIFA LEAGUE",
+  "home.card.about.description": "Rozgrywki ligowe w FIFA, pełne emocji i niespodzianek dla każdego fana. Śledź wszystkie mecze na żywo i bądź na bieżąco z wynikami oraz wydarzeniami.",
+  "home.card.matches.title": "MECZE",
+  "home.card.matches.description": "Zobacz nadchodzące mecze i wyniki spotkań w naszej lidze. Nie przegap żadnej akcji i dołącz do naszej społeczności kibiców, którzy śledzą każdą minutę gry.",
+  "home.card.stats.title": "STATYSTYKI",
+  "home.card.stats.description": "Szczegółowe statystyki drużyn i graczy, aktualizowane na bieżąco. Odkryj, kto jest liderem pod względem bramek, asyst i innych kluczowych statystyk.",
+  "home.card.table.title": "TABELA",
+  "home.card.table.description": "Aktualna tabela ligowa, śledź pozycje swoich ulubionych zespołów. Zobacz, kto ma największe szanse na zwycięstwo w tym sezonie i jakie są prognozy ekspertów.",
+  "home.card.teams.title": "ZESPOŁY",
+  "home.card.teams.description": "Informacje o drużynach, zawodnikach i ich historiach. Poznaj składy, strategie oraz najważniejsze momenty każdej drużyny w rozgrywkach.",
+  "home.card.ranking.title": "RANKING",
+  "home.card.ranking.description": "Sprawdź, kto jest najlepszy w lidze dzięki naszemu rankingowi. Zobacz, jak zmienia się pozycja graczy w miarę postępu rozgrywek i kto zasługuje na miano MVP.",
+
+  "about.subtitle": "Witamy w Fifa ...",
+  "about.title": "League",
+  "about.gallery.description": "<h2 class=\"description__heading\">Witaj w FIFA League!</h2><p class=\"description__text\">Odkryj funkcje, które ułatwią Ci organizację i zarządzanie meczami 2v2:</p><ul class=\"description__list\"><li class=\"description__list-item\"><span class=\"material-icons description__icon\">sports_soccer</span><strong>Organizuj mecze</strong> – zaplanuj spotkania ze znajomymi</li><li class=\"description__list-item\"><span class=\"material-icons description__icon\">emoji_events</span><strong>Śledź wyniki</strong> – monitoruj postępy i osiągnięcia</li><li class=\"description__list-item\"><span class=\"material-icons description__icon\">equalizer</span><strong>Analizuj statystyki</strong> – poznaj swoje mocne strony</li><li class=\"description__list-item\"><span class=\"material-icons description__icon\">sports_esports</span><strong>Dodawaj mecze</strong> – wybieraj przeciwników i rozwijaj rywalizację</li><li class=\"description__list-item\"><span class=\"material-icons description__icon\">group</span><strong>Dziel się wynikami</strong> – konkuruj z innymi graczami</li><li class=\"description__list-item\"><span class=\"material-icons description__icon\">people</span><strong>Twórz drużyny</strong> – buduj zgrane zespoły i zdobywaj doświadczenie</li></ul>",
+  "about.description.header": "Dlaczego warto dołączyć do 'FIFA League'?",
+  "about.description.content": "Aplikacja 'FIFA League' to idealne miejsce do zarządzania swoimi meczami 2v2, śledzenia wyników i wspólnego rywalizowania z przyjaciółmi. Z łatwością możesz dodawać nowe mecze, wybrać przeciwników, ustawić wynik, a także potwierdzić wyniki rywali. Analizuj swoje statystyki, śledź swoje postępy i zdobywaj punkty, aby awansować na szczyt rankingu. Dołącz do naszej społeczności graczy, aby zwiększyć swoje umiejętności i dobrze się bawić, grając w swoją ulubioną grę!",
+  "about.description.button.teams": "Zespoły",
+  "about.faqSubitle": "Najczęściej zadawane ...",
+  "about.faqTitle": "Pytania",
+  "about.faq.questions": [
+    {
+      "question": "Jak mogę dodać nowy mecz do aplikacji?",
+      "answer": "Aby dodać nowy mecz, przejdź do sekcji \"Twoje Mecze\", kliknij przycisk \"Dodaj mecz\", wybierz przeciwników i wprowadź wynik meczu."
+    },
+    {
+      "question": "Czy inni gracze muszą potwierdzić wynik meczu?",
+      "answer": "Tak, po dodaniu meczu wybrani przeciwnicy otrzymają powiadomienie z prośbą o potwierdzenie wyniku. Dopiero po akceptacji wyniku przez obie strony, zostanie on zapisany w aplikacji."
+    },
+    {
+      "question": "Jakie statystyki mogę śledzić w aplikacji?",
+      "answer": "Możesz śledzić swoje statystyki meczowe, takie jak liczba rozegranych meczów, wygranych, przegranych, remisów oraz statystyki drużynowe, pokazujące Twoje osiągnięcia w zespołach z innymi graczami."
+    },
+    {
+      "question": "Czy mogę stworzyć ranking graczy?",
+      "answer": "Tak, aplikacja automatycznie generuje ranking graczy na podstawie wyników meczów. Możesz zobaczyć swój ranking na podstronie \"Ranking Graczy\"."
+    },
+    {
+      "question": "Czy aplikacja pozwala na śledzenie wyników drużyn?",
+      "answer": "Tak, na podstronie \"Tabela\" znajdziesz zestawienie wszystkich zespołów wraz z ich statystykami meczowymi, w tym liczbą wygranych, przegranych i punktów."
+    },
+    {
+      "question": "Czy mogę zobaczyć szczegółowe statystyki zespołów, w których gram?",
+      "answer": "Tak, na podstronie \"Lista Zespołów\" możesz zobaczyć statystyki dla każdej drużyny, w której grasz, oraz Twoje wyniki z różnymi partnerami."
+    },
+    {
+      "question": "Czy mogę zmieniać ustawienia aplikacji?",
+      "answer": "Obecnie aplikacja nie pozwala na zmianę ustawień. Wszystkie wyniki i statystyki są automatycznie aktualizowane na podstawie wyników meczów."
+    }
+  ],
+
+  "table.subtitle": "Sprawdź...",
+  "table.title": "Tabelę",
+  "table.filter.label": "Filtruj",
+  "table.column.players": "Zawodnicy",
+  "table.column.matches": "Mecze",
+  "table.column.wins": "Zwycięstwa",
+  "table.column.looses": "Porażki",
+  "table.column.draws": "Remisy",
+  "table.column.points": "Punkty",
+  "table.column.pointsPerMetch": "Pkt/M",
+  "table.noData": "Brak danych pasujących do filtra",
+  "table.select.player": "Zawodnik",
+  "table.select.matches": "Mecze",
+  "table.select.points": "Punkty",
+  "table.select.ppm": "Punkty na mecz",
+  "table.button.clear": "Wyczyść",
+  "table.select.clear": "Wyczyść",
+
+  "ranking.subtitle": "Sprawdź ranking...",
+  "ranking.title": "Graczy",
+  "ranking.column.playerName": "Gracz",
+  "ranking.column.matches": "Mecze",
+  "ranking.column.wins": "Zwycięstwa",
+  "ranking.column.looses": "Porażki",
+  "ranking.column.draws": "Remisy",
+  "ranking.column.points": "Punkty",
+  "ranking.column.pointsPerMetch": "Pkt/M",
+  "ranking.noData": "Brak wyników pasujących do filtra",
+  "ranking.select.matches": "Mecze",
+  "ranking.select.points": "Punkty",
+  "ranking.select.ppm": "Punkty na mecz",
+  "ranking.select.clear": "Wyczyść",
+  "ranking.button.clear": "Wyczyść",
+
+  "teams": {
+    "title": "Zespoły",
+    "subtitle": "Sprawdź swoje...",
+    "button": {
+      "addTeam": "DODAJ ZESPÓŁ"
+    },
+    "legend": {
+      "wins": "Wygrane",
+      "losses": "Przegrane",
+      "draws": "Remisy"
+    },
+    "stats": {
+      "matches": "Liczba wszystkich meczy: ",
+      "points": "Liczba zdobytych punktów",
+      "winPercentage": "Wygrane",
+      "lossPercentage": "Przegrane",
+      "drawPercentage": "Zremisowane",
+      "pointsPerMatch": "Punkty na mecz"
+    }
+  },
+
+  "matches": {
+    "title": "Mecze",
+    "subtitle": "Zweryfikuj swoje...",
+    "legend": {
+      "wins": "Wygrane",
+      "losses": "Przegrane",
+      "draws": "Remisy"
+    },
+    "table": {
+      "team": "Zespół",
+      "opponent": "Rywal",
+      "result": "Rezultat",
+      "date": "Data",
+      "status": "Status"
+    },
+    "status": {
+      "accepted": "Mecz zaakceptowany",
+      "pending": "Mecz oczekujący",
+      "rejected": "Mecz odrzucony"
+    },
+    "outcomes": {
+      "win": "Wygrana",
+      "loss": "Przegrana",
+      "draw": "Remis"
+    },
+    "buttons": {
+      "addMatch": "DODAJ MECZ"
+    }
+  },
+
+  "stats": {
+    "title": "Statystyki",
+    "subtitle": "Przenalizuj swoje ..."
+  }
+}
