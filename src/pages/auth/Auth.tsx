@@ -11,7 +11,7 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 
-import styles from "./Auth.module.scss";
+import styles from "./auth.module.scss";
 import Logo from "../../assets/Logo.png";
 import Title from "../../common/UI/Title";
 

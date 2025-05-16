@@ -22,7 +22,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import Title from "../../common/UI/Title";
 import { useAllMatches, MatchUi } from "../../common/hooks/useAllMatches";
-import styles from "./Table.module.scss";
+import styles from "./table.module.scss";
 
 export interface Team {
   position?: number;
