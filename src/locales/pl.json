@@ -54,44 +54,91 @@
   "home.card.ranking.title": "RANKING",
   "home.card.ranking.description": "Sprawdź, kto jest najlepszy w lidze dzięki naszemu rankingowi. Zobacz, jak zmienia się pozycja graczy w miarę postępu rozgrywek i kto zasługuje na miano MVP.",
 
-  "about.subtitle": "Witamy w Fifa ...",
-  "about.title": "League",
-  "about.gallery.description": "<h2 class=\"description__heading\">Witaj w FIFA League!</h2><p class=\"description__text\">Odkryj funkcje, które ułatwią Ci organizację i zarządzanie meczami 2v2:</p><ul class=\"description__list\"><li class=\"description__list-item\"><span class=\"material-icons description__icon\">sports_soccer</span><strong>Organizuj mecze</strong> – zaplanuj spotkania ze znajomymi</li><li class=\"description__list-item\"><span class=\"material-icons description__icon\">emoji_events</span><strong>Śledź wyniki</strong> – monitoruj postępy i osiągnięcia</li><li class=\"description__list-item\"><span class=\"material-icons description__icon\">equalizer</span><strong>Analizuj statystyki</strong> – poznaj swoje mocne strony</li><li class=\"description__list-item\"><span class=\"material-icons description__icon\">sports_esports</span><strong>Dodawaj mecze</strong> – wybieraj przeciwników i rozwijaj rywalizację</li><li class=\"description__list-item\"><span class=\"material-icons description__icon\">group</span><strong>Dziel się wynikami</strong> – konkuruj z innymi graczami</li><li class=\"description__list-item\"><span class=\"material-icons description__icon\">people</span><strong>Twórz drużyny</strong> – buduj zgrane zespoły i zdobywaj doświadczenie</li></ul>",
-  "about.description.header": "Dlaczego warto dołączyć do 'FIFA League'?",
-  "about.description.content": "Aplikacja 'FIFA League' to idealne miejsce do zarządzania swoimi meczami 2v2, śledzenia wyników i wspólnego rywalizowania z przyjaciółmi. Z łatwością możesz dodawać nowe mecze, wybrać przeciwników, ustawić wynik, a także potwierdzić wyniki rywali. Analizuj swoje statystyki, śledź swoje postępy i zdobywaj punkty, aby awansować na szczyt rankingu. Dołącz do naszej społeczności graczy, aby zwiększyć swoje umiejętności i dobrze się bawić, grając w swoją ulubioną grę!",
-  "about.description.button.teams": "Zespoły",
-  "about.faqSubitle": "Najczęściej zadawane ...",
-  "about.faqTitle": "Pytania",
-  "about.faq.questions": [
-    {
-      "question": "Jak mogę dodać nowy mecz do aplikacji?",
-      "answer": "Aby dodać nowy mecz, przejdź do sekcji \"Twoje Mecze\", kliknij przycisk \"Dodaj mecz\", wybierz przeciwników i wprowadź wynik meczu."
+  "about": {
+    "title": "FIFA 2x2 League",
+    "subtitle": "Witamy w",
+    "description": {
+      "header": "Dlaczego warto dołączyć do \"FIFA League\"?",
+      "content": "Aplikacja \"FIFA League\" to idealne miejsce do zarządzania swoimi meczami 2x2, śledzenia wyników i wspólnego rywalizowania z przyjaciółmi. Z łatwością możesz dodawać nowe mecze, wybierać przeciwników, ustawiać wyniki, a także potwierdzać wyniki rywali. Analizuj swoje statystyki, śledź postępy i zdobywaj punkty, aby awansować na szczyt rankingu. Dołącz do naszej społeczności graczy, aby zwiększyć swoje umiejętności i dobrze się bawić, grając w ulubioną grę!",
+      "button": {
+        "teams": "Zespoły"
+      }
     },
-    {
-      "question": "Czy inni gracze muszą potwierdzić wynik meczu?",
-      "answer": "Tak, po dodaniu meczu wybrani przeciwnicy otrzymają powiadomienie z prośbą o potwierdzenie wyniku. Dopiero po akceptacji wyniku przez obie strony, zostanie on zapisany w aplikacji."
-    },
-    {
-      "question": "Jakie statystyki mogę śledzić w aplikacji?",
-      "answer": "Możesz śledzić swoje statystyki meczowe, takie jak liczba rozegranych meczów, wygranych, przegranych, remisów oraz statystyki drużynowe, pokazujące Twoje osiągnięcia w zespołach z innymi graczami."
-    },
-    {
-      "question": "Czy mogę stworzyć ranking graczy?",
-      "answer": "Tak, aplikacja automatycznie generuje ranking graczy na podstawie wyników meczów. Możesz zobaczyć swój ranking na podstronie \"Ranking Graczy\"."
-    },
-    {
-      "question": "Czy aplikacja pozwala na śledzenie wyników drużyn?",
-      "answer": "Tak, na podstronie \"Tabela\" znajdziesz zestawienie wszystkich zespołów wraz z ich statystykami meczowymi, w tym liczbą wygranych, przegranych i punktów."
-    },
-    {
-      "question": "Czy mogę zobaczyć szczegółowe statystyki zespołów, w których gram?",
-      "answer": "Tak, na podstronie \"Lista Zespołów\" możesz zobaczyć statystyki dla każdej drużyny, w której grasz, oraz Twoje wyniki z różnymi partnerami."
-    },
-    {
-      "question": "Czy mogę zmieniać ustawienia aplikacji?",
-      "answer": "Obecnie aplikacja nie pozwala na zmianę ustawień. Wszystkie wyniki i statystyki są automatycznie aktualizowane na podstawie wyników meczów."
+    "faqSubtitle": "Najczęściej zadawane",
+    "faqTitle": "Pytania",
+    "faq": {
+      "questions": [
+        {
+          "question": "Jak mogę dodać nowy mecz do aplikacji?",
+          "answer": "Aby dodać nowy mecz, przejdź do sekcji \"Mecze\" i kliknij przycisk \"Dodaj mecz\". Następnie wybierz swojego partnera, wskaż przeciwników i wprowadź wynik meczu."
+        },
+        {
+          "question": "Jakie statystyki mogę śledzić w aplikacji?",
+          "answer": "Możesz śledzić swoje statystyki meczowe, takie jak liczba rozegranych meczów, wygranych, przegranych, remisów, a także statystyki drużynowe pokazujące Twoje osiągnięcia w zespołach z różnymi partnerami."
+        },
+        {
+          "question": "Czy aplikacja tworzy ranking graczy?",
+          "answer": "Tak, aplikacja automatycznie generuje ranking graczy na podstawie wyników meczów. Swój aktualny ranking możesz zobaczyć na podstronie \"Ranking\"."
+        },
+        {
+          "question": "Czy aplikacja pozwala na śledzenie wyników drużyn?",
+          "answer": "Tak, na podstronie \"Tabela\" znajdziesz zestawienie wszystkich dwuosobowych zespołów wraz z ich statystykami meczowymi (liczbą wygranych, przegranych, remisów i zdobytych punktów)."
+        },
+        {
+          "question": "Czy mogę zobaczyć szczegółowe statystyki drużyn, w których gram?",
+          "answer": "Tak, na podstronie \"Zespoły\" możesz sprawdzić statystyki dla każdej drużyny, której jesteś członkiem, oraz prześledzić swoje wyniki z różnymi partnerami."
+        },
+        {
+          "question": "Czy mogę zmienić ustawienia aplikacji?",
+          "answer": "Obecnie aplikacja nie pozwala na zmianę ustawień. Wszystkie wyniki i statystyki są automatycznie aktualizowane na podstawie rozegranych meczów."
+        },
+        {
+          "question": "Czy muszę ręcznie zakładać drużynę przed rozegraniem meczu?",
+          "answer": "Nie, nie musisz tworzyć drużyny ręcznie. Wystarczy, że dodasz mecz, wybierając dwóch graczy do swojego zespołu aplikacja automatycznie utworzy nową drużynę w tabeli, jeśli taki skład jeszcze nie istnieje."
+        },
+        {
+          "question": "Czy potrzebuję konta, aby korzystać z aplikacji?",
+          "answer": "Tak, musisz być zalogowany, aby móc używać aplikacji i dodawać mecze. Konto użytkownika jest wymagane przy starcie aplikacji."
+        },
+        {
+          "question": "Jak obliczane są punkty w rankingu i tabeli?",
+          "answer": "Za zwycięstwo drużyna otrzymuje 3 punkty, za remis 1 punkt, a za porażkę 0 punktów:contentReference[oaicite:10]{index=10}. Ranking graczy oraz punktacja w tabeli zespołów bazują na sumie punktów zdobytych we wszystkich meczach:contentReference[oaicite:11]{index=11}."
+        },
+        {
+          "question": "Czym różni się ranking graczy od tabeli drużyn?",
+          "answer": "Ranking graczy dotyczy indywidualnych zawodników i pokazuje łączny dorobek każdego z nich. Tabela drużyn skupia się na dwuosobowych zespołach – każda unikalna para graczy traktowana jest jako oddzielna drużyna. Możesz figurować w wielu drużynach jednocześnie (grając z różnymi partnerami) i wszystkie one pojawią się w tabeli."
+        },
+        {
+          "question": "Czy mogę filtrować lub wyszukiwać mecze na liście?",
+          "answer": "Tak, lista meczów posiada funkcje filtrowania. Możesz wyświetlić tylko swoje mecze lub wszystkie, a także zawęzić listę po nazwie przeciwnika, wyniku (wygrana, remis, porażka) oraz zakresie dat:contentReference[oaicite:12]{index=12}:contentReference[oaicite:13]{index=13}."
+        },
+        {
+          "question": "Czy mogę usunąć lub edytować dodany mecz?",
+          "answer": "Obecnie nie ma możliwości edycji ani usunięcia raz dodanego meczu poprzez interfejs aplikacji. Jeśli popełnisz błąd przy wprowadzaniu wyniku, najlepiej dodaj mecz jeszcze raz z poprawnymi danymi. Błędny wpis możesz ewentualnie zgłosić administratorowi do usunięcia."
+        },
+        {
+          "question": "Czy aplikacja dostępna jest w języku angielskim?",
+          "answer": "Tak, aplikacja dostępna jest zarówno po polsku, jak i po angielsku. Możesz przełączyć język interfejsu w dowolnym momencie – kliknij ikonę języka (globus) w menu i wybierz preferowany język:contentReference[oaicite:14]{index=14}:contentReference[oaicite:15]{index=15}."
+        },
+        {
+          "question": "Czy mogę zmienić motyw aplikacji na ciemny lub jasny?",
+          "answer": "Tak, aplikacja obsługuje tryb jasny i ciemny. Przełącznik motywu znajdziesz w menu (ikona słońce/księżyc) – kliknięcie spowoduje zmianę kolorystyki interfejsu na wybrany motyw:contentReference[oaicite:16]{index=16}."
+        },
+        {
+          "question": "Jak się wylogować z aplikacji?",
+          "answer": "Aby się wylogować, kliknij ikonę profilu w prawym górnym rogu i wybierz \"Wyloguj się\". Aplikacja powróci do ekranu logowania."
+        },
+        {
+          "question": "Czy mogę korzystać z aplikacji na telefonie?",
+          "answer": "Tak, aplikacja jest w pełni responsywna i działa w przeglądarce na urządzeniach mobilnych. Możesz z niej korzystać na telefonie lub tablecie tak samo jak na komputerze."
+        },
+        {
+          "question": "Czy aplikacja obsługuje mecze 1 na 1, czy tylko 2 na 2?",
+          "answer": "Aplikacja została zaprojektowana z myślą o meczach 2x2, więc nie wspiera bezpośrednio pojedynczych meczów jeden na jeden. Wszystkie statystyki i rankingi dotyczą rywalizacji w dwuosobowych drużynach."
+        }
+      ]
     }
-  ],
+  },
 
   "table.subtitle": "Sprawdź...",
   "table.title": "Tabelę",

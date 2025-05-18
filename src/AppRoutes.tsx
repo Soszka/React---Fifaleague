@@ -8,6 +8,7 @@ import RankingPage from "./pages/ranking/Ranking";
 import TeamsPage from "./pages/teams/Teams";
 import MatchesTable from "./pages/matches/Matches";
 import StatsPage from "./pages/stats/Stats";
+import AboutPage from "./pages/about/About";
 
 interface Props {
   toggleTheme: () => void;
@@ -28,6 +29,7 @@ export function AppRoutes({ toggleTheme }: Props) {
         <Route path="teams" element={<TeamsPage />} />
         <Route path="matches" element={<MatchesTable />} />
         <Route path="stats" element={<StatsPage />} />
+        <Route path="about" element={<AboutPage />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />
