@@ -203,6 +203,93 @@
 
   "stats": {
     "title": "Statystyki",
-    "subtitle": "Przenalizuj swoje ..."
+    "subtitle": "Przegląd wyników i statystyk gracza",
+    "tabs": {
+      "matches": "Mecze",
+      "wins": "Zwycięstwa",
+      "points": "Punkty",
+      "ppm": "Punkty/mecz"
+    },
+    "outcome": {
+      "win": "Zwycięstwo",
+      "draw": "Remis",
+      "loss": "Porażka"
+    },
+    "charts": {
+      "matches": "Mecze",
+      "wins": "Zwycięstwa",
+      "points": "Punkty",
+      "ppm": "Punkty/mecz"
+    },
+    "cards": {
+      "matches": {
+        "title": "Wyniki meczów",
+        "recommendation": "Najwiecej rozgranych meczów masz z graczem: {{partner}}.",
+        "bestPartner": "Najlepszy partner",
+        "bestPoints": "Największa liczba punktów",
+        "bestPPM": "Najwyższe punkty/mecz",
+        "worstPPM": "Najniższe punkty/mecz",
+        "winPercent": "Procent zwycięstw",
+        "totalLabel": "Łączna liczba meczów",
+        "drawsLabel": "Remisy",
+        "winsLabel": "Zwycięstwa",
+        "lossesLabel": "Porażki",
+        "totalPointsLabel": "Łącznie punktów",
+        "ppmLabel": "Średnie punkty/mecz",
+        "consistencyLabel": "Konsystencja wyników",
+        "recentLabel": "Ostatnie zwycięstwa",
+        "stabilityLabel": "Stabilność (ostatnie Pkt/M)"
+      },
+      "wins": {
+        "title": "Zwycięstwa",
+        "recommendation": "Masz {{percent}} zwycięstw.",
+        "bestPartner": "Najlepszy partner",
+        "totalLabel": "Łączna liczba zwycięstw",
+        "winPercentLabel": "Procent zwycięstw",
+        "recentLabel": "Ostatnie zwycięstwa",
+        "matchesLabel": "Mecze",
+        "winPointsLabel": "Punkty za zwycięstwa",
+        "bestPPMLabel": "Najwyższe punkty/mecz",
+        "drawsLabel": "Remisy",
+        "lossesLabel": "Porażki",
+        "totalPointsLabel": "Łącznie punktów",
+        "ppmLabel": "Średnie punkty/mecz",
+        "consistencyLabel": "Konsystencja wyników"
+      },
+      "points": {
+        "title": "Punkty",
+        "recommendation": "Do tej pory zdobyłeś {{target}} punktów",
+        "bestPartner": "Najlepszy partner",
+        "totalPointsLabel": "Łącznie punktów",
+        "avgPPMLabel": "Średnie punkty/mecz",
+        "bestPPMLabel": "Najwyższe punkty/mecz",
+        "ppmLabel": "Punkty/mecz",
+        "matchesLabel": "Mecze",
+        "winsLabel": "Zwycięstwa",
+        "drawsLabel": "Remisy",
+        "lossesLabel": "Porażki",
+        "winPercentLabel": "Procent zwycięstw",
+        "recentLabel": "Ostatnie zwycięstwa",
+        "consistencyLabel": "Konsystencja wyników",
+        "stabilityLabel": "Stabilność (ostatnie Pkt/M)"
+      },
+      "ppm": {
+        "title": "PPM (punkty na mecz)",
+        "recommendation": "Skup się na utrzymaniu wysokiego PPM.",
+        "bestPartnerLabel": "Najlepszy partner",
+        "worstPartnerLabel": "Najgorszy partner",
+        "avgPPMLabel": "Średnie punkty/mecz",
+        "consistencyLabel": "Konsystencja wyników",
+        "matchesLabel": "Mecze",
+        "winPercentLabel": "Procent zwycięstw",
+        "totalPointsLabel": "Łącznie punktów",
+        "winsLabel": "Zwycięstwa",
+        "drawsLabel": "Remisy",
+        "lossesLabel": "Porażki",
+        "bestPointsPartnerLabel": "Partner z największą liczbą punktów",
+        "recentLabel": "Ostatnie zwycięstwa",
+        "stabilityLabel": "Stabilność (ostatnie Pkt/M)"
+      }
+    }
   }
 }

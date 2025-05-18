@@ -161,7 +161,65 @@
   },
 
   "stats": {
-    "title": "Statystyki",
-    "subtitle": "Przenalizuj swoje ..."
+    "title": "Statistics",
+    "subtitle": "Detailed player statistics",
+    "tabs": {
+      "matches": "Matches",
+      "wins": "Wins",
+      "points": "Points",
+      "ppm": "Points/Match"
+    },
+    "outcome": {
+      "win": "Win",
+      "draw": "Draw",
+      "loss": "Loss"
+    },
+    "charts": {
+      "wins": "Wins",
+      "points": "Points",
+      "ppm": "PPM"
+    },
+    "cards": {
+      "matches": {
+        "title": "Match overview",
+        "recommendation": "Try playing more with {{partner}} to improve results!",
+        "bestPartner": "Most wins with {{partner}} ({{count}})",
+        "bestPoints": "Most points with {{partner}} ({{points}})",
+        "bestPPM": "Highest PPM with {{partner}} ({{ppm}})",
+        "worstPPM": "Lowest PPM with {{partner}} ({{ppm}})",
+        "winPercent": "Win percentage: {{percent}}",
+        "total": "Total matches: {{count}}"
+      },
+      "wins": {
+        "title": "Win breakdown",
+        "recommendation": "Your win rate is {{percent}} — great job!",
+        "bestPartner": "Most wins with {{partner}} ({{count}})",
+        "total": "Total wins: {{count}}",
+        "percent": "Win rate: {{percent}}",
+        "recent": "Wins in last 5 games: {{count}}",
+        "matches": "Matches played: {{count}}",
+        "winPoints": "Points from wins: {{points}}"
+      },
+      "points": {
+        "title": "Points summary",
+        "recommendation": "Next goal: {{target}} points!",
+        "bestPartner": "Most points with {{partner}} ({{points}})",
+        "total": "Total points: {{points}}",
+        "avg": "Average points per match: {{avg}}",
+        "bestPPM": "Best PPM with {{partner}} ({{ppm}})",
+        "ppm": "Overall PPM: {{ppm}}",
+        "matches": "Matches played: {{count}}"
+      },
+      "ppm": {
+        "title": "Points per match",
+        "recommendation": "Boost consistency to raise your PPM.",
+        "bestPartner": "Highest PPM with {{partner}} ({{ppm}})",
+        "worstPartner": "Lowest PPM with {{partner}} ({{ppm}})",
+        "avg": "Average PPM: {{avg}}",
+        "consistency": "Consistency index: {{value}}",
+        "matches": "Matches counted: {{count}}",
+        "winPercent": "Win percentage: {{percent}}"
+      }
+    }
   }
 }
