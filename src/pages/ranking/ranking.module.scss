@@ -1,0 +1,14 @@
+.container {
+  width: 100%;
+}
+
+tr:hover {
+  background: rgba(0, 0, 0, 0.04);
+  transition: background 0.18s ease-in-out;
+}
+
+@media (prefers-color-scheme: dark) {
+  tr:hover {
+    background: rgba(255, 255, 255, 0.07);
+  }
+}

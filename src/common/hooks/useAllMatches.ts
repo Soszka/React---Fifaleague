@@ -8,13 +8,14 @@ export interface RawMatch {
   rival1: string;
   rival2: string;
   result: string;
-  date: string;
+  date: string | number;
 }
 
 export interface MatchUi {
   team1: string;
   team2: string;
   score: string;
+  date: number;
 }
 
 export const useAllMatches = () => {
@@ -35,13 +36,16 @@ export const useAllMatches = () => {
         const list: MatchUi[] = [];
         snap.forEach((child) => {
           const m = child.val() as RawMatch;
+          const dateMs =
+            typeof m.date === "number" ? m.date : new Date(m.date).getTime();
           list.push({
             team1: `${m.player1} & ${m.player2}`,
             team2: `${m.rival1} & ${m.rival2}`,
             score: m.result.replace("-", " : "),
+            date: dateMs,
           });
         });
-        setMatches(list.reverse()); // najnowsze na górze
+        setMatches(list.reverse());
         setLoading(false);
       },
       (e) => {

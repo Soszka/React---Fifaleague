@@ -293,9 +293,20 @@ const TablePage: React.FC = () => {
           />
           <Button
             onClick={clearFilters}
-            variant="outlined"
+            variant="contained"
             size="small"
-            sx={{ minWidth: "auto", px: 2 }}
+            sx={{
+              minWidth: "auto",
+              px: 2,
+              backgroundColor: (theme) =>
+                theme.palette.mode === "light" ? "black" : "white",
+              color: (theme) =>
+                theme.palette.mode === "light" ? "white" : "black",
+              "&:hover": {
+                backgroundColor: (theme) =>
+                  theme.palette.mode === "light" ? "#333333" : "#e0e0e0",
+              },
+            }}
           >
             {t("table.clear", "Wyczyść")}
           </Button>

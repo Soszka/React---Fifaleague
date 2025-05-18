@@ -128,31 +128,35 @@
 
   "matches": {
     "title": "Mecze",
-    "subtitle": "Zweryfikuj swoje...",
-    "legend": {
-      "wins": "Wygrane",
-      "losses": "Przegrane",
-      "draws": "Remisy"
+    "subtitle": "Lista wszystkich meczów",
+    "filters": {
+      "allMatches": "Pokaż wszystkie mecze",
+      "team": "Drużyna",
+      "result": "Wynik",
+      "none": "Brak",
+      "from": "Od",
+      "to": "Do",
+      "clear": "Wyczyść filtry"
     },
-    "table": {
-      "team": "Zespół",
-      "opponent": "Rywal",
-      "result": "Rezultat",
-      "date": "Data",
-      "status": "Status"
+    "actions": {
+      "add": "Dodaj mecz"
     },
-    "status": {
-      "accepted": "Mecz zaakceptowany",
-      "pending": "Mecz oczekujący",
-      "rejected": "Mecz odrzucony"
+    "messages": {
+      "error": "Błąd podczas ładowania meczów"
     },
-    "outcomes": {
-      "win": "Wygrana",
-      "loss": "Przegrana",
+    "outcome": {
+      "win": "Zwycięstwo",
+      "loss": "Porażka",
       "draw": "Remis"
     },
-    "buttons": {
-      "addMatch": "DODAJ MECZ"
+    "table": {
+      "team": "Drużyna",
+      "rival": "Przeciwnik",
+      "result": "Wynik",
+      "date": "Data"
+    },
+    "pagination": {
+      "rowsPerPage": "Wierszy na stronę"
     }
   },
 
