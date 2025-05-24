@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Skeleton } from "@mui/material";
 import styles from "./home-card.module.scss";
 
 export interface HomeCardProps {
@@ -7,6 +8,8 @@ export interface HomeCardProps {
   content: string;
   image: string;
   link: string;
+  ready: boolean;
+  onLoaded: () => void;
 }
 
 const HomeCard: React.FC<HomeCardProps> = ({
@@ -14,12 +17,35 @@ const HomeCard: React.FC<HomeCardProps> = ({
   content,
   image,
   link,
+  ready,
+  onLoaded,
 }) => {
   const navigate = useNavigate();
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    if (loaded) {
+      onLoaded();
+    }
+  }, [loaded, onLoaded]);
+
+  const showContent = loaded && ready;
 
   return (
     <div className={styles.cardWrap} onClick={() => navigate(link)}>
-      <div className={styles.card}>
+      {!showContent && (
+        <Skeleton
+          variant="rectangular"
+          animation="wave"
+          className={styles.cardSkeleton}
+          sx={{ width: "100%", height: "100%" }}
+        />
+      )}
+
+      <div
+        className={styles.card}
+        style={{ visibility: showContent ? "visible" : "hidden" }}
+      >
         <div
           className={styles.cardBg}
           style={{ backgroundImage: `url(${image})` }}
@@ -29,6 +55,13 @@ const HomeCard: React.FC<HomeCardProps> = ({
           <p>{content}</p>
         </div>
       </div>
+
+      <img
+        src={image}
+        alt=""
+        className={styles.imgPreload}
+        onLoad={() => setLoaded(true)}
+      />
     </div>
   );
 };

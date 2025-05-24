@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Box, Typography, useTheme, keyframes } from "@mui/material";
 import { motion } from "framer-motion";
@@ -69,14 +69,33 @@ const MotionTypography = motion(Typography);
 
 const Home: React.FC = () => {
   const { t } = useTranslation();
-  const cards = React.useMemo(() => cardsConfig(t), [t]);
+  const cards = useMemo(() => cardsConfig(t), [t]);
   const theme = useTheme();
   const animatedGradient = `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main}, ${theme.palette.primary.main})`;
   const userName = "Bartek";
 
+  const [scoreboardLoaded, setScoreboardLoaded] = useState(false);
+  const [statsLoaded, setStatsLoaded] = useState(false);
+  const [imagesLoaded, setImagesLoaded] = useState(0);
+
+  const cardsLoaded = imagesLoaded === cards.length;
+  const allLoaded = scoreboardLoaded && statsLoaded && cardsLoaded;
+
+  const handleScoreboardLoaded = useCallback(() => {
+    setScoreboardLoaded(true);
+  }, []);
+
+  const handleStatsLoaded = useCallback(() => {
+    setStatsLoaded(true);
+  }, []);
+
+  const handleCardLoaded = useCallback(() => {
+    setImagesLoaded((prev) => prev + 1);
+  }, []);
+
   return (
     <Box className={styles.container} sx={{ width: "100%" }}>
-      <HomeScoreboard />
+      <HomeScoreboard ready={allLoaded} onLoaded={handleScoreboardLoaded} />
 
       <Box sx={{ mt: 4, px: 3, maxWidth: 1800, mx: "auto" }}>
         <MotionTypography
@@ -111,7 +130,11 @@ const Home: React.FC = () => {
         </Typography>
       </Box>
 
-      <HomeStats />
+      <HomeStats
+        player={userName}
+        ready={allLoaded}
+        onLoaded={handleStatsLoaded}
+      />
 
       <Box sx={{ mt: 6, mb: 1, px: 3, maxWidth: 1800, mx: "auto" }}>
         <Title subtitle={t("home.subtitle")} title={t("home.title")} />
@@ -125,6 +148,8 @@ const Home: React.FC = () => {
             content={card.content}
             image={card.image}
             link={card.link}
+            ready={allLoaded}
+            onLoaded={handleCardLoaded}
           />
         ))}
       </div>

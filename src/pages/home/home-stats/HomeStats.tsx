@@ -1,10 +1,11 @@
-import React from "react";
-import { Box, Typography, Paper, useTheme } from "@mui/material";
+import React, { useEffect } from "react";
+import { Box, Typography, Paper, Skeleton, useTheme } from "@mui/material";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import { motion } from "framer-motion";
+import { usePlayerStats } from "../../../common/hooks/usePlayerStats";
 import styles from "./home-stats.module.scss";
 
 interface HighlightItemProps {
@@ -31,7 +32,7 @@ const HighlightItem: React.FC<HighlightItemProps> = ({
     <Paper
       className={styles.highlightCard}
       elevation={8}
-      sx={{ background: gradient, borderRadius: "32px", overflow: "hidden" }}
+      sx={{ background: gradient }}
       aria-label={ariaLabel || label}
     >
       <Box className={styles.textContainer}>
@@ -59,7 +60,6 @@ const HighlightItem: React.FC<HighlightItemProps> = ({
             {value}
           </Typography>
         </MotionDiv>
-
         <Typography
           variant="subtitle1"
           component="p"
@@ -73,8 +73,39 @@ const HighlightItem: React.FC<HighlightItemProps> = ({
   );
 };
 
-const HomeStats: React.FC = () => {
+const SkeletonHighlightItem: React.FC = () => (
+  <Paper className={styles.highlightCard} elevation={8}>
+    <Skeleton
+      animation="wave"
+      variant="rectangular"
+      width="100%"
+      height="100%"
+      sx={{ borderRadius: "2rem" }}
+    />
+  </Paper>
+);
+
+interface HomeStatsProps {
+  player: string;
+  dbPath?: string;
+  ready: boolean;
+  onLoaded: () => void;
+}
+
+const HomeStats: React.FC<HomeStatsProps> = ({
+  player,
+  dbPath,
+  ready,
+  onLoaded,
+}) => {
   const theme = useTheme();
+  const { stats, loading } = usePlayerStats(player, dbPath);
+
+  useEffect(() => {
+    if (!loading) {
+      onLoaded();
+    }
+  }, [loading, onLoaded]);
 
   const lightGradients = [
     "linear-gradient(135deg,#ffffff 0%,#e1e1e1 100%)",
@@ -92,29 +123,67 @@ const HomeStats: React.FC = () => {
     theme.palette.mode === "dark" ? darkGradients : lightGradients;
   const iconColor = theme.palette.mode === "dark" ? "#ffffff" : "#000000";
 
+  if (loading || !stats || !ready) {
+    return (
+      <Box className={styles.highlightsContainer} sx={{ mt: 6 }}>
+        {Array.from({ length: 4 }).map((_, idx) => (
+          <SkeletonHighlightItem key={idx} />
+        ))}
+      </Box>
+    );
+  }
+
   const highlightData: HighlightItemProps[] = [
     {
-      icon: <SportsScoreIcon sx={{ fontSize: 96, color: iconColor }} />,
-      label: "Wynik ostatniego rozegranego meczu",
-      value: "3 : 1",
+      icon: (
+        <SportsScoreIcon
+          sx={{
+            fontSize: { xs: "3.5rem", sm: "5rem", md: "6rem" },
+            color: iconColor,
+          }}
+        />
+      ),
+      label: "Wynik ostatniego  meczu",
+      value: stats.lastResult,
       gradient: gradients[0],
     },
     {
-      icon: <EventNoteIcon sx={{ fontSize: 96, color: iconColor }} />,
+      icon: (
+        <EventNoteIcon
+          sx={{
+            fontSize: { xs: "3.5rem", sm: "5rem", md: "6rem" },
+            color: iconColor,
+          }}
+        />
+      ),
       label: "Mecze rozegrane w tym tygodniu",
-      value: "7",
+      value: stats.weekMatches.toString(),
       gradient: gradients[1],
     },
     {
-      icon: <EmojiEventsIcon sx={{ fontSize: 96, color: iconColor }} />,
+      icon: (
+        <EmojiEventsIcon
+          sx={{
+            fontSize: { xs: "3.5rem", sm: "5rem", md: "6rem" },
+            color: iconColor,
+          }}
+        />
+      ),
       label: "Procent wygranych spotkań",
-      value: "72 %",
+      value: `${stats.winPercent}%`,
       gradient: gradients[2],
     },
     {
-      icon: <TrendingUpIcon sx={{ fontSize: 96, color: iconColor }} />,
+      icon: (
+        <TrendingUpIcon
+          sx={{
+            fontSize: { xs: "3.5rem", sm: "5rem", md: "6rem" },
+            color: iconColor,
+          }}
+        />
+      ),
       label: "Średnia zdobytych goli na mecz",
-      value: "2,3",
+      value: stats.avgGoals.toString().replace(".", ","),
       gradient: gradients[3],
     },
   ];

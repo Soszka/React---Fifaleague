@@ -1,12 +1,24 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./home-scoreboard.module.scss";
 import { useLastMatches } from "../../../common/hooks/useLastMatches";
+import { Skeleton } from "@mui/material";
 
-const HomeScoreboard: React.FC = React.memo(() => {
+interface HomeScoreboardProps {
+  ready: boolean;
+  onLoaded: () => void;
+}
+
+const HomeScoreboard: React.FC<HomeScoreboardProps> = ({ ready, onLoaded }) => {
   const { t } = useTranslation();
-  const { matches } = useLastMatches(10); // ← ostatnie 10 meczów
-  // generujemy tylko przy zmianie danych
+  const { matches, loading } = useLastMatches(10);
+
+  useEffect(() => {
+    if (!loading) {
+      onLoaded();
+    }
+  }, [loading, onLoaded]);
+
   const renderedMatches = useMemo(
     () =>
       matches.map((m, idx) => (
@@ -19,13 +31,22 @@ const HomeScoreboard: React.FC = React.memo(() => {
     [matches]
   );
 
-  if (!renderedMatches.length) return null; // prosty „loader”
+  if (loading || !ready) {
+    return (
+      <Skeleton
+        variant="rectangular"
+        width="100%"
+        height="2.75rem"
+        animation="wave"
+      />
+    );
+  }
+
+  if (!renderedMatches.length) return null;
 
   return (
     <section className={styles.scoreboard}>
       <div className={styles.title}>{`${t("home.last.matches")}:`}</div>
-
-      {/* 3 kopie – każda ≈ 33 % szerokości → brak „dziury” */}
       <div className={styles.marquee}>
         <div className={styles.track}>
           {renderedMatches}
@@ -35,6 +56,6 @@ const HomeScoreboard: React.FC = React.memo(() => {
       </div>
     </section>
   );
-});
+};
 
-export default HomeScoreboard;
+export default React.memo(HomeScoreboard);

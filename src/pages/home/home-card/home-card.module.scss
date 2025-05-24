@@ -1,43 +1,51 @@
 .cardWrap {
-  /* 3 kolumny − odejmujemy 2 przerwy po 32 px  ➜  (100%-64px)/3  */
-  flex: 0 1 calc((100% - 64px) / 3);
-  max-width: calc((100% - 64px) / 3);
+  position: relative;
+  flex: 0 1 calc((100% - 4rem) / 3);
+  max-width: calc((100% - 4rem) / 3);
 
-  /* breakpoint 2 kolumny */
-  @media (max-width: 1199px) {
-    flex-basis: calc((100% - 32px) / 2);
-    max-width: calc((100% - 32px) / 2);
+  @media (max-width: 74.9375rem) {
+    flex-basis: calc((100% - 2rem) / 2);
+    max-width: calc((100% - 2rem) / 2);
   }
 
-  /* breakpoint 1 kolumna */
-  @media (max-width: 899px) {
+  @media (max-width: 56.1875rem) {
     flex-basis: 100%;
     max-width: 100%;
   }
 
-  height: 250px;
+  height: 15.625rem;
   cursor: pointer;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 0.75rem;
+}
+
+.cardSkeleton {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.75rem;
+}
+
+.imgPreload {
+  display: none;
 }
 
 .card {
   position: relative;
-  width: 100%; /* usunięto 30% – teraz wypełnia cardWrap */
+  width: 100%;
   height: 100%;
   background-color: #333;
-  border-radius: 12px;
+  border-radius: 0.75rem;
   overflow: hidden;
-  box-shadow: rgba(0, 0, 0, 0.66) 0 5px 10px, inset #333 0 0 0 3px,
-    inset rgba(255, 255, 255, 0.5) 0 0 0 4px;
+  box-shadow: rgba(0, 0, 0, 0.66) 0 0.3125rem 0.625rem,
+    inset #333 0 0 0 0.1875rem, inset rgba(255, 255, 255, 0.5) 0 0 0 0.25rem;
   transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1),
     box-shadow 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .cardWrap:hover .card {
   transform: scale(1.03);
-  box-shadow: rgba(0, 0, 0, 0.7) 0 8px 20px, inset #333 0 0 0 3px,
-    inset rgba(255, 255, 255, 0.5) 0 0 0 4px;
+  box-shadow: rgba(0, 0, 0, 0.7) 0 0.5rem 1.25rem, inset #333 0 0 0 0.1875rem,
+    inset rgba(255, 255, 255, 0.5) 0 0 0 0.25rem;
   z-index: 1;
 }
 
@@ -48,7 +56,7 @@
   background-position: center;
   background-size: cover;
   filter: brightness(0.7);
-  border-radius: 12px;
+  border-radius: 0.75rem;
   transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1),
     filter 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 
@@ -57,7 +65,7 @@
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.25);
-    border-radius: 12px;
+    border-radius: 0.75rem;
     pointer-events: none;
   }
 }
@@ -73,10 +81,10 @@
   left: 0;
   width: 100%;
   background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
-  transform: translateY(calc(100% - 60px));
+  backdrop-filter: blur(0.25rem);
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+  transform: translateY(calc(100% - 3.75rem));
   transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
   text-align: left;
 }
@@ -84,16 +92,16 @@
 .cardInfo h2 {
   position: relative;
   font-size: 1.5rem;
-  margin: 12px 16px 4px;
+  margin: 0.75rem 1rem 0.25rem;
   color: #fff;
 
   &::after {
     content: "";
     position: absolute;
-    bottom: -2px;
+    bottom: -0.125rem;
     left: 0;
     width: 0;
-    height: 2px;
+    height: 0.125rem;
     background: #fff;
     transition: width 0.4s ease;
   }
@@ -106,7 +114,7 @@
 .cardInfo p {
   font-size: 0.85rem;
   color: #eee;
-  margin: 12px 16px 12px;
+  margin: 0.75rem 1rem 0.75rem;
   line-height: 1.4;
   opacity: 0;
   transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);

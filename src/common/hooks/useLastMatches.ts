@@ -25,13 +25,17 @@ export interface MatchUi {
 
 export const useLastMatches = (howMany = 10) => {
   const [matches, setMatches] = useState<MatchUi[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    setLoading(true);
     const q = query(ref(rtdb, "/"), orderByChild("date"), limitToLast(howMany));
-
     const unsub = onValue(q, (snap) => {
-      if (!snap.exists()) return setMatches([]);
-
+      if (!snap.exists()) {
+        setMatches([]);
+        setLoading(false);
+        return;
+      }
       const list: MatchUi[] = [];
       snap.forEach((child) => {
         const m = child.val() as RawMatch;
@@ -42,10 +46,10 @@ export const useLastMatches = (howMany = 10) => {
         });
       });
       setMatches(list.reverse());
+      setLoading(false);
     });
-
     return () => unsub();
   }, [howMany]);
 
-  return { matches };
+  return { matches, loading };
 };
