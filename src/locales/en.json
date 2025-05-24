@@ -6,31 +6,40 @@
   "nav.menu.table": "Tabela",
   "nav.menu.teams": "Zespoły",
   "nav.menu.ranking": "Ranking",
-  "nav.toolbar.menu": "Menu",
-  "nav.toolbar.language": "Język",
-  "nav.toolbar.user": "Użytkownik",
-  "nav.toolbar.notifications": "Powiadomienia",
-  "nav.actions.language.polish": "Polski",
-  "nav.actions.language.english": "English",
-  "nav.actions.user.changePhoto": "Zmień zdjęcie",
-  "nav.actions.user.logOut": "Wyloguj się",
-  "nav.actions.notofication": "Gracz Marek chce potwierdzić mecz z 01.08.2024r",
+  "navigation": {
+    "language": "Language",
+    "theme": "Toggle theme",
+    "account": "Account",
+    "profile": "Profile",
+    "logout": "Log out"
+  },
+  "language": {
+    "pl": "Polish",
+    "en": "English"
+  },
 
-  "home.title": "Stronie",
-  "home.subtitle": "Co znajdziesz na ...",
-  "home.last.matches": "OSTATNIE MECZE",
+  "home.title": "Home",
+  "home.subtitle": "What you’ll find on ...",
+  "home.last.matches": "LAST MATCHES",
   "home.card.about.title": "FIFA LEAGUE",
-  "home.card.about.description": "Rozgrywki ligowe w FIFA, pełne emocji i niespodzianek dla każdego fana. Śledź wszystkie mecze na żywo i bądź na bieżąco z wynikami oraz wydarzeniami.",
-  "home.card.matches.title": "MECZE",
-  "home.card.matches.description": "Zobacz nadchodzące mecze i wyniki spotkań w naszej lidze. Nie przegap żadnej akcji i dołącz do naszej społeczności kibiców, którzy śledzą każdą minutę gry.",
-  "home.card.stats.title": "STATYSTYKI",
-  "home.card.stats.description": "Szczegółowe statystyki drużyn i graczy, aktualizowane na bieżąco. Odkryj, kto jest liderem pod względem bramek, asyst i innych kluczowych statystyk.",
-  "home.card.table.title": "TABELA",
-  "home.card.table.description": "Aktualna tabela ligowa, śledź pozycje swoich ulubionych zespołów. Zobacz, kto ma największe szanse na zwycięstwo w tym sezonie i jakie są prognozy ekspertów.",
-  "home.card.teams.title": "ZESPOŁY",
-  "home.card.teams.description": "Informacje o drużynach, zawodnikach i ich historiach. Poznaj składy, strategie oraz najważniejsze momenty każdej drużyny w rozgrywkach.",
+  "home.card.about.description": "FIFA league competitions, full of excitement and surprises for every fan. Follow all matches live and stay up to date with scores and events.",
+  "home.card.matches.title": "MATCHES",
+  "home.card.matches.description": "See upcoming matches and results in our league. Don’t miss a single play and join our community of fans who follow every minute of the game.",
+  "home.card.stats.title": "STATISTICS",
+  "home.card.stats.description": "Detailed team and player statistics, updated in real time. Discover who leads in goals, assists, and other key metrics.",
+  "home.card.table.title": "TABLE",
+  "home.card.table.description": "Current league table – track the standings of your favorite teams. See who has the best chances to win this season and what the experts predict.",
+  "home.card.teams.title": "TEAMS",
+  "home.card.teams.description": "Information about teams, players, and their histories. Get to know the rosters, strategies, and the most important moments of each team in the competition.",
   "home.card.ranking.title": "RANKING",
-  "home.card.ranking.description": "Sprawdź, kto jest najlepszy w lidze dzięki naszemu rankingowi. Zobacz, jak zmienia się pozycja graczy w miarę postępu rozgrywek i kto zasługuje na miano MVP.",
+  "home.card.ranking.description": "Check out the league’s best with our ranking. See how players’ positions change as the competition progresses and who deserves the MVP title.",
+
+  "homeStats": {
+    "lastResult": "Last match result",
+    "weekMatches": "Matches played this week",
+    "winPercent": "Win percentage",
+    "avgGoals": "Average goals per match"
+  },
 
   "about": {
     "title": "FIFA 2x2 League",
@@ -200,7 +209,8 @@
       "team": "Drużyna",
       "rival": "Przeciwnik",
       "result": "Wynik",
-      "date": "Data"
+      "date": "Data",
+      "actions": "Akcje"
     },
     "pagination": {
       "rowsPerPage": "Wierszy na stronę"

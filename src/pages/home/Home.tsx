@@ -26,37 +26,37 @@ const cardsConfig = (t: ReturnType<typeof useTranslation>["t"]): CardItem[] => [
     header: t("home.card.about.title"),
     content: t("home.card.about.description"),
     image: aboutImg,
-    link: "/navigation/about",
+    link: "/app/about",
   },
   {
     header: t("home.card.matches.title"),
     content: t("home.card.matches.description"),
     image: matchesImg,
-    link: "/navigation/matches",
+    link: "/app/matches",
   },
   {
     header: t("home.card.table.title"),
     content: t("home.card.table.description"),
     image: tableImg,
-    link: "/navigation/table",
+    link: "/app/table",
   },
   {
     header: t("home.card.stats.title"),
     content: t("home.card.stats.description"),
     image: statsImg,
-    link: "/navigation/stats",
+    link: "/app/stats",
   },
   {
     header: t("home.card.teams.title"),
     content: t("home.card.teams.description"),
     image: teamsImg,
-    link: "/navigation/teams",
+    link: "/app/teams",
   },
   {
     header: t("home.card.ranking.title"),
     content: t("home.card.ranking.description"),
     image: rankingImg,
-    link: "/navigation/ranking",
+    link: "/app/ranking",
   },
 ];
 

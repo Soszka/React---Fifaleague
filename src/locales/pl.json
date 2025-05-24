@@ -28,15 +28,17 @@
   "nav.menu.table": "Tabela",
   "nav.menu.teams": "Zespoły",
   "nav.menu.ranking": "Ranking",
-  "nav.toolbar.menu": "Menu",
-  "nav.toolbar.language": "Język",
-  "nav.toolbar.user": "Użytkownik",
-  "nav.toolbar.notifications": "Powiadomienia",
-  "nav.actions.language.polish": "Polski",
-  "nav.actions.language.english": "English",
-  "nav.actions.user.changePhoto": "Zmień zdjęcie",
-  "nav.actions.user.logOut": "Wyloguj się",
-  "nav.actions.notofication": "Gracz Marek chce potwierdzić mecz z 01.08.2024r",
+  "navigation": {
+    "language": "Język",
+    "theme": "Przełącz motyw",
+    "account": "Konto",
+    "profile": "Profil",
+    "logout": "Wyloguj się"
+  },
+  "language": {
+    "pl": "Polski",
+    "en": "Angielski"
+  },
 
   "home.title": "Stronie",
   "home.subtitle": "Co znajdziesz na ...",
@@ -53,6 +55,13 @@
   "home.card.teams.description": "Informacje o drużynach, zawodnikach i ich historiach. Poznaj składy, strategie oraz najważniejsze momenty każdej drużyny w rozgrywkach.",
   "home.card.ranking.title": "RANKING",
   "home.card.ranking.description": "Sprawdź, kto jest najlepszy w lidze dzięki naszemu rankingowi. Zobacz, jak zmienia się pozycja graczy w miarę postępu rozgrywek i kto zasługuje na miano MVP.",
+
+  "homeStats": {
+    "lastResult": "Wynik ostatniego rozegranego meczu",
+    "weekMatches": "Mecze rozegrane w tym tygodniu",
+    "winPercent": "Procent wygranych spotkań",
+    "avgGoals": "Średnia zdobytych goli na mecz"
+  },
 
   "about": {
     "title": "FIFA 2x2 League",
@@ -241,7 +250,8 @@
       "team": "Drużyna",
       "rival": "Przeciwnik",
       "result": "Wynik",
-      "date": "Data"
+      "date": "Data",
+      "actions": "Akcje"
     },
     "pagination": {
       "rowsPerPage": "Wierszy na stronę"

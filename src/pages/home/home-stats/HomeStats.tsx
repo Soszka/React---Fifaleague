@@ -5,8 +5,10 @@ import EventNoteIcon from "@mui/icons-material/EventNote";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { usePlayerStats } from "../../../common/hooks/usePlayerStats";
 import styles from "./home-stats.module.scss";
+import { useTranslation } from "react-i18next";
 
 interface HighlightItemProps {
   icon: React.ReactNode;
@@ -14,6 +16,7 @@ interface HighlightItemProps {
   value: string;
   gradient: string;
   ariaLabel?: string;
+  onClick?: () => void;
 }
 
 const MotionDiv = motion.div;
@@ -24,6 +27,7 @@ const HighlightItem: React.FC<HighlightItemProps> = ({
   value,
   gradient,
   ariaLabel,
+  onClick,
 }) => {
   const theme = useTheme();
   const accent = `linear-gradient(90deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`;
@@ -32,8 +36,14 @@ const HighlightItem: React.FC<HighlightItemProps> = ({
     <Paper
       className={styles.highlightCard}
       elevation={8}
-      sx={{ background: gradient }}
+      sx={{
+        background: gradient,
+        cursor: onClick ? "pointer" : "default",
+        transition: "transform 0.2s",
+        "&:hover": { transform: onClick ? "scale(1.03)" : "none" },
+      }}
       aria-label={ariaLabel || label}
+      onClick={onClick}
     >
       <Box className={styles.textContainer}>
         <MotionDiv
@@ -99,6 +109,8 @@ const HomeStats: React.FC<HomeStatsProps> = ({
   onLoaded,
 }) => {
   const theme = useTheme();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const { stats, loading } = usePlayerStats(player, dbPath);
 
   useEffect(() => {
@@ -143,9 +155,10 @@ const HomeStats: React.FC<HomeStatsProps> = ({
           }}
         />
       ),
-      label: "Wynik ostatniego  meczu",
+      label: t("homeStats.lastResult"),
       value: stats.lastResult,
       gradient: gradients[0],
+      onClick: () => navigate("/app/matches"),
     },
     {
       icon: (
@@ -156,9 +169,10 @@ const HomeStats: React.FC<HomeStatsProps> = ({
           }}
         />
       ),
-      label: "Mecze rozegrane w tym tygodniu",
+      label: t("homeStats.weekMatches"),
       value: stats.weekMatches.toString(),
       gradient: gradients[1],
+      onClick: () => navigate("/app/matches"),
     },
     {
       icon: (
@@ -169,9 +183,10 @@ const HomeStats: React.FC<HomeStatsProps> = ({
           }}
         />
       ),
-      label: "Procent wygranych spotkań",
+      label: t("homeStats.winPercent"),
       value: `${stats.winPercent}%`,
       gradient: gradients[2],
+      onClick: () => navigate("/app/stats"),
     },
     {
       icon: (
@@ -182,9 +197,10 @@ const HomeStats: React.FC<HomeStatsProps> = ({
           }}
         />
       ),
-      label: "Średnia zdobytych goli na mecz",
+      label: t("homeStats.avgGoals"),
       value: stats.avgGoals.toString().replace(".", ","),
       gradient: gradients[3],
+      onClick: () => navigate("/app/stats"),
     },
   ];
 
