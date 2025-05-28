@@ -6,7 +6,7 @@ import Home from "./pages/home/Home";
 import TablePage from "./pages/table/Table";
 import RankingPage from "./pages/ranking/Ranking";
 import TeamsPage from "./pages/teams/Teams";
-import MatchesTable from "./pages/matches/Matches";
+import Matches from "./pages/matches/Matches";
 import StatsPage from "./pages/stats/Stats";
 import AboutPage from "./pages/about/About";
 
@@ -27,7 +27,7 @@ export function AppRoutes({ toggleTheme }: Props) {
         <Route path="table" element={<TablePage />} />
         <Route path="ranking" element={<RankingPage />} />
         <Route path="teams" element={<TeamsPage />} />
-        <Route path="matches" element={<MatchesTable />} />
+        <Route path="matches" element={<Matches />} />
         <Route path="stats" element={<StatsPage />} />
         <Route path="about" element={<AboutPage />} />
       </Route>

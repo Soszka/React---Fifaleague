@@ -223,11 +223,12 @@
   },
 
   "matches": {
-    "title": "Mecze",
-    "subtitle": "Lista wszystkich meczów",
+    "title": "Mecze 2x2",
+    "subtitle": "Analiza historii meczów",
     "filters": {
-      "allMatches": "Pokaż wszystkie mecze",
-      "myMatches": "Pokaż moje mecze",
+      "myMatches": "Moje mecze",
+      "allMatches": "Wszystkie mecze",
+      "filter": "Filtruj",
       "team": "Drużyna",
       "result": "Wynik",
       "none": "Brak",
@@ -236,15 +237,15 @@
       "clear": "Wyczyść"
     },
     "actions": {
-      "add": "Dodaj mecz"
+      "add": "Dodaj mecz",
+      "edit": "Edytuj",
+      "delete": "Usuń"
     },
-    "messages": {
-      "error": "Błąd podczas ładowania meczów"
-    },
-    "outcome": {
-      "win": "Zwycięstwo",
-      "loss": "Porażka",
-      "draw": "Remis"
+    "card": {
+      "players": "Gracze",
+      "rival": "Przeciwnik",
+      "score": "Wynik",
+      "date": "Data"
     },
     "table": {
       "team": "Drużyna",
@@ -253,99 +254,100 @@
       "date": "Data",
       "actions": "Akcje"
     },
+    "outcome": {
+      "win": "Zwycięstwo",
+      "loss": "Porażka",
+      "draw": "Remis"
+    },
     "pagination": {
-      "rowsPerPage": "Wierszy na stronę"
+      "rowsPerPage": "Wierszy na stronę:",
+      "all": "Wszystkie"
+    },
+    "dialogs": {
+      "editMatch": "Edytuj mecz",
+      "deleteMatch": "Usuń mecz"
+    },
+    "messages": {
+      "error": "Wystąpił błąd"
     }
   },
-
   "stats": {
     "title": "Statystyki",
-    "subtitle": "Przegląd wyników i statystyk gracza",
+    "subtitle": "Szczegółowa analiza Twoich meczów",
     "tabs": {
       "matches": "Mecze",
       "wins": "Zwycięstwa",
+      "losses": "Porażki",
       "points": "Punkty",
-      "ppm": "Punkty/mecz"
-    },
-    "outcome": {
-      "win": "Zwycięstwo",
-      "draw": "Remis",
-      "loss": "Porażka"
+      "ppm": "Punkty na mecz"
     },
     "charts": {
       "matches": "Mecze",
       "wins": "Zwycięstwa",
+      "losses": "Porażki",
       "points": "Punkty",
-      "ppm": "Punkty/mecz"
+      "ppm": "PPM"
+    },
+    "outcome": {
+      "win": "Zwycięstwo",
+      "loss": "Porażka",
+      "draw": "Remis"
     },
     "cards": {
       "matches": {
-        "title": "Wyniki meczów",
-        "recommendation": "Najwiecej rozgranych meczów masz z graczem: {{partner}}.",
-        "bestPartner": "Najlepszy partner",
-        "bestPoints": "Największa liczba punktów",
-        "bestPPM": "Najwyższe punkty/mecz",
-        "worstPPM": "Najniższe punkty/mecz",
-        "winPercent": "Procent zwycięstw",
-        "totalLabel": "Łączna liczba meczów",
-        "drawsLabel": "Remisy",
+        "title": "Statystyki meczów",
+        "totalLabel": "Łącznie meczów",
         "winsLabel": "Zwycięstwa",
+        "drawsLabel": "Remisy",
         "lossesLabel": "Porażki",
+        "winPercent": "Procent zwycięstw",
         "totalPointsLabel": "Łącznie punktów",
-        "ppmLabel": "Średnie punkty/mecz",
-        "consistencyLabel": "Konsystencja wyników",
-        "recentLabel": "Ostatnie zwycięstwa",
-        "stabilityLabel": "Stabilność (ostatnie Pkt/M)"
+        "ppmLabel": "PPM",
+        "stabilityLabel": "Stabilność"
       },
       "wins": {
-        "title": "Zwycięstwa",
-        "recommendation": "Masz {{percent}} zwycięstw.",
-        "bestPartner": "Najlepszy partner",
-        "totalLabel": "Łączna liczba zwycięstw",
+        "title": "Statystyki zwycięstw",
+        "totalLabel": "Łącznie zwycięstw",
         "winPercentLabel": "Procent zwycięstw",
         "recentLabel": "Ostatnie zwycięstwa",
         "matchesLabel": "Mecze",
-        "winPointsLabel": "Punkty za zwycięstwa",
-        "bestPPMLabel": "Najwyższe punkty/mecz",
         "drawsLabel": "Remisy",
         "lossesLabel": "Porażki",
         "totalPointsLabel": "Łącznie punktów",
-        "ppmLabel": "Średnie punkty/mecz",
-        "consistencyLabel": "Konsystencja wyników"
+        "ppmLabel": "PPM"
+      },
+      "losses": {
+        "title": "Statystyki porażek",
+        "totalLabel": "Łącznie porażek",
+        "lossPercentLabel": "Procent porażek",
+        "recentLabel": "Ostatnie porażki",
+        "matchesLabel": "Mecze",
+        "winsLabel": "Zwycięstwa",
+        "drawsLabel": "Remisy",
+        "totalPointsLabel": "Łącznie punktów",
+        "ppmLabel": "PPM"
       },
       "points": {
-        "title": "Punkty",
-        "recommendation": "Do tej pory zdobyłeś {{target}} punktów",
-        "bestPartner": "Najlepszy partner",
+        "title": "Statystyki punktów",
         "totalPointsLabel": "Łącznie punktów",
-        "avgPPMLabel": "Średnie punkty/mecz",
-        "bestPPMLabel": "Najwyższe punkty/mecz",
-        "ppmLabel": "Punkty/mecz",
+        "avgPPMLabel": "Średnie PPM",
         "matchesLabel": "Mecze",
         "winsLabel": "Zwycięstwa",
         "drawsLabel": "Remisy",
         "lossesLabel": "Porażki",
         "winPercentLabel": "Procent zwycięstw",
-        "recentLabel": "Ostatnie zwycięstwa",
-        "consistencyLabel": "Konsystencja wyników",
-        "stabilityLabel": "Stabilność (ostatnie Pkt/M)"
+        "stabilityLabel": "Stabilność"
       },
       "ppm": {
-        "title": "PPM (punkty na mecz)",
-        "recommendation": "Skup się na utrzymaniu wysokiego PPM.",
-        "bestPartnerLabel": "Najlepszy partner",
-        "worstPartnerLabel": "Najgorszy partner",
-        "avgPPMLabel": "Średnie punkty/mecz",
-        "consistencyLabel": "Konsystencja wyników",
+        "title": "Statystyki PPM",
+        "avgPPMLabel": "Średnie PPM",
+        "stabilityLabel": "Stabilność",
         "matchesLabel": "Mecze",
         "winPercentLabel": "Procent zwycięstw",
         "totalPointsLabel": "Łącznie punktów",
         "winsLabel": "Zwycięstwa",
         "drawsLabel": "Remisy",
-        "lossesLabel": "Porażki",
-        "bestPointsPartnerLabel": "Partner z największą liczbą punktów",
-        "recentLabel": "Ostatnie zwycięstwa",
-        "stabilityLabel": "Stabilność (ostatnie Pkt/M)"
+        "lossesLabel": "Porażki"
       }
     }
   }

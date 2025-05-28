@@ -16,7 +16,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { SvgIconProps } from "@mui/material/SvgIcon";
-import { useTranslation, Trans } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import Title from "../../common/UI/Title";
 import { useAllMatches } from "../../common/hooks/useAllMatches";
 import ReactApexChart from "react-apexcharts";
@@ -108,12 +108,21 @@ const StatsPage: React.FC = () => {
   const totalPoints = outcomeCounts.win * 3 + outcomeCounts.draw;
   const overallPPM = totalMatches ? totalPoints / totalMatches : 0;
   const winPct = totalMatches ? (outcomeCounts.win / totalMatches) * 100 : 0;
+  const lossPct = totalMatches ? (outcomeCounts.loss / totalMatches) * 100 : 0;
 
   const recentWins = useMemo(() => {
     const recent = [...userMatches].sort((a, b) => b.date - a.date).slice(0, 5);
     return recent.filter((m) => {
       const isUserTeam1 = normPlayers(m.team1).includes(user);
       return getOutcomeForUser(m.score, isUserTeam1) === "win";
+    }).length;
+  }, [userMatches, user]);
+
+  const recentLosses = useMemo(() => {
+    const recent = [...userMatches].sort((a, b) => b.date - a.date).slice(0, 5);
+    return recent.filter((m) => {
+      const isUserTeam1 = normPlayers(m.team1).includes(user);
+      return getOutcomeForUser(m.score, isUserTeam1) === "loss";
     }).length;
   }, [userMatches, user]);
 
@@ -136,13 +145,13 @@ const StatsPage: React.FC = () => {
     };
     const map = new Map<
       string,
-      { matches: number; wins: number; points: number }
+      { matches: number; wins: number; losses: number; points: number }
     >();
     userMatches.forEach((m) => {
       const partner =
         getPartner(m.team1) || getPartner(m.team2) || "Solo/Unknown";
       if (!map.has(partner))
-        map.set(partner, { matches: 0, wins: 0, points: 0 });
+        map.set(partner, { matches: 0, wins: 0, losses: 0, points: 0 });
       const a = map.get(partner)!;
       a.matches += 1;
       const isUserTeam1 = normPlayers(m.team1).includes(user);
@@ -151,6 +160,7 @@ const StatsPage: React.FC = () => {
         a.wins += 1;
         a.points += 3;
       } else if (oc === "draw") a.points += 1;
+      else if (oc === "loss") a.losses += 1;
     });
     return map;
   }, [userMatches, user]);
@@ -170,6 +180,7 @@ const StatsPage: React.FC = () => {
       worstPPM: by("ppm").reverse()[0],
       mostMatches: by("matches")[0],
       listWins: by("wins").slice(0, 6),
+      listLosses: by("losses").slice(0, 6),
       listPoints: by("points").slice(0, 6),
       listPPM: by("ppm").slice(0, 6),
     } as const;
@@ -187,6 +198,10 @@ const StatsPage: React.FC = () => {
     theme.palette.mode === "dark"
       ? theme.palette.warning.light
       : theme.palette.warning.main;
+  const pointsColor =
+    theme.palette.mode === "dark"
+      ? theme.palette.primary.light
+      : theme.palette.primary.dark;
 
   const chartColors = [successColor, errorColor, warningColor];
 
@@ -233,9 +248,15 @@ const StatsPage: React.FC = () => {
     t("stats.charts.wins") as string
   );
 
+  const lossesBar = barConfig(
+    partnerStats.listLosses.map((i) => ({ name: i.name, value: i.losses })),
+    errorColor,
+    t("stats.charts.losses") as string
+  );
+
   const pointsBar = barConfig(
     partnerStats.listPoints.map((i) => ({ name: i.name, value: i.points })),
-    errorColor,
+    pointsColor,
     t("stats.charts.points") as string
   );
 
@@ -334,10 +355,12 @@ const StatsPage: React.FC = () => {
       >
         <Tab label={t("stats.tabs.matches")} />
         <Tab label={t("stats.tabs.wins")} />
+        <Tab label={t("stats.tabs.losses")} />
         <Tab label={t("stats.tabs.points")} />
         <Tab label={t("stats.tabs.ppm")} />
       </Tabs>
 
+      {/* Matches */}
       <TabPanel value={tab} index={0}>
         <Box
           sx={{
@@ -401,6 +424,7 @@ const StatsPage: React.FC = () => {
         </Box>
       </TabPanel>
 
+      {/* Wins */}
       <TabPanel value={tab} index={1}>
         <Box
           sx={{
@@ -464,7 +488,72 @@ const StatsPage: React.FC = () => {
         </Box>
       </TabPanel>
 
+      {/* Losses */}
       <TabPanel value={tab} index={2}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            gap: 2,
+          }}
+        >
+          <ChartCard>
+            <ReactApexChart
+              type="bar"
+              width="100%"
+              height={360}
+              series={lossesBar.series}
+              options={lossesBar.opts as any}
+            />
+          </ChartCard>
+
+          <InfoCard title={t("stats.cards.losses.title") as string}>
+            {bullet(
+              <CancelIcon />,
+              t("stats.cards.losses.totalLabel"),
+              outcomeCounts.loss
+            )}
+            {bullet(
+              <PercentIcon />,
+              t("stats.cards.losses.lossPercentLabel"),
+              `${lossPct.toFixed(1)}%`
+            )}
+            {bullet(
+              <TrendingUpIcon />,
+              t("stats.cards.losses.recentLabel"),
+              recentLosses
+            )}
+            {bullet(
+              <QueryStatsIcon />,
+              t("stats.cards.losses.matchesLabel"),
+              totalMatches
+            )}
+            {bullet(
+              <EmojiEventsIcon />,
+              t("stats.cards.losses.winsLabel"),
+              outcomeCounts.win
+            )}
+            {bullet(
+              <RemoveCircleOutlineIcon />,
+              t("stats.cards.losses.drawsLabel"),
+              outcomeCounts.draw
+            )}
+            {bullet(
+              <TrendingUpIcon />,
+              t("stats.cards.losses.totalPointsLabel"),
+              totalPoints
+            )}
+            {bullet(
+              <PercentIcon />,
+              t("stats.cards.losses.ppmLabel"),
+              overallPPM.toFixed(2)
+            )}
+          </InfoCard>
+        </Box>
+      </TabPanel>
+
+      {/* Points */}
+      <TabPanel value={tab} index={3}>
         <Box
           sx={{
             display: "flex",
@@ -527,7 +616,8 @@ const StatsPage: React.FC = () => {
         </Box>
       </TabPanel>
 
-      <TabPanel value={tab} index={3}>
+      {/* PPM */}
+      <TabPanel value={tab} index={4}>
         <Box
           sx={{
             display: "flex",

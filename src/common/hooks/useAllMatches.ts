@@ -24,6 +24,7 @@ export const useAllMatches = () => {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    console.log("[HOOK] Pobieram dane z Firebase...");
     const q = query(ref(rtdb, "/"), orderByChild("date"));
     const unsub = onValue(
       q,

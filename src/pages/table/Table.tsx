@@ -2,6 +2,12 @@ import React, { useMemo, useState } from "react";
 import {
   Box,
   Button,
+  Card,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   FormControl,
   InputLabel,
   MenuItem,
@@ -17,6 +23,8 @@ import {
   TableRow,
   TableSortLabel,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -66,7 +74,10 @@ const FilterSelect = ({
   label: string;
   options: readonly string[];
 }) => (
-  <FormControl size="small" sx={{ minWidth: 180 }}>
+  <FormControl
+    size="small"
+    sx={{ minWidth: 180, width: { xs: "100%", md: "auto" } }}
+  >
     <InputLabel>{label}</InputLabel>
     <Select
       label={label}
@@ -173,6 +184,8 @@ const columns: {
 
 const TablePage: React.FC = () => {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { matches, loading, error } = useAllMatches();
   const teams = useMemo(() => buildTeamsStats(matches), [matches]);
 
@@ -184,6 +197,14 @@ const TablePage: React.FC = () => {
   const [order, setOrder] = useState<Order>("desc");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [filterDialogOpen, setFilterDialogOpen] = useState(false);
+
+  const medalColor = (pos?: number) => {
+    if (pos === 1) return "#D4AF37";
+    if (pos === 2) return "#C0C0C0";
+    if (pos === 3) return "#CD7F32";
+    return theme.palette.text.primary;
+  };
 
   const uniquePlayers = useMemo(() => {
     const s = new Set<string>();
@@ -248,12 +269,31 @@ const TablePage: React.FC = () => {
     setOrderBy(prop as keyof Team);
   };
 
-  const clearFilters = () => {
+  const handleClearFilters = () => {
     setPlayerFilter(null);
     setMatchesFilter(null);
     setPointsFilter(null);
     setPpmFilter(null);
+    setPage(0);
   };
+
+  const ClearButton = (
+    <Button
+      variant="contained"
+      onClick={handleClearFilters}
+      sx={{
+        backgroundColor: theme.palette.mode === "light" ? "#000" : "#fff",
+        color: theme.palette.mode === "light" ? "#fff" : "#000",
+        "&:hover": {
+          backgroundColor: theme.palette.mode === "light" ? "#000" : "#fff",
+        },
+        width: { xs: "100%", md: "auto" },
+        px: 2,
+      }}
+    >
+      {t("table.button.clear", "Wyczyść")}
+    </Button>
+  );
 
   return (
     <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: 4 }}>
@@ -266,51 +306,101 @@ const TablePage: React.FC = () => {
         className={styles.container}
         sx={{ p: { xs: 2, md: 3 }, mt: 2 }}
       >
-        <Box sx={{ display: "flex", gap: 2, alignItems: "center", mb: 3 }}>
-          <FilterSelect
-            value={playerFilter}
-            onChange={setPlayerFilter}
-            label={t("table.select.player", "Gracz")}
-            options={uniquePlayers}
-          />
-          <FilterSelect
-            value={matchesFilter}
-            onChange={setMatchesFilter}
-            label={t("table.select.matches", "Mecze")}
-            options={MATCH_OPTIONS}
-          />
-          <FilterSelect
-            value={pointsFilter}
-            onChange={setPointsFilter}
-            label={t("table.select.points", "Punkty")}
-            options={POINTS_OPTIONS}
-          />
-          <FilterSelect
-            value={ppmFilter}
-            onChange={setPpmFilter}
-            label={t("table.select.ppm", "Pkt/Mecz")}
-            options={PPM_OPTIONS}
-          />
-          <Button
-            onClick={clearFilters}
-            variant="contained"
-            size="small"
+        {!isMobile && (
+          <Box
             sx={{
-              minWidth: "auto",
-              px: 2,
-              backgroundColor: (theme) =>
-                theme.palette.mode === "light" ? "black" : "white",
-              color: (theme) =>
-                theme.palette.mode === "light" ? "white" : "black",
-              "&:hover": {
-                backgroundColor: (theme) =>
-                  theme.palette.mode === "light" ? "#333333" : "#e0e0e0",
-              },
+              display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              flexWrap: "wrap",
+              gap: 2,
+              alignItems: "center",
+              mb: 3,
             }}
           >
-            {t("table.clear", "Wyczyść")}
-          </Button>
-        </Box>
+            <FilterSelect
+              value={playerFilter}
+              onChange={setPlayerFilter}
+              label={t("table.select.player", "Gracz")}
+              options={uniquePlayers}
+            />
+            <FilterSelect
+              value={matchesFilter}
+              onChange={setMatchesFilter}
+              label={t("table.select.matches", "Mecze")}
+              options={MATCH_OPTIONS}
+            />
+            <FilterSelect
+              value={pointsFilter}
+              onChange={setPointsFilter}
+              label={t("table.select.points", "Punkty")}
+              options={POINTS_OPTIONS}
+            />
+            <FilterSelect
+              value={ppmFilter}
+              onChange={setPpmFilter}
+              label={t("table.select.ppm", "Pkt/Mecz")}
+              options={PPM_OPTIONS}
+            />
+            {ClearButton}
+          </Box>
+        )}
+
+        {isMobile && (
+          <>
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={() => setFilterDialogOpen(true)}
+              sx={{ mb: 2 }}
+            >
+              {t("table.button.filter", "Filtruj")}
+            </Button>
+            <Dialog
+              open={filterDialogOpen}
+              onClose={() => setFilterDialogOpen(false)}
+              fullWidth
+            >
+              <DialogTitle>
+                {t("table.filterDialog.title", "Filtry")}
+              </DialogTitle>
+              <DialogContent sx={{ pt: 2, pb: 1 }}>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <FilterSelect
+                    value={playerFilter}
+                    onChange={setPlayerFilter}
+                    label={t("table.select.player", "Gracz")}
+                    options={uniquePlayers}
+                  />
+                  <FilterSelect
+                    value={matchesFilter}
+                    onChange={setMatchesFilter}
+                    label={t("table.select.matches", "Mecze")}
+                    options={MATCH_OPTIONS}
+                  />
+                  <FilterSelect
+                    value={pointsFilter}
+                    onChange={setPointsFilter}
+                    label={t("table.select.points", "Punkty")}
+                    options={POINTS_OPTIONS}
+                  />
+                  <FilterSelect
+                    value={ppmFilter}
+                    onChange={setPpmFilter}
+                    label={t("table.select.ppm", "Pkt/Mecz")}
+                    options={PPM_OPTIONS}
+                  />
+                  {ClearButton}
+                </Box>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => setFilterDialogOpen(false)}>
+                  {t("table.filterDialog.close", "Zamknij")}
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </>
+        )}
+
         {loading && (
           <TableContainer
             component={Paper}
@@ -344,12 +434,14 @@ const TablePage: React.FC = () => {
             </Table>
           </TableContainer>
         )}
+
         {error && (
           <Typography color="error" align="center" sx={{ my: 4 }}>
             Błąd: {error.message}
           </Typography>
         )}
-        {!loading && !error && (
+
+        {!loading && !error && !isMobile && (
           <TableContainer
             component={Paper}
             elevation={0}
@@ -383,7 +475,11 @@ const TablePage: React.FC = () => {
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.25 }}
                   >
-                    <TableCell>{team.position}</TableCell>
+                    <TableCell
+                      sx={{ fontWeight: 700, color: medalColor(team.position) }}
+                    >
+                      {team.position}
+                    </TableCell>
                     <TableCell
                       sx={{ fontSize: { xs: "0.95rem", md: "1.05rem" } }}
                     >
@@ -414,6 +510,90 @@ const TablePage: React.FC = () => {
               labelRowsPerPage={t("table.rowsPerPage", "Wierszy na stronę:")}
             />
           </TableContainer>
+        )}
+
+        {!loading && !error && isMobile && (
+          <>
+            {paginated.map((team) => (
+              <motion.div
+                key={`${team.players}-${team.position}`}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.25 }}
+              >
+                <Card sx={{ mb: 2, position: "relative" }}>
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: 8,
+                      right: 8,
+                      px: 1.5,
+                      py: 0.25,
+                      borderRadius: 1,
+                      backgroundColor: medalColor(team.position),
+                      color: theme.palette.getContrastText(
+                        medalColor(team.position)
+                      ),
+                      fontWeight: 600,
+                    }}
+                  >
+                    {team.position}
+                  </Box>
+                  <CardContent>
+                    <Typography
+                      variant="h6"
+                      sx={{ fontWeight: 700, mb: 1, fontSize: "1.4rem" }}
+                    >
+                      {team.players}
+                    </Typography>
+                    <Typography variant="body2" sx={{ mb: 0.5 }}>
+                      Mecze:{" "}
+                      <Box component="span" sx={{ fontWeight: 600 }}>
+                        {team.matches}
+                      </Box>
+                    </Typography>
+                    <Typography variant="body2" sx={{ mb: 0.5 }}>
+                      Wygrane:{" "}
+                      <Box component="span" sx={{ fontWeight: 600 }}>
+                        {team.wins}
+                      </Box>
+                    </Typography>
+                    <Typography variant="body2" sx={{ mb: 0.5 }}>
+                      Porażki:{" "}
+                      <Box component="span" sx={{ fontWeight: 600 }}>
+                        {team.looses}
+                      </Box>
+                    </Typography>
+                    <Typography variant="body2" sx={{ mb: 0.5 }}>
+                      Remisy:{" "}
+                      <Box component="span" sx={{ fontWeight: 600 }}>
+                        {team.draws}
+                      </Box>
+                    </Typography>
+                    <Typography variant="body2">
+                      Pkt/Mecz:{" "}
+                      <Box component="span" sx={{ fontWeight: 600 }}>
+                        {team.pointsPerMatch.toFixed(2)}
+                      </Box>
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+            <TablePagination
+              component="div"
+              count={processed.length}
+              page={page}
+              onPageChange={(_, p) => setPage(p)}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={(e) => {
+                setRowsPerPage(parseInt(e.target.value, 10));
+                setPage(0);
+              }}
+              labelRowsPerPage={t("table.rowsPerPage", "Wierszy na stronę:")}
+            />
+          </>
         )}
       </Paper>
     </Box>

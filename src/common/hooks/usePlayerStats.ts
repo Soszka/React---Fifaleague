@@ -51,6 +51,7 @@ export const usePlayerStats = (player: string, dbPath: string = "/") => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("[HOOK] Pobieram dane z Firebase...");
     const q = query(ref(rtdb, dbPath), orderByChild("date"));
 
     const handleSnap = (snap: DataSnapshot) => {

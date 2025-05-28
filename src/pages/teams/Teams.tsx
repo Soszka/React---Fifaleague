@@ -12,6 +12,7 @@ import {
   Skeleton,
   Typography,
   useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
@@ -36,6 +37,18 @@ interface TeamAccordionData {
   trophy?: string;
 }
 
+const parseScore = (score: string): [number, number] => {
+  const parts = score.split(/[-:]/).map((n) => n.trim());
+  return [parseInt(parts[0], 10) || 0, parseInt(parts[1], 10) || 0];
+};
+
+const formatNames = (players: string) =>
+  players
+    .split(" & ")
+    .map((p) => p.trim())
+    .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+    .join(" & ");
+
 const buildTeamsData = (matches: MatchUi[]): TeamAccordionData[] => {
   const map = new Map<string, TeamAccordionData>();
   const get = (team: string) => {
@@ -58,14 +71,14 @@ const buildTeamsData = (matches: MatchUi[]): TeamAccordionData[] => {
   const norm = (team: string) =>
     team
       .split("&")
-      .map((p) => p.trim())
+      .map((p) => p.trim().toLowerCase())
       .sort((a, b) => a.localeCompare(b))
       .join(" & ");
 
   matches.forEach((m) => {
     const t1 = norm(m.team1);
     const t2 = norm(m.team2);
-    const [g1, g2] = m.score.split(":").map((n) => parseInt(n, 10));
+    const [g1, g2] = parseScore(m.score);
     const A = get(t1);
     const B = get(t2);
     A.matches += 1;
@@ -98,7 +111,10 @@ const buildTeamsData = (matches: MatchUi[]): TeamAccordionData[] => {
   });
 
   const arr = Array.from(map.values()).sort(
-    (a, b) => b.winPercentage - a.winPercentage
+    (a, b) =>
+      b.points - a.points ||
+      b.goalsDiff - a.goalsDiff ||
+      b.goalsFor - a.goalsFor
   );
   arr.forEach((t, i) => {
     if (i === 0) t.trophy = "🥇";
@@ -117,11 +133,13 @@ const TeamDetails: React.FC<DetailsProps> = ({ team, matches }) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
+  const isBelow1400 = useMediaQuery("(max-width:1399px)");
+  const isXsScreen = useMediaQuery(theme.breakpoints.only("xs"));
 
   const normalize = (s: string) =>
     s
       .split("&")
-      .map((p) => p.trim())
+      .map((p) => p.trim().toLowerCase())
       .sort()
       .join(" & ");
 
@@ -172,21 +190,12 @@ const TeamDetails: React.FC<DetailsProps> = ({ team, matches }) => {
           ]}
           options={{
             theme: { mode: theme.palette.mode },
-            chart: {
-              toolbar: { show: false },
-              parentHeightOffset: 0,
-            },
+            chart: { toolbar: { show: false }, parentHeightOffset: 0 },
             colors: chartColors,
             plotOptions: {
-              bar: {
-                horizontal: false,
-                columnWidth: "50%",
-                distributed: true,
-              },
+              bar: { horizontal: false, columnWidth: "50%", distributed: true },
             },
-            grid: {
-              padding: { left: 16, right: 0, top: 0, bottom: 0 },
-            },
+            grid: { padding: { left: 16, right: 0, top: 0, bottom: 0 } },
             xaxis: {
               categories: [
                 t("teams.legend.wins"),
@@ -231,7 +240,7 @@ const TeamDetails: React.FC<DetailsProps> = ({ team, matches }) => {
 
       <Card elevation={3} sx={{ flex: 1 }}>
         <CardContent>
-          <Box sx={{ width: { xs: "100%" }, mx: "auto" }}>
+          <Box sx={{ width: "100%", mx: "auto" }}>
             <Typography variant="subtitle2" gutterBottom>
               {t("teams.history.lastMatches")}
             </Typography>
@@ -250,20 +259,22 @@ const TeamDetails: React.FC<DetailsProps> = ({ team, matches }) => {
               }}
               sx={{
                 display: "grid",
-                gridTemplateColumns: "1fr 1fr",
+                gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
                 gap: 2,
               }}
             >
-              {teamMatches.slice(0, 8).map((m, idx) => {
-                const [g1, g2] = m.score.split(":").map((n) => parseInt(n, 10));
-                const isWin =
-                  (normalize(m.team1) === team.players && g1 > g2) ||
-                  (normalize(m.team2) === team.players && g2 > g1);
-                const isDraw = g1 === g2;
-                const opponent =
-                  normalize(m.team1) === team.players
-                    ? normalize(m.team2)
-                    : normalize(m.team1);
+              {teamMatches.slice(0, isBelow1400 ? 4 : 8).map((m, idx) => {
+                const [g1, g2] = parseScore(m.score);
+                const normalizedTeam1 = normalize(m.team1);
+                const normalizedTeam2 = normalize(m.team2);
+
+                const isTeam1 = normalizedTeam1 === team.players;
+                const teamScore = isTeam1 ? g1 : g2;
+                const opponentScore = isTeam1 ? g2 : g1;
+                const isWin = teamScore > opponentScore;
+                const isDraw = teamScore === opponentScore;
+
+                const opponent = isTeam1 ? normalizedTeam2 : normalizedTeam1;
 
                 const outcomeBg = isDraw
                   ? isDark
@@ -293,8 +304,9 @@ const TeamDetails: React.FC<DetailsProps> = ({ team, matches }) => {
                       border: `1px solid ${theme.palette.divider}`,
                       borderRadius: 1,
                       display: "flex",
+                      flexDirection: "row",
                       alignItems: "center",
-                      gap: 2,
+                      gap: 1,
                       justifyContent: "space-between",
                     }}
                   >
@@ -306,16 +318,22 @@ const TeamDetails: React.FC<DetailsProps> = ({ team, matches }) => {
                         width: 80,
                         flexShrink: 0,
                         textAlign: "center",
+                        display: { xs: "none", sm: "block" },
                       }}
                     >
                       {dateStr}
                     </Typography>
                     <Typography
                       variant="body2"
-                      noWrap
-                      sx={{ flex: 1, minWidth: 0, textAlign: "left" }}
+                      noWrap={!isXsScreen}
+                      sx={{
+                        flex: 1,
+                        minWidth: 0,
+                        textAlign: "left",
+                        wordBreak: isXsScreen ? "break-word" : "normal",
+                      }}
                     >
-                      {team.players}
+                      {formatNames(team.players)}
                     </Typography>
                     <Chip
                       icon={<SportsSoccerIcon />}
@@ -339,10 +357,15 @@ const TeamDetails: React.FC<DetailsProps> = ({ team, matches }) => {
                     />
                     <Typography
                       variant="body2"
-                      noWrap
-                      sx={{ flex: 1, minWidth: 0, textAlign: "right" }}
+                      noWrap={!isXsScreen}
+                      sx={{
+                        flex: 1,
+                        minWidth: 0,
+                        textAlign: "right",
+                        wordBreak: isXsScreen ? "break-word" : "normal",
+                      }}
                     >
-                      {opponent}
+                      {formatNames(opponent)}
                     </Typography>
                   </Box>
                 );
@@ -380,7 +403,14 @@ const TeamsPage: React.FC = () => {
   const filteredTeams = useMemo(
     () =>
       selectedPlayer
-        ? teams.filter((t) => t.players.includes(selectedPlayer))
+        ? teams.filter((t) =>
+            t.players
+              .split(" & ")
+              .some(
+                (player) =>
+                  player.toLowerCase() === selectedPlayer.toLowerCase()
+              )
+          )
         : teams,
     [teams, selectedPlayer]
   );
@@ -426,7 +456,7 @@ const TeamsPage: React.FC = () => {
           <MenuItem value="">{t("teams.filter.allPlayers")}</MenuItem>
           {playersList.map((p) => (
             <MenuItem key={p} value={p}>
-              {p}
+              {formatNames(p)}
             </MenuItem>
           ))}
         </Select>
@@ -453,20 +483,24 @@ const TeamsPage: React.FC = () => {
               expandIcon={<ExpandMoreIcon />}
               sx={{
                 p: 0,
-                minHeight: 91,
-                "&.Mui-expanded": { minHeight: 91 },
+                minHeight: { xs: "auto", md: 91 },
+                height: { xs: "auto", md: 91 },
+                "&.Mui-expanded": { minHeight: { xs: "auto", md: 91 } },
                 "& .MuiAccordionSummary-content": {
                   m: 0,
                   display: "flex",
-                  alignItems: "center",
+                  alignItems: { xs: "flex-start", md: "center" },
                   width: "100%",
+                  flexDirection: { xs: "column", md: "row" },
                 },
               }}
             >
               <Box
                 sx={{
-                  height: 91,
-                  width: 320,
+                  height: { xs: "auto", md: 91 },
+                  width: { xs: "100%", md: 320 },
+                  minHeight: { xs: "auto", md: 91 },
+                  py: { xs: 1, md: 0 },
                   flexShrink: 0,
                   bgcolor: isDark
                     ? nameBgDark[idx % nameBgDark.length]
@@ -479,7 +513,7 @@ const TeamsPage: React.FC = () => {
                 }}
               >
                 <Typography variant="h5" fontWeight={700} noWrap>
-                  {team.players}
+                  {formatNames(team.players)}
                 </Typography>
                 {team.trophy && (
                   <Typography component="span" sx={{ fontSize: "1.6rem" }}>
@@ -489,10 +523,14 @@ const TeamsPage: React.FC = () => {
               </Box>
               <Box
                 sx={{
-                  display: "flex",
-                  flexWrap: "nowrap",
-                  flex: 1,
-                  gap: { xs: 1, md: 2 },
+                  display: "grid",
+                  gridTemplateColumns: "repeat(4, 1fr)",
+                  flex: { md: 1 },
+                  width: "100%",
+                  gap: 1,
+                  pt: { xs: 1, md: 0 },
+                  px: { xs: 2, sm: 0 },
+                  textAlign: "center",
                 }}
               >
                 {[
@@ -507,24 +545,26 @@ const TeamsPage: React.FC = () => {
                     value: `${team.winPercentage.toFixed(2)}%`,
                   },
                 ].map(({ label, value }) => (
-                  <Box
-                    key={label}
-                    sx={{
-                      flex: "1 0 0",
-                      textAlign: "center",
-                    }}
-                  >
-                    <Typography variant="body2" color="text.secondary">
+                  <Box key={label} sx={{ minWidth: 0 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ fontSize: { xs: "0.7rem", sm: "0.8rem" } }}
+                      color="text.secondary"
+                    >
                       {label}
                     </Typography>
-                    <Typography variant="h6" fontWeight={700}>
+                    <Typography
+                      variant="h6"
+                      sx={{ fontSize: { xs: "0.78rem", sm: "0.95rem" } }}
+                      fontWeight={700}
+                    >
                       {value}
                     </Typography>
                   </Box>
                 ))}
               </Box>
             </AccordionSummary>
-            <AccordionDetails sx={{ pt: 2 }}>
+            <AccordionDetails sx={{ pt: 2, pb: 2, px: { xs: 1, sm: 2 } }}>
               <TeamDetails team={team} matches={matches} />
             </AccordionDetails>
           </MotionAccordion>

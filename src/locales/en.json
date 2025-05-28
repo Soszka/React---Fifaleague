@@ -183,99 +183,132 @@
   },
 
   "matches": {
-    "title": "Mecze",
-    "subtitle": "Lista wszystkich meczów",
+    "title": "2v2 Matches",
+    "subtitle": "Match history analysis",
     "filters": {
-      "allMatches": "Pokaż wszystkie mecze",
-      "team": "Drużyna",
-      "result": "Wynik",
-      "none": "Brak",
-      "from": "Od",
-      "to": "Do",
-      "clear": "Wyczyść filtry"
+      "myMatches": "My Matches",
+      "allMatches": "All Matches",
+      "filter": "Filter",
+      "team": "Team",
+      "result": "Result",
+      "none": "None",
+      "from": "From",
+      "to": "To",
+      "clear": "Clear"
     },
     "actions": {
-      "add": "Dodaj mecz"
+      "add": "Add Match",
+      "edit": "Edit",
+      "delete": "Delete"
     },
-    "messages": {
-      "error": "Błąd podczas ładowania meczów"
-    },
-    "outcome": {
-      "win": "Zwycięstwo",
-      "loss": "Porażka",
-      "draw": "Remis"
+    "card": {
+      "players": "Players",
+      "rival": "Rival",
+      "score": "Score",
+      "date": "Date"
     },
     "table": {
-      "team": "Drużyna",
-      "rival": "Przeciwnik",
-      "result": "Wynik",
-      "date": "Data",
-      "actions": "Akcje"
+      "team": "Team",
+      "rival": "Rival",
+      "result": "Result",
+      "date": "Date",
+      "actions": "Actions"
+    },
+    "outcome": {
+      "win": "Win",
+      "loss": "Loss",
+      "draw": "Draw"
     },
     "pagination": {
-      "rowsPerPage": "Wierszy na stronę"
+      "rowsPerPage": "Rows per page:",
+      "all": "All"
+    },
+    "dialogs": {
+      "editMatch": "Edit Match",
+      "deleteMatch": "Delete Match"
+    },
+    "messages": {
+      "error": "An error occurred"
     }
   },
 
   "stats": {
     "title": "Statistics",
-    "subtitle": "Detailed player statistics",
+    "subtitle": "Detailed analysis of your matches",
     "tabs": {
       "matches": "Matches",
       "wins": "Wins",
+      "losses": "Losses",
       "points": "Points",
-      "ppm": "Points/Match"
-    },
-    "outcome": {
-      "win": "Win",
-      "draw": "Draw",
-      "loss": "Loss"
+      "ppm": "Points per Match"
     },
     "charts": {
+      "matches": "Matches",
       "wins": "Wins",
+      "losses": "Losses",
       "points": "Points",
       "ppm": "PPM"
     },
+    "outcome": {
+      "win": "Win",
+      "loss": "Loss",
+      "draw": "Draw"
+    },
     "cards": {
       "matches": {
-        "title": "Match overview",
-        "recommendation": "Try playing more with {{partner}} to improve results!",
-        "bestPartner": "Most wins with {{partner}} ({{count}})",
-        "bestPoints": "Most points with {{partner}} ({{points}})",
-        "bestPPM": "Highest PPM with {{partner}} ({{ppm}})",
-        "worstPPM": "Lowest PPM with {{partner}} ({{ppm}})",
-        "winPercent": "Win percentage: {{percent}}",
-        "total": "Total matches: {{count}}"
+        "title": "Match Stats",
+        "totalLabel": "Total Matches",
+        "winsLabel": "Wins",
+        "drawsLabel": "Draws",
+        "lossesLabel": "Losses",
+        "winPercent": "Win %",
+        "totalPointsLabel": "Total Points",
+        "ppmLabel": "PPM",
+        "stabilityLabel": "Recent Stability"
       },
       "wins": {
-        "title": "Win breakdown",
-        "recommendation": "Your win rate is {{percent}} — great job!",
-        "bestPartner": "Most wins with {{partner}} ({{count}})",
-        "total": "Total wins: {{count}}",
-        "percent": "Win rate: {{percent}}",
-        "recent": "Wins in last 5 games: {{count}}",
-        "matches": "Matches played: {{count}}",
-        "winPoints": "Points from wins: {{points}}"
+        "title": "Win Stats",
+        "totalLabel": "Total Wins",
+        "winPercentLabel": "Win %",
+        "recentLabel": "Recent Wins",
+        "matchesLabel": "Matches",
+        "drawsLabel": "Draws",
+        "lossesLabel": "Losses",
+        "totalPointsLabel": "Total Points",
+        "ppmLabel": "PPM"
+      },
+      "losses": {
+        "title": "Loss Stats",
+        "totalLabel": "Total Losses",
+        "lossPercentLabel": "Loss %",
+        "recentLabel": "Recent Losses",
+        "matchesLabel": "Matches",
+        "winsLabel": "Wins",
+        "drawsLabel": "Draws",
+        "totalPointsLabel": "Total Points",
+        "ppmLabel": "PPM"
       },
       "points": {
-        "title": "Points summary",
-        "recommendation": "Next goal: {{target}} points!",
-        "bestPartner": "Most points with {{partner}} ({{points}})",
-        "total": "Total points: {{points}}",
-        "avg": "Average points per match: {{avg}}",
-        "bestPPM": "Best PPM with {{partner}} ({{ppm}})",
-        "ppm": "Overall PPM: {{ppm}}",
-        "matches": "Matches played: {{count}}"
+        "title": "Points Stats",
+        "totalPointsLabel": "Total Points",
+        "avgPPMLabel": "Avg. PPM",
+        "matchesLabel": "Matches",
+        "winsLabel": "Wins",
+        "drawsLabel": "Draws",
+        "lossesLabel": "Losses",
+        "winPercentLabel": "Win %",
+        "stabilityLabel": "Recent Stability"
       },
       "ppm": {
-        "title": "Points per match",
-        "recommendation": "Boost consistency to raise your PPM.",
-        "bestPartner": "Highest PPM with {{partner}} ({{ppm}})",
-        "worstPartner": "Lowest PPM with {{partner}} ({{ppm}})",
-        "avg": "Average PPM: {{avg}}",
-        "consistency": "Consistency index: {{value}}",
-        "matches": "Matches counted: {{count}}",
-        "winPercent": "Win percentage: {{percent}}"
+        "title": "PPM Stats",
+        "avgPPMLabel": "Avg. PPM",
+        "stabilityLabel": "Recent Stability",
+        "matchesLabel": "Matches",
+        "winPercentLabel": "Win %",
+        "totalPointsLabel": "Total Points",
+        "winsLabel": "Wins",
+        "drawsLabel": "Draws",
+        "lossesLabel": "Losses"
       }
     }
   }

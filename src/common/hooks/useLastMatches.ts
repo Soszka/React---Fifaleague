@@ -28,6 +28,7 @@ export const useLastMatches = (howMany = 10) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    console.log("[HOOK] Pobieram dane z Firebase...");
     setLoading(true);
     const q = query(ref(rtdb, "/"), orderByChild("date"), limitToLast(howMany));
     const unsub = onValue(q, (snap) => {
