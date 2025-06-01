@@ -75,7 +75,6 @@
   }
 }
 
-/* Przy węższych niż 100rem ekranach nadal 4 kafelki, ale mniejsze ikony i czcionki */
 @container (max-width: 100rem) {
   .highlightCard {
     padding: 1.25rem 1.5rem;
@@ -87,11 +86,10 @@
     font-size: 1rem;
   }
   .iconContainer svg {
-    font-size: 5rem !important;
+    font-size: 4.5rem !important;
   }
 }
 
-/* Jeszcze mniejsze czcionki przy końcowej szerokości (wciąż 4 kafelki) */
 @container (max-width: 80rem) {
   .valueText {
     font-size: 2.4rem;
@@ -99,26 +97,33 @@
   .labelText {
     font-size: 0.9rem;
   }
-  .iconContainer svg {
-    font-size: 4rem !important;
-  }
 }
 
-/* Dwa kafelki na wiersz */
 @container (max-width: 64rem) {
   .highlightCard {
     flex-basis: calc((100% - 2.25rem) / 2);
     max-width: calc((100% - 2.25rem) / 2);
-    height: 15.625rem;
+    height: 11.25rem; // zmniejszona wysokość w trybie dwóch kolumn
   }
 }
 
-/* Jeden kafelek (stacked) */
-@container (max-width: 47.9375rem) {
+@container (max-width: 36rem) {
   .highlightCard {
+    min-height: 12rem;
+  }
+  .valueText {
+    font-size: 1.8rem;
+  }
+  .labelText {
+    font-size: 0.8rem;
+  }
+}
+
+.highlightCard {
+  @container (max-width: 47.9375rem) {
     flex-basis: 100%;
     max-width: 90%;
-    min-height: 13.75rem;
+    min-height: 13.75rem; // można tu też zmniejszyć, jeśli będzie konieczne
     flex-direction: column-reverse;
     text-align: center;
   }
@@ -154,31 +159,28 @@
   line-height: 1.15;
   margin-bottom: 0.25rem;
   display: inline-block;
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-@container (max-width: 60rem) {
-  .valueText {
-    font-size: 2.4rem;
-  }
-  .labelText {
-    font-size: 1rem;
-  }
-}
-
-@container (max-width: 48rem) {
-  .valueText {
-    font-size: 2rem;
-  }
-  .labelText {
-    font-size: 0.9rem;
-  }
 }
 
 .labelText {
   font-size: 1.15rem;
   font-weight: 500;
   opacity: 0.95;
+}
+
+@media (max-width: 1350px) {
+  .highlightCard {
+    justify-content: center;
+    height: 8rem !important;
+  }
+  .iconContainer {
+    display: none !important;
+  }
+  .textContainer {
+    align-items: center !important;
+    padding-right: 0 !important;
+  }
+  .valueText,
+  .labelText {
+    text-align: center !important;
+  }
 }

@@ -79,71 +79,67 @@
       "questions": [
         {
           "question": "Jak mogę dodać nowy mecz do aplikacji?",
-          "answer": "Aby dodać nowy mecz, przejdź do sekcji \"Mecze\" i kliknij przycisk \"Dodaj mecz\". Następnie wybierz swojego partnera, wskaż przeciwników i wprowadź wynik meczu."
+          "answer": "Aby dodać nowy mecz, przejdź do zakładki \"Mecze\" i kliknij przycisk \"Dodaj mecz\". Następnie wybierz obu zawodników swojego zespołu, wskaż przeciwników i wprowadź wynik meczu."
         },
         {
           "question": "Jakie statystyki mogę śledzić w aplikacji?",
-          "answer": "Możesz śledzić swoje statystyki meczowe, takie jak liczba rozegranych meczów, wygranych, przegranych, remisów, a także statystyki drużynowe pokazujące Twoje osiągnięcia w zespołach z różnymi partnerami."
+          "answer": "Możesz przeglądać statystyki indywidualne oraz zespołowe, m.in. liczbę rozegranych meczów, wygranych, przegranych, remisów, punkty oraz średnią punktów na mecz. Wszystkie dane są dostępne w zakładkach \"Gracze\" i \"Zespoły\"."
         },
         {
           "question": "Czy aplikacja tworzy ranking graczy?",
-          "answer": "Tak, aplikacja automatycznie generuje ranking graczy na podstawie wyników meczów. Swój aktualny ranking możesz zobaczyć na podstronie \"Ranking\"."
+          "answer": "Tak, w zakładce \"Gracze\" zobaczysz listę wszystkich zawodników posortowaną według zdobytych punktów. Ranking jest generowany automatycznie na podstawie wyników rozegranych meczów."
         },
         {
           "question": "Czy aplikacja pozwala na śledzenie wyników drużyn?",
-          "answer": "Tak, na podstronie \"Tabela\" znajdziesz zestawienie wszystkich dwuosobowych zespołów wraz z ich statystykami meczowymi (liczbą wygranych, przegranych, remisów i zdobytych punktów)."
+          "answer": "Tak, w zakładce \"Zespoły\" znajdziesz wszystkie dwuosobowe pary graczy wraz z ich statystykami (liczbą zwycięstw, porażek, remisów i zdobytych punktów)."
         },
         {
           "question": "Czy mogę zobaczyć szczegółowe statystyki drużyn, w których gram?",
-          "answer": "Tak, na podstronie \"Zespoły\" możesz sprawdzić statystyki dla każdej drużyny, której jesteś członkiem, oraz prześledzić swoje wyniki z różnymi partnerami."
+          "answer": "Tak, klikając na wybraną drużynę w zakładce \"Zespoły\", przejdziesz do karty zespołu. Zobaczysz tam wykres pokazujący liczbę zwycięstw, remisów i porażek oraz tekstowy komentarz dotyczący wyników, a najlepsze trzy drużyny są wyróżnione medalami."
         },
         {
           "question": "Czy mogę zmienić ustawienia aplikacji?",
-          "answer": "Obecnie aplikacja nie pozwala na zmianę ustawień. Wszystkie wyniki i statystyki są automatycznie aktualizowane na podstawie rozegranych meczów."
+          "answer": "Możesz zmienić język interfejsu oraz motyw (jasny/ciemny). Inne ustawienia nie są dostępne – wszystkie wyniki i statystyki aktualizują się automatycznie na podstawie rozegranych meczów."
         },
         {
           "question": "Czy muszę ręcznie zakładać drużynę przed rozegraniem meczu?",
-          "answer": "Nie, nie musisz tworzyć drużyny ręcznie. Wystarczy, że dodasz mecz, wybierając dwóch graczy do swojego zespołu aplikacja automatycznie utworzy nową drużynę w tabeli, jeśli taki skład jeszcze nie istnieje."
+          "answer": "Nie, nie musisz tworzyć drużyny ręcznie. Wystarczy, że przy dodawaniu meczu wybierzesz dwóch graczy, a aplikacja automatycznie utworzy nową drużynę, jeśli taki skład jeszcze nie istnieje."
         },
         {
           "question": "Czy potrzebuję konta, aby korzystać z aplikacji?",
-          "answer": "Tak, musisz być zalogowany, aby móc używać aplikacji i dodawać mecze. Konto użytkownika jest wymagane przy starcie aplikacji."
+          "answer": "Tak, aby przeglądać statystyki i dodawać mecze, musisz być zalogowany. Rejestracja i logowanie odbywają się za pomocą Firebase Auth."
         },
         {
           "question": "Jak obliczane są punkty w rankingu i tabeli?",
-          "answer": "Za zwycięstwo drużyna otrzymuje 3 punkty, za remis 1 punkt, a za porażkę 0 punktów:contentReference[oaicite:10]{index=10}. Ranking graczy oraz punktacja w tabeli zespołów bazują na sumie punktów zdobytych we wszystkich meczach:contentReference[oaicite:11]{index=11}."
+          "answer": "Za zwycięstwo drużyna otrzymuje 3 punkty, za remis 1 punkt, a za porażkę 0 punktów. Ranking graczy oraz tabela drużyn bazują na sumie punktów zdobytych we wszystkich rozegranych meczach."
         },
         {
           "question": "Czym różni się ranking graczy od tabeli drużyn?",
-          "answer": "Ranking graczy dotyczy indywidualnych zawodników i pokazuje łączny dorobek każdego z nich. Tabela drużyn skupia się na dwuosobowych zespołach – każda unikalna para graczy traktowana jest jako oddzielna drużyna. Możesz figurować w wielu drużynach jednocześnie (grając z różnymi partnerami) i wszystkie one pojawią się w tabeli."
+          "answer": "Ranking graczy pokazuje łączny dorobek punktowy każdego zawodnika indywidualnie. Tabela drużyn skupia się na dwuosobowych parach – każda unikalna para traktowana jest jako odrębna drużyna. Możesz figurować w wielu drużynach jednocześnie, jeśli grasz z różnymi partnerami."
         },
         {
           "question": "Czy mogę filtrować lub wyszukiwać mecze na liście?",
-          "answer": "Tak, lista meczów posiada funkcje filtrowania. Możesz wyświetlić tylko swoje mecze lub wszystkie, a także zawęzić listę po nazwie przeciwnika, wyniku (wygrana, remis, porażka) oraz zakresie dat:contentReference[oaicite:12]{index=12}:contentReference[oaicite:13]{index=13}."
-        },
-        {
-          "question": "Czy mogę usunąć lub edytować dodany mecz?",
-          "answer": "Obecnie nie ma możliwości edycji ani usunięcia raz dodanego meczu poprzez interfejs aplikacji. Jeśli popełnisz błąd przy wprowadzaniu wyniku, najlepiej dodaj mecz jeszcze raz z poprawnymi danymi. Błędny wpis możesz ewentualnie zgłosić administratorowi do usunięcia."
+          "answer": "Tak, lista meczów posiada funkcję filtrowania. Możesz wyświetlić tylko swoje mecze lub wszystkie, a także wyszukiwać po nazwie gracza, wyniku (zwycięstwo, remis, porażka) oraz ograniczyć listę do wybranego zakresu dat."
         },
         {
           "question": "Czy aplikacja dostępna jest w języku angielskim?",
-          "answer": "Tak, aplikacja dostępna jest zarówno po polsku, jak i po angielsku. Możesz przełączyć język interfejsu w dowolnym momencie – kliknij ikonę języka (globus) w menu i wybierz preferowany język:contentReference[oaicite:14]{index=14}:contentReference[oaicite:15]{index=15}."
+          "answer": "Tak, aplikacja jest w pełni dwujęzyczna (polski i angielski). Aby zmienić język, kliknij ikonę globusa w pasku menu i wybierz preferowany język."
         },
         {
           "question": "Czy mogę zmienić motyw aplikacji na ciemny lub jasny?",
-          "answer": "Tak, aplikacja obsługuje tryb jasny i ciemny. Przełącznik motywu znajdziesz w menu (ikona słońce/księżyc) – kliknięcie spowoduje zmianę kolorystyki interfejsu na wybrany motyw:contentReference[oaicite:16]{index=16}."
+          "answer": "Tak, aplikacja obsługuje tryb jasny i ciemny. Przełącznik motywu znajdziesz w pasku menu (ikona słońce/księżyc). Kliknij, aby zmienić kolorystykę interfejsu."
         },
         {
           "question": "Jak się wylogować z aplikacji?",
-          "answer": "Aby się wylogować, kliknij ikonę profilu w prawym górnym rogu i wybierz \"Wyloguj się\". Aplikacja powróci do ekranu logowania."
+          "answer": "Aby się wylogować, kliknij ikonę profilu w prawym górnym rogu i wybierz \"Wyloguj się\". Zostaniesz przekierowany z powrotem do ekranu logowania."
         },
         {
           "question": "Czy mogę korzystać z aplikacji na telefonie?",
-          "answer": "Tak, aplikacja jest w pełni responsywna i działa w przeglądarce na urządzeniach mobilnych. Możesz z niej korzystać na telefonie lub tablecie tak samo jak na komputerze."
+          "answer": "Tak, aplikacja jest w pełni responsywna i działa w przeglądarce na urządzeniach mobilnych. Używaj jej na telefonie lub tablecie tak samo jak na komputerze."
         },
         {
           "question": "Czy aplikacja obsługuje mecze 1 na 1, czy tylko 2 na 2?",
-          "answer": "Aplikacja została zaprojektowana z myślą o meczach 2x2, więc nie wspiera bezpośrednio pojedynczych meczów jeden na jeden. Wszystkie statystyki i rankingi dotyczą rywalizacji w dwuosobowych drużynach."
+          "answer": "Aplikacja została zaprojektowana wyłącznie do analizowania meczów 2x2. Nie obsługuje pojedynczych meczów 1 na 1 – wszystkie statystyki i rankingi odnoszą się do dwuosobowych drużyn."
         }
       ]
     }
@@ -264,10 +260,24 @@
       "all": "Wszystkie"
     },
     "dialogs": {
+      "addMatch": "Dodaj mecz",
       "editMatch": "Edytuj mecz",
-      "deleteMatch": "Usuń mecz"
+      "deleteMatch": "Usuń mecz",
+      "deleteConfirm": "Usuń mecz {{team1}} vs {{team2}} ({{date}})?"
+    },
+    "form": {
+      "player1": "Zawodnik 1",
+      "player2": "Zawodnik 2",
+      "rival1": "Rywal 1",
+      "rival2": "Rywal 2",
+      "date": "Data",
+      "scoreHome": "Wynik drużyny 1",
+      "scoreAway": "Wynik drużyny 2"
     },
     "messages": {
+      "addSuccess": "Dodano mecz",
+      "updateSuccess": "Pomyślnie zaktualizowano mecz",
+      "deleteSuccess": "Usunięto mecz",
       "error": "Wystąpił błąd"
     }
   },
@@ -350,5 +360,9 @@
         "lossesLabel": "Porażki"
       }
     }
+  },
+  "common": {
+    "cancel": "Anuluj",
+    "save": "Zapisz"
   }
 }

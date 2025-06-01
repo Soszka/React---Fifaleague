@@ -197,7 +197,7 @@ const columns: {
 const RankingPage: React.FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { matches, loading, error } = useAllMatches();
 
   const players = useMemo(() => buildPlayersStats(matches), [matches]);
@@ -313,7 +313,6 @@ const RankingPage: React.FC = () => {
         className={styles.container}
         sx={{ p: { xs: 2, md: 3 }, mt: 2 }}
       >
-        {/* Desktop filters */}
         {!isMobile && (
           <Box
             sx={{
@@ -353,7 +352,6 @@ const RankingPage: React.FC = () => {
           </Box>
         )}
 
-        {/* Mobile filter button & dialog */}
         {isMobile && (
           <>
             <Button

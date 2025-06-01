@@ -3,13 +3,13 @@ import {
   Box,
   Card,
   CardContent,
-  Grow,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   MenuItem,
   Select,
+  Skeleton,
   Tab,
   Tabs,
   Typography,
@@ -43,10 +43,53 @@ const TabPanel = ({
 const pointsForOutcome = (o: Outcome) =>
   o === "win" ? 3 : o === "draw" ? 1 : 0;
 
+const ChartSkeleton: React.FC = () => (
+  <Card sx={{ flex: 1, p: 2 }}>
+    <Skeleton variant="rectangular" width="100%" height={360} />
+  </Card>
+);
+
+const InfoSkeleton: React.FC = () => (
+  <Card sx={{ flex: 1 }}>
+    <CardContent>
+      <Skeleton
+        variant="text"
+        sx={{ width: { xs: "70%", md: "40%" }, height: 40, mb: 2 }}
+      />
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+          gap: 1,
+        }}
+      >
+        {Array.from({ length: 8 }).map((_, i) => (
+          <Skeleton key={i} variant="text" sx={{ height: 50 }} />
+        ))}
+      </Box>
+    </CardContent>
+  </Card>
+);
+
 const StatsPage: React.FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
   const { matches } = useAllMatches();
+  const loadingData = matches.length === 0;
+
+  const [canRenderCharts, setCanRenderCharts] = useState(false);
+
+  useEffect(() => {
+    if (!loadingData) {
+      const timer = setTimeout(() => {
+        setCanRenderCharts(true);
+      }, 100);
+      return () => clearTimeout(timer);
+    } else {
+      setCanRenderCharts(false);
+    }
+  }, [loadingData]);
+
   const textColor =
     theme.palette.mode === "dark"
       ? theme.palette.grey[100]
@@ -220,53 +263,72 @@ const StatsPage: React.FC = () => {
     },
   });
 
-  const matchesBar = {
-    series: [
-      {
-        name: t("stats.charts.matches") as string,
-        data: [outcomeCounts.win, outcomeCounts.loss, outcomeCounts.draw],
+  const matchesBar = useMemo(
+    () => ({
+      series: [
+        {
+          name: t("stats.charts.matches") as string,
+          data: [outcomeCounts.win, outcomeCounts.loss, outcomeCounts.draw],
+        },
+      ],
+      opts: {
+        theme: { mode: theme.palette.mode },
+        chart: { toolbar: { show: false }, parentHeightOffset: 0 },
+        plotOptions: { bar: { horizontal: true, distributed: true } },
+        xaxis: {
+          categories: [
+            t("stats.outcome.win") as string,
+            t("stats.outcome.loss") as string,
+            t("stats.outcome.draw") as string,
+          ],
+        },
+        colors: chartColors,
       },
-    ],
-    opts: {
-      theme: { mode: theme.palette.mode },
-      chart: { toolbar: { show: false }, parentHeightOffset: 0 },
-      plotOptions: { bar: { horizontal: true, distributed: true } },
-      xaxis: {
-        categories: [
-          t("stats.outcome.win") as string,
-          t("stats.outcome.loss") as string,
-          t("stats.outcome.draw") as string,
-        ],
-      },
-      colors: chartColors,
-    },
-  };
-
-  const winsBar = barConfig(
-    partnerStats.listWins.map((i) => ({ name: i.name, value: i.wins })),
-    successColor,
-    t("stats.charts.wins") as string
+    }),
+    [t, theme.palette.mode, outcomeCounts, chartColors]
   );
 
-  const lossesBar = barConfig(
-    partnerStats.listLosses.map((i) => ({ name: i.name, value: i.losses })),
-    errorColor,
-    t("stats.charts.losses") as string
+  const winsBar = useMemo(
+    () =>
+      barConfig(
+        partnerStats.listWins.map((i) => ({ name: i.name, value: i.wins })),
+        successColor,
+        t("stats.charts.wins") as string
+      ),
+    [partnerStats.listWins, successColor, t, theme.palette.mode]
   );
 
-  const pointsBar = barConfig(
-    partnerStats.listPoints.map((i) => ({ name: i.name, value: i.points })),
-    pointsColor,
-    t("stats.charts.points") as string
+  const lossesBar = useMemo(
+    () =>
+      barConfig(
+        partnerStats.listLosses.map((i) => ({ name: i.name, value: i.losses })),
+        errorColor,
+        t("stats.charts.losses") as string
+      ),
+    [partnerStats.listLosses, errorColor, t, theme.palette.mode]
   );
 
-  const ppmBar = barConfig(
-    partnerStats.listPPM.map((i) => ({
-      name: i.name,
-      value: parseFloat(i.ppm.toFixed(2)),
-    })),
-    warningColor,
-    t("stats.charts.ppm") as string
+  const pointsBar = useMemo(
+    () =>
+      barConfig(
+        partnerStats.listPoints.map((i) => ({ name: i.name, value: i.points })),
+        pointsColor,
+        t("stats.charts.points") as string
+      ),
+    [partnerStats.listPoints, pointsColor, t, theme.palette.mode]
+  );
+
+  const ppmBar = useMemo(
+    () =>
+      barConfig(
+        partnerStats.listPPM.map((i) => ({
+          name: i.name,
+          value: parseFloat(i.ppm.toFixed(2)),
+        })),
+        warningColor,
+        t("stats.charts.ppm") as string
+      ),
+    [partnerStats.listPPM, warningColor, t, theme.palette.mode]
   );
 
   const bulletIndexRef = useRef(0);
@@ -300,7 +362,11 @@ const StatsPage: React.FC = () => {
   };
 
   const ChartCard = ({ children }: { children: React.ReactNode }) => (
-    <Card sx={{ flex: 1, p: 2 }}>{children}</Card>
+    <Card
+      sx={{ flex: 1, p: 2, minHeight: `calc(360px + ${theme.spacing(4)})` }}
+    >
+      {children}
+    </Card>
   );
 
   const InfoCard = ({
@@ -310,18 +376,28 @@ const StatsPage: React.FC = () => {
     title: string;
     children: React.ReactNode;
   }) => (
-    <Grow in timeout={500}>
-      <Card sx={{ flex: 1 }}>
-        <CardContent>
-          <Typography variant="h4" fontWeight={700} gutterBottom>
-            {title}
-          </Typography>
-          <List sx={{ columnCount: { xs: 1, sm: 2 }, columnGap: 2 }}>
-            {children}
-          </List>
-        </CardContent>
-      </Card>
-    </Grow>
+    <Card sx={{ flex: 1 }}>
+      <CardContent>
+        <Typography variant="h4" fontWeight={700} gutterBottom>
+          {title}
+        </Typography>
+        <List sx={{ columnCount: { xs: 1, sm: 2 }, columnGap: 2 }}>
+          {children}
+        </List>
+      </CardContent>
+    </Card>
+  );
+
+  const layoutProps = {
+    display: "flex",
+    flexDirection: { xs: "column", lg: "row" },
+    gap: 2,
+  } as const;
+
+  const showSkeleton = loadingData;
+
+  const chartPlaceholder = (
+    <Skeleton variant="rectangular" width="100%" height={360} />
   );
 
   return (
@@ -348,7 +424,10 @@ const StatsPage: React.FC = () => {
 
       <Tabs
         value={tab}
-        onChange={(_, v) => setTab(v)}
+        onChange={(_, v) => {
+          bulletIndexRef.current = 0;
+          setTab(v);
+        }}
         variant="scrollable"
         scrollButtons="auto"
         sx={{ mt: 3 }}
@@ -360,323 +439,353 @@ const StatsPage: React.FC = () => {
         <Tab label={t("stats.tabs.ppm")} />
       </Tabs>
 
-      {/* Matches */}
       <TabPanel value={tab} index={0}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            gap: 2,
-          }}
-        >
-          <ChartCard>
-            <ReactApexChart
-              type="bar"
-              width="100%"
-              height={360}
-              series={matchesBar.series}
-              options={matchesBar.opts as any}
-            />
-          </ChartCard>
-
-          <InfoCard title={t("stats.cards.matches.title") as string}>
-            {bullet(
-              <SportsSoccerIcon />,
-              t("stats.cards.matches.totalLabel"),
-              totalMatches
-            )}
-            {bullet(
-              <EmojiEventsIcon />,
-              t("stats.cards.matches.winsLabel"),
-              outcomeCounts.win
-            )}
-            {bullet(
-              <RemoveCircleOutlineIcon />,
-              t("stats.cards.matches.drawsLabel"),
-              outcomeCounts.draw
-            )}
-            {bullet(
-              <CancelIcon />,
-              t("stats.cards.matches.lossesLabel"),
-              outcomeCounts.loss
-            )}
-            {bullet(
-              <PercentIcon />,
-              t("stats.cards.matches.winPercent"),
-              `${winPct.toFixed(1)}%`
-            )}
-            {bullet(
-              <TrendingUpIcon />,
-              t("stats.cards.matches.totalPointsLabel"),
-              totalPoints
-            )}
-            {bullet(
-              <PercentIcon />,
-              t("stats.cards.matches.ppmLabel"),
-              overallPPM.toFixed(2)
-            )}
-            {bullet(
-              <QueryStatsIcon />,
-              t("stats.cards.matches.stabilityLabel"),
-              stability
-            )}
-          </InfoCard>
+        <Box sx={layoutProps}>
+          {showSkeleton ? (
+            <>
+              <ChartSkeleton />
+              <InfoSkeleton />
+            </>
+          ) : (
+            <>
+              <ChartCard>
+                {canRenderCharts ? (
+                  <ReactApexChart
+                    key={user}
+                    type="bar"
+                    width="100%"
+                    height={360}
+                    series={matchesBar.series}
+                    options={matchesBar.opts as any}
+                  />
+                ) : (
+                  chartPlaceholder
+                )}
+              </ChartCard>
+              <InfoCard title={t("stats.cards.matches.title") as string}>
+                {bullet(
+                  <SportsSoccerIcon />,
+                  t("stats.cards.matches.totalLabel"),
+                  totalMatches
+                )}
+                {bullet(
+                  <EmojiEventsIcon />,
+                  t("stats.cards.matches.winsLabel"),
+                  outcomeCounts.win
+                )}
+                {bullet(
+                  <RemoveCircleOutlineIcon />,
+                  t("stats.cards.matches.drawsLabel"),
+                  outcomeCounts.draw
+                )}
+                {bullet(
+                  <CancelIcon />,
+                  t("stats.cards.matches.lossesLabel"),
+                  outcomeCounts.loss
+                )}
+                {bullet(
+                  <PercentIcon />,
+                  t("stats.cards.matches.winPercent"),
+                  `${winPct.toFixed(1)}%`
+                )}
+                {bullet(
+                  <TrendingUpIcon />,
+                  t("stats.cards.matches.totalPointsLabel"),
+                  totalPoints
+                )}
+                {bullet(
+                  <PercentIcon />,
+                  t("stats.cards.matches.ppmLabel"),
+                  overallPPM.toFixed(2)
+                )}
+                {bullet(
+                  <QueryStatsIcon />,
+                  t("stats.cards.matches.stabilityLabel"),
+                  stability
+                )}
+              </InfoCard>
+            </>
+          )}
         </Box>
       </TabPanel>
 
-      {/* Wins */}
       <TabPanel value={tab} index={1}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            gap: 2,
-          }}
-        >
-          <ChartCard>
-            <ReactApexChart
-              type="bar"
-              width="100%"
-              height={360}
-              series={winsBar.series}
-              options={winsBar.opts as any}
-            />
-          </ChartCard>
-
-          <InfoCard title={t("stats.cards.wins.title") as string}>
-            {bullet(
-              <EmojiEventsIcon />,
-              t("stats.cards.wins.totalLabel"),
-              outcomeCounts.win
-            )}
-            {bullet(
-              <PercentIcon />,
-              t("stats.cards.wins.winPercentLabel"),
-              `${winPct.toFixed(1)}%`
-            )}
-            {bullet(
-              <TrendingUpIcon />,
-              t("stats.cards.wins.recentLabel"),
-              recentWins
-            )}
-            {bullet(
-              <QueryStatsIcon />,
-              t("stats.cards.wins.matchesLabel"),
-              totalMatches
-            )}
-            {bullet(
-              <RemoveCircleOutlineIcon />,
-              t("stats.cards.wins.drawsLabel"),
-              outcomeCounts.draw
-            )}
-            {bullet(
-              <CancelIcon />,
-              t("stats.cards.wins.lossesLabel"),
-              outcomeCounts.loss
-            )}
-            {bullet(
-              <TrendingUpIcon />,
-              t("stats.cards.wins.totalPointsLabel"),
-              totalPoints
-            )}
-            {bullet(
-              <PercentIcon />,
-              t("stats.cards.wins.ppmLabel"),
-              overallPPM.toFixed(2)
-            )}
-          </InfoCard>
+        <Box sx={layoutProps}>
+          {showSkeleton ? (
+            <>
+              <ChartSkeleton />
+              <InfoSkeleton />
+            </>
+          ) : (
+            <>
+              <ChartCard>
+                {canRenderCharts ? (
+                  <ReactApexChart
+                    key={user}
+                    type="bar"
+                    width="100%"
+                    height={360}
+                    series={winsBar.series}
+                    options={winsBar.opts as any}
+                  />
+                ) : (
+                  chartPlaceholder
+                )}
+              </ChartCard>
+              <InfoCard title={t("stats.cards.wins.title") as string}>
+                {bullet(
+                  <EmojiEventsIcon />,
+                  t("stats.cards.wins.totalLabel"),
+                  outcomeCounts.win
+                )}
+                {bullet(
+                  <PercentIcon />,
+                  t("stats.cards.wins.winPercentLabel"),
+                  `${winPct.toFixed(1)}%`
+                )}
+                {bullet(
+                  <TrendingUpIcon />,
+                  t("stats.cards.wins.recentLabel"),
+                  recentWins
+                )}
+                {bullet(
+                  <QueryStatsIcon />,
+                  t("stats.cards.wins.matchesLabel"),
+                  totalMatches
+                )}
+                {bullet(
+                  <RemoveCircleOutlineIcon />,
+                  t("stats.cards.wins.drawsLabel"),
+                  outcomeCounts.draw
+                )}
+                {bullet(
+                  <CancelIcon />,
+                  t("stats.cards.wins.lossesLabel"),
+                  outcomeCounts.loss
+                )}
+                {bullet(
+                  <TrendingUpIcon />,
+                  t("stats.cards.wins.totalPointsLabel"),
+                  totalPoints
+                )}
+                {bullet(
+                  <PercentIcon />,
+                  t("stats.cards.wins.ppmLabel"),
+                  overallPPM.toFixed(2)
+                )}
+              </InfoCard>
+            </>
+          )}
         </Box>
       </TabPanel>
 
-      {/* Losses */}
       <TabPanel value={tab} index={2}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            gap: 2,
-          }}
-        >
-          <ChartCard>
-            <ReactApexChart
-              type="bar"
-              width="100%"
-              height={360}
-              series={lossesBar.series}
-              options={lossesBar.opts as any}
-            />
-          </ChartCard>
-
-          <InfoCard title={t("stats.cards.losses.title") as string}>
-            {bullet(
-              <CancelIcon />,
-              t("stats.cards.losses.totalLabel"),
-              outcomeCounts.loss
-            )}
-            {bullet(
-              <PercentIcon />,
-              t("stats.cards.losses.lossPercentLabel"),
-              `${lossPct.toFixed(1)}%`
-            )}
-            {bullet(
-              <TrendingUpIcon />,
-              t("stats.cards.losses.recentLabel"),
-              recentLosses
-            )}
-            {bullet(
-              <QueryStatsIcon />,
-              t("stats.cards.losses.matchesLabel"),
-              totalMatches
-            )}
-            {bullet(
-              <EmojiEventsIcon />,
-              t("stats.cards.losses.winsLabel"),
-              outcomeCounts.win
-            )}
-            {bullet(
-              <RemoveCircleOutlineIcon />,
-              t("stats.cards.losses.drawsLabel"),
-              outcomeCounts.draw
-            )}
-            {bullet(
-              <TrendingUpIcon />,
-              t("stats.cards.losses.totalPointsLabel"),
-              totalPoints
-            )}
-            {bullet(
-              <PercentIcon />,
-              t("stats.cards.losses.ppmLabel"),
-              overallPPM.toFixed(2)
-            )}
-          </InfoCard>
+        <Box sx={layoutProps}>
+          {showSkeleton ? (
+            <>
+              <ChartSkeleton />
+              <InfoSkeleton />
+            </>
+          ) : (
+            <>
+              <ChartCard>
+                {canRenderCharts ? (
+                  <ReactApexChart
+                    key={user}
+                    type="bar"
+                    width="100%"
+                    height={360}
+                    series={lossesBar.series}
+                    options={lossesBar.opts as any}
+                  />
+                ) : (
+                  chartPlaceholder
+                )}
+              </ChartCard>
+              <InfoCard title={t("stats.cards.losses.title") as string}>
+                {bullet(
+                  <CancelIcon />,
+                  t("stats.cards.losses.totalLabel"),
+                  outcomeCounts.loss
+                )}
+                {bullet(
+                  <PercentIcon />,
+                  t("stats.cards.losses.lossPercentLabel"),
+                  `${lossPct.toFixed(1)}%`
+                )}
+                {bullet(
+                  <TrendingUpIcon />,
+                  t("stats.cards.losses.recentLabel"),
+                  recentLosses
+                )}
+                {bullet(
+                  <QueryStatsIcon />,
+                  t("stats.cards.losses.matchesLabel"),
+                  totalMatches
+                )}
+                {bullet(
+                  <EmojiEventsIcon />,
+                  t("stats.cards.losses.winsLabel"),
+                  outcomeCounts.win
+                )}
+                {bullet(
+                  <RemoveCircleOutlineIcon />,
+                  t("stats.cards.losses.drawsLabel"),
+                  outcomeCounts.draw
+                )}
+                {bullet(
+                  <TrendingUpIcon />,
+                  t("stats.cards.losses.totalPointsLabel"),
+                  totalPoints
+                )}
+                {bullet(
+                  <PercentIcon />,
+                  t("stats.cards.losses.ppmLabel"),
+                  overallPPM.toFixed(2)
+                )}
+              </InfoCard>
+            </>
+          )}
         </Box>
       </TabPanel>
 
-      {/* Points */}
       <TabPanel value={tab} index={3}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            gap: 2,
-          }}
-        >
-          <ChartCard>
-            <ReactApexChart
-              type="bar"
-              width="100%"
-              height={360}
-              series={pointsBar.series}
-              options={pointsBar.opts as any}
-            />
-          </ChartCard>
-
-          <InfoCard title={t("stats.cards.points.title") as string}>
-            {bullet(
-              <TrendingUpIcon />,
-              t("stats.cards.points.totalPointsLabel"),
-              totalPoints
-            )}
-            {bullet(
-              <PercentIcon />,
-              t("stats.cards.points.avgPPMLabel"),
-              overallPPM.toFixed(2)
-            )}
-            {bullet(
-              <QueryStatsIcon />,
-              t("stats.cards.points.matchesLabel"),
-              totalMatches
-            )}
-            {bullet(
-              <EmojiEventsIcon />,
-              t("stats.cards.points.winsLabel"),
-              outcomeCounts.win
-            )}
-            {bullet(
-              <RemoveCircleOutlineIcon />,
-              t("stats.cards.points.drawsLabel"),
-              outcomeCounts.draw
-            )}
-            {bullet(
-              <CancelIcon />,
-              t("stats.cards.points.lossesLabel"),
-              outcomeCounts.loss
-            )}
-            {bullet(
-              <PercentIcon />,
-              t("stats.cards.points.winPercentLabel"),
-              `${winPct.toFixed(1)}%`
-            )}
-            {bullet(
-              <QueryStatsIcon />,
-              t("stats.cards.points.stabilityLabel"),
-              stability
-            )}
-          </InfoCard>
+        <Box sx={layoutProps}>
+          {showSkeleton ? (
+            <>
+              <ChartSkeleton />
+              <InfoSkeleton />
+            </>
+          ) : (
+            <>
+              <ChartCard>
+                {canRenderCharts ? (
+                  <ReactApexChart
+                    key={user}
+                    type="bar"
+                    width="100%"
+                    height={360}
+                    series={pointsBar.series}
+                    options={pointsBar.opts as any}
+                  />
+                ) : (
+                  chartPlaceholder
+                )}
+              </ChartCard>
+              <InfoCard title={t("stats.cards.points.title") as string}>
+                {bullet(
+                  <TrendingUpIcon />,
+                  t("stats.cards.points.totalPointsLabel"),
+                  totalPoints
+                )}
+                {bullet(
+                  <PercentIcon />,
+                  t("stats.cards.points.avgPPMLabel"),
+                  overallPPM.toFixed(2)
+                )}
+                {bullet(
+                  <QueryStatsIcon />,
+                  t("stats.cards.points.matchesLabel"),
+                  totalMatches
+                )}
+                {bullet(
+                  <EmojiEventsIcon />,
+                  t("stats.cards.points.winsLabel"),
+                  outcomeCounts.win
+                )}
+                {bullet(
+                  <RemoveCircleOutlineIcon />,
+                  t("stats.cards.points.drawsLabel"),
+                  outcomeCounts.draw
+                )}
+                {bullet(
+                  <CancelIcon />,
+                  t("stats.cards.points.lossesLabel"),
+                  outcomeCounts.loss
+                )}
+                {bullet(
+                  <PercentIcon />,
+                  t("stats.cards.points.winPercentLabel"),
+                  `${winPct.toFixed(1)}%`
+                )}
+                {bullet(
+                  <QueryStatsIcon />,
+                  t("stats.cards.points.stabilityLabel"),
+                  stability
+                )}
+              </InfoCard>
+            </>
+          )}
         </Box>
       </TabPanel>
 
-      {/* PPM */}
       <TabPanel value={tab} index={4}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            gap: 2,
-          }}
-        >
-          <ChartCard>
-            <ReactApexChart
-              type="bar"
-              width="100%"
-              height={360}
-              series={ppmBar.series}
-              options={ppmBar.opts as any}
-            />
-          </ChartCard>
-
-          <InfoCard title={t("stats.cards.ppm.title") as string}>
-            {bullet(
-              <PercentIcon />,
-              t("stats.cards.ppm.avgPPMLabel"),
-              overallPPM.toFixed(2)
-            )}
-            {bullet(
-              <QueryStatsIcon />,
-              t("stats.cards.ppm.stabilityLabel"),
-              stability
-            )}
-            {bullet(
-              <QueryStatsIcon />,
-              t("stats.cards.ppm.matchesLabel"),
-              totalMatches
-            )}
-            {bullet(
-              <PercentIcon />,
-              t("stats.cards.ppm.winPercentLabel"),
-              `${winPct.toFixed(1)}%`
-            )}
-            {bullet(
-              <TrendingUpIcon />,
-              t("stats.cards.ppm.totalPointsLabel"),
-              totalPoints
-            )}
-            {bullet(
-              <EmojiEventsIcon />,
-              t("stats.cards.ppm.winsLabel"),
-              outcomeCounts.win
-            )}
-            {bullet(
-              <RemoveCircleOutlineIcon />,
-              t("stats.cards.ppm.drawsLabel"),
-              outcomeCounts.draw
-            )}
-            {bullet(
-              <CancelIcon />,
-              t("stats.cards.ppm.lossesLabel"),
-              outcomeCounts.loss
-            )}
-          </InfoCard>
+        <Box sx={layoutProps}>
+          {showSkeleton ? (
+            <>
+              <ChartSkeleton />
+              <InfoSkeleton />
+            </>
+          ) : (
+            <>
+              <ChartCard>
+                {canRenderCharts ? (
+                  <ReactApexChart
+                    key={user}
+                    type="bar"
+                    width="100%"
+                    height={360}
+                    series={ppmBar.series}
+                    options={ppmBar.opts as any}
+                  />
+                ) : (
+                  chartPlaceholder
+                )}
+              </ChartCard>
+              <InfoCard title={t("stats.cards.ppm.title") as string}>
+                {bullet(
+                  <PercentIcon />,
+                  t("stats.cards.ppm.avgPPMLabel"),
+                  overallPPM.toFixed(2)
+                )}
+                {bullet(
+                  <QueryStatsIcon />,
+                  t("stats.cards.ppm.stabilityLabel"),
+                  stability
+                )}
+                {bullet(
+                  <QueryStatsIcon />,
+                  t("stats.cards.ppm.matchesLabel"),
+                  totalMatches
+                )}
+                {bullet(
+                  <PercentIcon />,
+                  t("stats.cards.ppm.winPercentLabel"),
+                  `${winPct.toFixed(1)}%`
+                )}
+                {bullet(
+                  <TrendingUpIcon />,
+                  t("stats.cards.ppm.totalPointsLabel"),
+                  totalPoints
+                )}
+                {bullet(
+                  <EmojiEventsIcon />,
+                  t("stats.cards.ppm.winsLabel"),
+                  outcomeCounts.win
+                )}
+                {bullet(
+                  <RemoveCircleOutlineIcon />,
+                  t("stats.cards.ppm.drawsLabel"),
+                  outcomeCounts.draw
+                )}
+                {bullet(
+                  <CancelIcon />,
+                  t("stats.cards.ppm.lossesLabel"),
+                  outcomeCounts.loss
+                )}
+              </InfoCard>
+            </>
+          )}
         </Box>
       </TabPanel>
     </Box>

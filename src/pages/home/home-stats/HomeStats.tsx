@@ -30,7 +30,7 @@ const HighlightItem: React.FC<HighlightItemProps> = ({
   onClick,
 }) => {
   const theme = useTheme();
-  const accent = `linear-gradient(90deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`;
+  const textColor = theme.palette.mode === "dark" ? "#ffffff" : "#000000";
 
   return (
     <Paper
@@ -61,11 +61,7 @@ const HighlightItem: React.FC<HighlightItemProps> = ({
             variant="h3"
             component="p"
             className={styles.valueText}
-            sx={{
-              background: accent,
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
+            sx={{ color: textColor }}
           >
             {value}
           </Typography>
@@ -145,58 +141,32 @@ const HomeStats: React.FC<HomeStatsProps> = ({
     );
   }
 
+  const iconSizes = { xs: "2.8rem", sm: "4rem", md: "5rem", lg: "6rem" };
+
   const highlightData: HighlightItemProps[] = [
     {
-      icon: (
-        <SportsScoreIcon
-          sx={{
-            fontSize: { xs: "3.5rem", sm: "5rem", md: "6rem" },
-            color: iconColor,
-          }}
-        />
-      ),
+      icon: <SportsScoreIcon sx={{ fontSize: iconSizes, color: iconColor }} />,
       label: t("homeStats.lastResult"),
       value: stats.lastResult,
       gradient: gradients[0],
       onClick: () => navigate("/app/matches"),
     },
     {
-      icon: (
-        <EventNoteIcon
-          sx={{
-            fontSize: { xs: "3.5rem", sm: "5rem", md: "6rem" },
-            color: iconColor,
-          }}
-        />
-      ),
+      icon: <EventNoteIcon sx={{ fontSize: iconSizes, color: iconColor }} />,
       label: t("homeStats.weekMatches"),
       value: stats.weekMatches.toString(),
       gradient: gradients[1],
       onClick: () => navigate("/app/matches"),
     },
     {
-      icon: (
-        <EmojiEventsIcon
-          sx={{
-            fontSize: { xs: "3.5rem", sm: "5rem", md: "6rem" },
-            color: iconColor,
-          }}
-        />
-      ),
+      icon: <EmojiEventsIcon sx={{ fontSize: iconSizes, color: iconColor }} />,
       label: t("homeStats.winPercent"),
       value: `${stats.winPercent}%`,
       gradient: gradients[2],
       onClick: () => navigate("/app/stats"),
     },
     {
-      icon: (
-        <TrendingUpIcon
-          sx={{
-            fontSize: { xs: "3.5rem", sm: "5rem", md: "6rem" },
-            color: iconColor,
-          }}
-        />
-      ),
+      icon: <TrendingUpIcon sx={{ fontSize: iconSizes, color: iconColor }} />,
       label: t("homeStats.avgGoals"),
       value: stats.avgGoals.toString().replace(".", ","),
       gradient: gradients[3],

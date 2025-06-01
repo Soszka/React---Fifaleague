@@ -38,6 +38,7 @@ interface Props {
   latestDate: Dayjs | null;
   uniqueTeams: string[];
   onClearFilters: () => void;
+  onAddMatch: () => void;
 }
 
 const FILTER_WIDTH = 220;
@@ -58,6 +59,7 @@ const MatchesFilters: React.FC<Props> = ({
   latestDate,
   uniqueTeams,
   onClearFilters,
+  onAddMatch,
 }) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -160,13 +162,41 @@ const MatchesFilters: React.FC<Props> = ({
       >
         {t("matches.filters.clear")}
       </Button>
+
+      {!isMobile && (
+        <Button
+          onClick={onAddMatch}
+          variant="contained"
+          size="small"
+          sx={{
+            minWidth: "auto",
+            px: 2,
+            width: buttonWidth,
+            backgroundColor: theme.palette.grey[500],
+            color: theme.palette.getContrastText(theme.palette.grey[500]),
+            "&:hover": {
+              backgroundColor: theme.palette.grey[600],
+            },
+          }}
+        >
+          {t("matches.actions.add")}
+        </Button>
+      )}
     </>
   );
 
   if (isMobile) {
     return (
       <>
-        <Box sx={{ display: "flex", gap: 2, alignItems: "center", mb: 3 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            alignItems: "center",
+            mb: 3,
+          }}
+        >
           <Button
             variant="contained"
             size="small"
@@ -174,6 +204,22 @@ const MatchesFilters: React.FC<Props> = ({
             onClick={() => setOpen(true)}
           >
             {t("matches.filters.filter")}
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            sx={{
+              width: "100%",
+              px: 2,
+              backgroundColor: theme.palette.grey[500],
+              color: theme.palette.getContrastText(theme.palette.grey[500]),
+              "&:hover": {
+                backgroundColor: theme.palette.grey[600],
+              },
+            }}
+            onClick={onAddMatch}
+          >
+            {t("matches.actions.add")}
           </Button>
         </Box>
         <Dialog open={open} onClose={() => setOpen(false)} fullWidth>

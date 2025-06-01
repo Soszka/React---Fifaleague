@@ -96,23 +96,26 @@ const MatchListMobile: React.FC<Props> = ({
             whileHover={{ scale: 1.02 }}
           >
             <Card sx={{ mb: 2, position: "relative" }}>
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: 8,
-                  right: 8,
-                  px: 1.5,
-                  py: 0.25,
-                  borderRadius: 1,
-                  backgroundColor: resultColor(row.outcome),
-                  color: theme.palette.getContrastText(
-                    resultColor(row.outcome)
-                  ),
-                  fontWeight: 600,
-                }}
-              >
-                {outcomeLabel(row.outcome)}
-              </Box>
+              {!showAll && (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 8,
+                    right: 8,
+                    px: 1.5,
+                    py: 0.25,
+                    borderRadius: 1,
+                    backgroundColor: resultColor(row.outcome),
+                    color: theme.palette.getContrastText(
+                      resultColor(row.outcome)
+                    ),
+                    fontWeight: 600,
+                    fontSize: "0.75rem",
+                  }}
+                >
+                  {outcomeLabel(row.outcome)}
+                </Box>
+              )}
               <CardContent sx={{ pt: 4, pb: 0.5 }}>
                 <Typography variant="body2" sx={{ mb: 1 }}>
                   {t("matches.card.players")}:{" "}

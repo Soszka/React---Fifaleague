@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Box, Paper, Button, useTheme, useMediaQuery } from "@mui/material";
+import { Box, Paper, useTheme, useMediaQuery } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import dayjs, { Dayjs } from "dayjs";
 import Title from "../../common/UI/Title";
@@ -16,6 +16,7 @@ import {
   useMatches,
   Match,
 } from "../../common/context/MatchesContext";
+import { NotificationProvider } from "../../common/context/NotificationContext";
 
 const getOutcome = (score: string): ResultOption => {
   const [g1, g2] = score.split(" : ").map((n) => parseInt(n.trim(), 10));
@@ -27,7 +28,7 @@ const MatchesScreen: React.FC = () => {
   const { matches, loading, error } = useMatches();
   const { t } = useTranslation();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const currentUser = "Bartek";
 
   const [showAll, setShowAll] = useState(false);
@@ -168,9 +169,6 @@ const MatchesScreen: React.FC = () => {
           title={t("matches.title") as string}
           subtitle={t("matches.subtitle") as string}
         />
-        <Button variant="contained" onClick={() => setOpenAddDialog(true)}>
-          {t("matches.actions.add")}
-        </Button>
       </Box>
 
       <Paper
@@ -194,6 +192,7 @@ const MatchesScreen: React.FC = () => {
           latestDate={latestDate}
           uniqueTeams={uniqueTeams}
           onClearFilters={clearFilters}
+          onAddMatch={() => setOpenAddDialog(true)}
         />
 
         {isMobile ? (
@@ -249,9 +248,11 @@ const MatchesScreen: React.FC = () => {
 };
 
 const Matches: React.FC = () => (
-  <MatchesProvider>
-    <MatchesScreen />
-  </MatchesProvider>
+  <NotificationProvider>
+    <MatchesProvider>
+      <MatchesScreen />
+    </MatchesProvider>
+  </NotificationProvider>
 );
 
 export default Matches;

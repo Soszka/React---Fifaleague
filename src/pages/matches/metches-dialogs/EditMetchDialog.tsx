@@ -1,18 +1,25 @@
-import React, { useState, useEffect } from "react";
+// EditMetchDialog.tsx
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField,
   Button,
   Box,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  TextField,
+  Typography,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { useTranslation } from "react-i18next";
 import { useMatches, Match } from "../../../common/context/MatchesContext";
+import { useNotification } from "../../../common/context/NotificationContext";
 
 interface EditMatchDialogProps {
   open: boolean;
@@ -20,15 +27,26 @@ interface EditMatchDialogProps {
   match: Match | null;
 }
 
-const EditMatchDialog: React.FC<EditMatchDialogProps> = ({
+const EditMetchDialog: React.FC<EditMatchDialogProps> = ({
   open,
   onClose,
   match,
 }) => {
   const { t } = useTranslation();
-  const { updateMatch } = useMatches();
+  const { updateMatch, matches } = useMatches();
+  const { notify } = useNotification();
 
-  // Form state, initialize from `match` when it changes
+  const players = useMemo(() => {
+    const set = new Set<string>();
+    matches.forEach((m) => {
+      set.add(m.player1);
+      set.add(m.player2);
+      set.add(m.rival1);
+      set.add(m.rival2);
+    });
+    return Array.from(set).sort();
+  }, [matches]);
+
   const [player1, setPlayer1] = useState("");
   const [player2, setPlayer2] = useState("");
   const [rival1, setRival1] = useState("");
@@ -43,13 +61,15 @@ const EditMatchDialog: React.FC<EditMatchDialogProps> = ({
       setPlayer2(match.player2);
       setRival1(match.rival1);
       setRival2(match.rival2);
-      // Split result "X-Y" into two scores
       const [g1, g2] = match.result.split("-");
       setScore1(g1 ?? "");
       setScore2(g2 ?? "");
       setDate(dayjs(match.date));
     }
   }, [match]);
+
+  const options = (exclude: string[], value: string) =>
+    players.filter((p) => p === value || !exclude.includes(p));
 
   const handleSave = () => {
     if (
@@ -74,80 +94,148 @@ const EditMatchDialog: React.FC<EditMatchDialogProps> = ({
       result: updatedResult,
       date: date.valueOf(),
     };
-    updateMatch(updatedMatch);
-    onClose();
+    try {
+      updateMatch(updatedMatch);
+      notify(t("matches.messages.updateSuccess"), "success");
+      onClose();
+    } catch {
+      notify(t("matches.messages.error"), "error");
+    }
   };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
-      <DialogTitle>{t("matches.dialogs.editMatch")}</DialogTitle>
-      <DialogContent
-        sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
+      <DialogTitle
+        sx={{
+          typography: "h5",
+          fontSize: "1.6rem",
+          fontWeight: 700,
+          bgcolor: (theme) =>
+            theme.palette.mode === "dark"
+              ? theme.palette.grey[700]
+              : theme.palette.grey[200],
+          px: 2,
+          py: 1.5,
+          mb: 1,
+        }}
       >
-        <TextField
-          label={t("matches.form.player1") ?? "Player 1"}
-          value={player1}
-          onChange={(e) => setPlayer1(e.target.value)}
-          required
-        />
-        <TextField
-          label={t("matches.form.player2") ?? "Player 2"}
-          value={player2}
-          onChange={(e) => setPlayer2(e.target.value)}
-          required
-        />
-        <TextField
-          label={t("matches.form.rival1") ?? "Rival 1"}
-          value={rival1}
-          onChange={(e) => setRival1(e.target.value)}
-          required
-        />
-        <TextField
-          label={t("matches.form.rival2") ?? "Rival 2"}
-          value={rival2}
-          onChange={(e) => setRival2(e.target.value)}
-          required
-        />
+        {t("matches.dialogs.editMatch")}
+      </DialogTitle>
+      <DialogContent
+        sx={{ display: "flex", flexDirection: "column", gap: 2, pt: 3, px: 2 }}
+      >
+        <FormControl fullWidth sx={{ mt: 2 }}>
+          <InputLabel>{t("matches.form.player1")}</InputLabel>
+          <Select
+            label={t("matches.form.player1")}
+            value={player1}
+            onChange={(e) => setPlayer1(e.target.value as string)}
+          >
+            {options([player2, rival1, rival2], player1).map((p) => (
+              <MenuItem key={p} value={p}>
+                {p}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth>
+          <InputLabel>{t("matches.form.player2")}</InputLabel>
+          <Select
+            label={t("matches.form.player2")}
+            value={player2}
+            onChange={(e) => setPlayer2(e.target.value as string)}
+          >
+            {options([player1, rival1, rival2], player2).map((p) => (
+              <MenuItem key={p} value={p}>
+                {p}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth>
+          <InputLabel>{t("matches.form.rival1")}</InputLabel>
+          <Select
+            label={t("matches.form.rival1")}
+            value={rival1}
+            onChange={(e) => setRival1(e.target.value as string)}
+          >
+            {options([player1, player2, rival2], rival1).map((p) => (
+              <MenuItem key={p} value={p}>
+                {p}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth>
+          <InputLabel>{t("matches.form.rival2")}</InputLabel>
+          <Select
+            label={t("matches.form.rival2")}
+            value={rival2}
+            onChange={(e) => setRival2(e.target.value as string)}
+          >
+            {options([player1, player2, rival1], rival2).map((p) => (
+              <MenuItem key={p} value={p}>
+                {p}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
-            label={t("matches.form.date") ?? "Date"}
+            label={t("matches.form.date")}
             value={date}
             onChange={(newValue) => setDate(newValue)}
             slotProps={{ textField: { fullWidth: true } }}
           />
         </LocalizationProvider>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
+
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <TextField
             type="number"
-            label={t("matches.form.scoreHome") ?? "Score Home"}
+            label={t("matches.form.scoreHome")}
             value={score1}
             onChange={(e) => setScore1(e.target.value)}
             inputProps={{ min: 0 }}
-            sx={{ width: 80 }}
-            required
+            fullWidth
+            sx={{ flex: 1 }}
           />
-          <Box component="span" sx={{ mx: 1, fontWeight: "bold" }}>
+          <Typography variant="h6" fontWeight={700}>
             :
-          </Box>
+          </Typography>
           <TextField
             type="number"
-            label={t("matches.form.scoreAway") ?? "Score Away"}
+            label={t("matches.form.scoreAway")}
             value={score2}
             onChange={(e) => setScore2(e.target.value)}
             inputProps={{ min: 0 }}
-            sx={{ width: 80 }}
-            required
+            fullWidth
+            sx={{ flex: 1 }}
           />
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>{t("common.cancel") ?? "Cancel"}</Button>
-        <Button variant="contained" onClick={handleSave}>
-          {t("common.save") ?? t("matches.actions.edit") ?? "Save"}
+      <DialogActions sx={{ pb: 2, px: 3 }}>
+        <Button onClick={onClose}>{t("common.cancel")}</Button>
+        <Button
+          variant="contained"
+          onClick={handleSave}
+          disabled={
+            !player1 ||
+            !player2 ||
+            !rival1 ||
+            !rival2 ||
+            score1 === "" ||
+            score2 === ""
+          }
+        >
+          {t("common.save")}
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default EditMatchDialog;
+export default EditMetchDialog;

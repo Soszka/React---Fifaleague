@@ -1,36 +1,57 @@
-import React, { useState } from "react";
+// AddMetchDialog.tsx
+import React, { useState, useMemo } from "react";
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField,
   Button,
   Box,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  TextField,
+  Typography,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { useTranslation } from "react-i18next";
 import { useMatches } from "../../../common/context/MatchesContext";
+import { useNotification } from "../../../common/context/NotificationContext";
 
 interface AddMatchDialogProps {
   open: boolean;
   onClose: () => void;
 }
 
-const AddMatchDialog: React.FC<AddMatchDialogProps> = ({ open, onClose }) => {
+const AddMetchDialog: React.FC<AddMatchDialogProps> = ({ open, onClose }) => {
   const { t } = useTranslation();
-  const { addMatch } = useMatches();
+  const { addMatch, matches } = useMatches();
+  const { notify } = useNotification();
 
-  // Form state for new match fields
+  const players = useMemo(() => {
+    const set = new Set<string>();
+    matches.forEach((m) => {
+      set.add(m.player1);
+      set.add(m.player2);
+      set.add(m.rival1);
+      set.add(m.rival2);
+    });
+    return Array.from(set).sort();
+  }, [matches]);
+
   const [player1, setPlayer1] = useState("");
   const [player2, setPlayer2] = useState("");
   const [rival1, setRival1] = useState("");
   const [rival2, setRival2] = useState("");
   const [score1, setScore1] = useState("");
   const [score2, setScore2] = useState("");
-  const [date, setDate] = useState<Dayjs | null>(dayjs()); // default to today
+  const [date, setDate] = useState<Dayjs | null>(dayjs());
+
+  const options = (exclude: string[], value: string) =>
+    players.filter((p) => p === value || !exclude.includes(p));
 
   const handleAdd = () => {
     if (
@@ -42,100 +63,165 @@ const AddMatchDialog: React.FC<AddMatchDialogProps> = ({ open, onClose }) => {
       score2 === "" ||
       !date
     ) {
-      return; // do not add if any field is empty
+      return;
     }
-    // Prepare result in "X-Y" format
     const resultString = `${parseInt(score1, 10)}-${parseInt(score2, 10)}`;
-    // Add match via context
-    addMatch({
-      player1,
-      player2,
-      rival1,
-      rival2,
-      result: resultString,
-      date: date.valueOf(),
-    });
-    onClose();
-    // Clear the form after adding (optional, since dialog will unmount by default)
-    setPlayer1("");
-    setPlayer2("");
-    setRival1("");
-    setRival2("");
-    setScore1("");
-    setScore2("");
-    setDate(dayjs());
+    try {
+      addMatch({
+        player1,
+        player2,
+        rival1,
+        rival2,
+        result: resultString,
+        date: date.valueOf(),
+      });
+      notify(t("matches.messages.addSuccess"), "success");
+      onClose();
+      setPlayer1("");
+      setPlayer2("");
+      setRival1("");
+      setRival2("");
+      setScore1("");
+      setScore2("");
+      setDate(dayjs());
+    } catch {
+      notify(t("matches.messages.error"), "error");
+    }
   };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
-      <DialogTitle>{t("matches.dialogs.addMatch")}</DialogTitle>
-      <DialogContent
-        sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
+      <DialogTitle
+        sx={{
+          typography: "h5",
+          fontSize: "1.6rem",
+          fontWeight: 700,
+          bgcolor: (theme) =>
+            theme.palette.mode === "dark"
+              ? theme.palette.grey[700]
+              : theme.palette.grey[200],
+          px: 2,
+          py: 1.5,
+          mb: 1,
+        }}
       >
-        <TextField
-          label={t("matches.form.player1") ?? "Player 1"}
-          value={player1}
-          onChange={(e) => setPlayer1(e.target.value)}
-          required
-        />
-        <TextField
-          label={t("matches.form.player2") ?? "Player 2"}
-          value={player2}
-          onChange={(e) => setPlayer2(e.target.value)}
-          required
-        />
-        <TextField
-          label={t("matches.form.rival1") ?? "Rival 1"}
-          value={rival1}
-          onChange={(e) => setRival1(e.target.value)}
-          required
-        />
-        <TextField
-          label={t("matches.form.rival2") ?? "Rival 2"}
-          value={rival2}
-          onChange={(e) => setRival2(e.target.value)}
-          required
-        />
+        {t("matches.dialogs.addMatch")}
+      </DialogTitle>
+      <DialogContent
+        sx={{ display: "flex", flexDirection: "column", gap: 2, pt: 3, px: 2 }}
+      >
+        <FormControl fullWidth sx={{ mt: 2 }}>
+          <InputLabel>{t("matches.form.player1")}</InputLabel>
+          <Select
+            label={t("matches.form.player1")}
+            value={player1}
+            onChange={(e) => setPlayer1(e.target.value as string)}
+          >
+            {options([player2, rival1, rival2], player1).map((p) => (
+              <MenuItem key={p} value={p}>
+                {p}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth>
+          <InputLabel>{t("matches.form.player2")}</InputLabel>
+          <Select
+            label={t("matches.form.player2")}
+            value={player2}
+            onChange={(e) => setPlayer2(e.target.value as string)}
+          >
+            {options([player1, rival1, rival2], player2).map((p) => (
+              <MenuItem key={p} value={p}>
+                {p}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth>
+          <InputLabel>{t("matches.form.rival1")}</InputLabel>
+          <Select
+            label={t("matches.form.rival1")}
+            value={rival1}
+            onChange={(e) => setRival1(e.target.value as string)}
+          >
+            {options([player1, player2, rival2], rival1).map((p) => (
+              <MenuItem key={p} value={p}>
+                {p}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth>
+          <InputLabel>{t("matches.form.rival2")}</InputLabel>
+          <Select
+            label={t("matches.form.rival2")}
+            value={rival2}
+            onChange={(e) => setRival2(e.target.value as string)}
+          >
+            {options([player1, player2, rival1], rival2).map((p) => (
+              <MenuItem key={p} value={p}>
+                {p}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
-            label={t("matches.form.date") ?? "Date"}
+            label={t("matches.form.date")}
             value={date}
             onChange={(newValue) => setDate(newValue)}
             slotProps={{ textField: { fullWidth: true } }}
           />
         </LocalizationProvider>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
+
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <TextField
             type="number"
-            label={t("matches.form.scoreHome") ?? "Score Home"}
+            label={t("matches.form.scoreHome")}
             value={score1}
             onChange={(e) => setScore1(e.target.value)}
             inputProps={{ min: 0 }}
-            sx={{ width: 80 }}
-            required
+            fullWidth
+            sx={{ flex: 1 }}
           />
-          <Box component="span" sx={{ mx: 1, fontWeight: "bold" }}>
+          <Typography variant="h6" fontWeight={700}>
             :
-          </Box>
+          </Typography>
           <TextField
             type="number"
-            label={t("matches.form.scoreAway") ?? "Score Away"}
+            label={t("matches.form.scoreAway")}
             value={score2}
             onChange={(e) => setScore2(e.target.value)}
             inputProps={{ min: 0 }}
-            sx={{ width: 80 }}
-            required
+            fullWidth
+            sx={{ flex: 1 }}
           />
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>{t("common.cancel") ?? "Cancel"}</Button>
-        <Button variant="contained" onClick={handleAdd}>
-          {t("matches.actions.add") ?? "Add"}
+      <DialogActions sx={{ pb: 2, px: 3 }}>
+        <Button onClick={onClose}>{t("common.cancel")}</Button>
+        <Button
+          variant="contained"
+          onClick={handleAdd}
+          disabled={
+            !player1 ||
+            !player2 ||
+            !rival1 ||
+            !rival2 ||
+            score1 === "" ||
+            score2 === ""
+          }
+        >
+          {t("matches.actions.add")}
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default AddMatchDialog;
+export default AddMetchDialog;

@@ -6,9 +6,11 @@ import {
   DialogActions,
   Button,
   Typography,
+  Box,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useMatches, Match } from "../../../common/context/MatchesContext";
+import { useNotification } from "../../../common/context/NotificationContext";
 
 interface RemoveMatchDialogProps {
   open: boolean;
@@ -23,39 +25,83 @@ const RemoveMatchDialog: React.FC<RemoveMatchDialogProps> = ({
 }) => {
   const { t } = useTranslation();
   const { removeMatch } = useMatches();
+  const { notify } = useNotification();
 
   const handleConfirm = () => {
     if (match) {
       removeMatch(match.id);
+      notify(t("matches.messages.deleteSuccess"), "success");
     }
     onClose();
   };
 
-  // Compose a confirmation message (e.g., "Delete TeamA vs TeamB on Date?")
-  let confirmMessage = "";
-  if (match) {
-    const teamA = `${match.player1} & ${match.player2}`;
-    const teamB = `${match.rival1} & ${match.rival2}`;
-    const dateStr = new Date(match.date).toLocaleDateString();
-    confirmMessage =
-      t("matches.dialogs.deleteConfirm", {
-        team1: teamA,
-        team2: teamB,
-        date: dateStr,
-      }) ||
-      `${t("matches.dialogs.deleteMatch")} ${teamA} vs ${teamB} (${dateStr})?`;
-  }
+  const teamA = match ? `${match.player1} & ${match.player2}` : "";
+  const teamB = match ? `${match.rival1} & ${match.rival2}` : "";
+  const dateStr = match ? new Date(match.date).toLocaleDateString() : "";
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="xs">
-      <DialogTitle>{t("matches.dialogs.deleteMatch")}</DialogTitle>
-      <DialogContent>
-        <Typography>{confirmMessage}</Typography>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
+      <DialogTitle
+        sx={(theme) => {
+          const bgColor =
+            theme.palette.mode === "light"
+              ? theme.palette.error.light
+              : theme.palette.error.dark;
+          return {
+            typography: "h5",
+            fontWeight: 700,
+            bgcolor: bgColor,
+            color: theme.palette.getContrastText(bgColor),
+            px: 2,
+            py: 1,
+          };
+        }}
+      >
+        {t("matches.dialogs.deleteMatch")}
+      </DialogTitle>
+      <DialogContent
+        sx={{
+          mt: 3,
+          px: 2,
+        }}
+      >
+        {match && (
+          <Typography variant="body1">
+            {t(
+              "matches.dialogs.deleteConfirmPrefix",
+              "Czy na pewno chcesz usunąć"
+            )}{" "}
+            <Box component="span" sx={{ fontWeight: 700 }}>
+              {teamA}
+            </Box>{" "}
+            vs{" "}
+            <Box component="span" sx={{ fontWeight: 700 }}>
+              {teamB}
+            </Box>{" "}
+            ({dateStr})?
+          </Typography>
+        )}
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>{t("common.cancel") ?? "Cancel"}</Button>
-        <Button variant="contained" color="error" onClick={handleConfirm}>
-          {t("matches.actions.delete") ?? "Delete"}
+      <DialogActions sx={{ pb: 2, px: 3 }}>
+        <Button onClick={onClose}>{t("common.cancel")}</Button>
+        <Button
+          variant="contained"
+          onClick={handleConfirm}
+          sx={(theme) => {
+            const bgColor =
+              theme.palette.mode === "light"
+                ? theme.palette.error.light
+                : theme.palette.error.dark;
+            return {
+              bgcolor: bgColor,
+              color: theme.palette.getContrastText(bgColor),
+              "&:hover": {
+                bgcolor: theme.palette.error.main,
+              },
+            };
+          }}
+        >
+          {t("matches.actions.delete")}
         </Button>
       </DialogActions>
     </Dialog>

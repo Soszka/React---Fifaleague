@@ -185,7 +185,7 @@ const columns: {
 const TablePage: React.FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery("(max-width:800px)");
   const { matches, loading, error } = useAllMatches();
   const teams = useMemo(() => buildTeamsStats(matches), [matches]);
 
