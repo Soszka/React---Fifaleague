@@ -3,7 +3,6 @@ import React from "react";
 import {
   Box,
   Typography,
-  useTheme,
   styled,
   Accordion as MuiAccordion,
   AccordionSummary as MuiAccordionSummary,
