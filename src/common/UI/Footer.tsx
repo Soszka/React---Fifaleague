@@ -14,7 +14,7 @@ const Footer: React.FC = () => (
   >
     <Container maxWidth="xl" sx={{ textAlign: "center" }}>
       <Typography variant="body2" color="text.secondary">
-        © {new Date().getFullYear()} FIFA League · All rights reserved
+        © {new Date().getFullYear()} Efutbol League · All rights reserved
       </Typography>
     </Container>
   </Box>

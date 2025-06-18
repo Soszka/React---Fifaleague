@@ -43,7 +43,7 @@
   "home.title": "Stronie",
   "home.subtitle": "Co znajdziesz na ...",
   "home.last.matches": "OSTATNIE MECZE",
-  "home.card.about.title": "FIFA LEAGUE",
+  "home.card.about.title": "Efutbol League",
   "home.card.about.description": "Rozgrywki ligowe w FIFA, pełne emocji i niespodzianek dla każdego fana. Śledź wszystkie mecze na żywo i bądź na bieżąco z wynikami oraz wydarzeniami.",
   "home.card.matches.title": "MECZE",
   "home.card.matches.description": "Zobacz nadchodzące mecze i wyniki spotkań w naszej lidze. Nie przegap żadnej akcji i dołącz do naszej społeczności kibiców, którzy śledzą każdą minutę gry.",
@@ -67,8 +67,8 @@
     "title": "FIFA 2x2 League",
     "subtitle": "Witamy w",
     "description": {
-      "header": "Dlaczego warto dołączyć do \"FIFA League\"?",
-      "content": "Aplikacja \"FIFA League\" to idealne miejsce do zarządzania swoimi meczami 2x2, śledzenia wyników i wspólnego rywalizowania z przyjaciółmi. Z łatwością możesz dodawać nowe mecze, wybierać przeciwników, ustawiać wyniki, a także potwierdzać wyniki rywali. Analizuj swoje statystyki, śledź postępy i zdobywaj punkty, aby awansować na szczyt rankingu. Dołącz do naszej społeczności graczy, aby zwiększyć swoje umiejętności i dobrze się bawić, grając w ulubioną grę!",
+      "header": "Dlaczego warto dołączyć do \"Efutbol League\"?",
+      "content": "Aplikacja \"Efutbol League\" to idealne miejsce do zarządzania swoimi meczami 2x2, śledzenia wyników i wspólnego rywalizowania z przyjaciółmi. Z łatwością możesz dodawać nowe mecze, wybierać przeciwników, ustawiać wyniki, a także potwierdzać wyniki rywali. Analizuj swoje statystyki, śledź postępy i zdobywaj punkty, aby awansować na szczyt rankingu. Dołącz do naszej społeczności graczy, aby zwiększyć swoje umiejętności i dobrze się bawić, grając w ulubioną grę!",
       "button": {
         "teams": "Zespoły"
       }
