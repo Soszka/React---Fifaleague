@@ -60,7 +60,7 @@ export default function Navigation({ toggleTheme }: Props) {
   const drawer = (
     <Box sx={{ width: drawerWidth }}>
       <Typography variant="h6" sx={{ my: 2, textAlign: "center" }}>
-        FIFA League
+        EFUTBOL League
       </Typography>
 
       <List sx={{ pt: 0 }}>
@@ -144,7 +144,7 @@ export default function Navigation({ toggleTheme }: Props) {
                 "@media (max-width:500px)": { display: "none" },
               }}
             >
-              FIFA League
+              EFUTBOL League
             </Box>
             <Box
               component="span"
