@@ -127,58 +127,103 @@
     }
   },
 
-  "table.subtitle": "Sprawdź...",
-  "table.title": "Tabelę",
-  "table.filter.label": "Filtruj",
-  "table.column.players": "Zawodnicy",
-  "table.column.matches": "Mecze",
-  "table.column.wins": "Zwycięstwa",
-  "table.column.looses": "Porażki",
-  "table.column.draws": "Remisy",
-  "table.column.points": "Punkty",
-  "table.column.pointsPerMetch": "Pkt/M",
-  "table.noData": "Brak danych pasujących do filtra",
-  "table.select.player": "Zawodnik",
-  "table.select.matches": "Mecze",
-  "table.select.points": "Punkty",
-  "table.select.ppm": "Punkty na mecz",
-  "table.button.clear": "Wyczyść",
-  "table.select.clear": "Wyczyść",
+  "table": {
+    "title": "Teams table",
+    "subtitle": "FIFA 2×2 rankings – live",
+    "column": {
+      "position": "Pos.",
+      "team": "Team",
+      "matches": "Matches",
+      "wins": "Wins",
+      "looses": "Losses",
+      "draws": "Draws",
+      "points": "Pts",
+      "ppm": "Pts/Match"
+    },
+    "select": {
+      "player": "Player",
+      "matches": "Matches",
+      "points": "Points",
+      "ppm": "Pts/Match"
+    },
+    "button": {
+      "clear": "Clear",
+      "filter": "Filter"
+    },
+    "filterDialog": {
+      "title": "Filters",
+      "close": "Close"
+    },
+    "rowsPerPage": "Rows per page:",
+    "card": {
+      "matches": "Matches",
+      "wins": "Wins",
+      "losses": "Losses",
+      "draws": "Draws",
+      "ppm": "Pts/Match"
+    }
+  },
 
-  "ranking.subtitle": "Sprawdź ranking...",
-  "ranking.title": "Graczy",
-  "ranking.column.playerName": "Gracz",
-  "ranking.column.matches": "Mecze",
-  "ranking.column.wins": "Zwycięstwa",
-  "ranking.column.looses": "Porażki",
-  "ranking.column.draws": "Remisy",
-  "ranking.column.points": "Punkty",
-  "ranking.column.pointsPerMetch": "Pkt/M",
-  "ranking.noData": "Brak wyników pasujących do filtra",
-  "ranking.select.matches": "Mecze",
-  "ranking.select.points": "Punkty",
-  "ranking.select.ppm": "Punkty na mecz",
-  "ranking.select.clear": "Wyczyść",
-  "ranking.button.clear": "Wyczyść",
+  "ranking": {
+    "title": "Players ranking",
+    "subtitle": "Check the ranking",
+    "column": {
+      "position": "Pos.",
+      "player": "Player",
+      "matches": "Matches",
+      "wins": "Wins",
+      "looses": "Losses",
+      "draws": "Draws",
+      "points": "Pts",
+      "ppm": "Pts/Match"
+    },
+    "button": {
+      "clear": "Clear",
+      "filter": "Filter"
+    },
+    "select": {
+      "player": "Player",
+      "matches": "Matches",
+      "points": "Points",
+      "ppm": "Pts/Match",
+      "none": "None"
+    },
+    "filterDialog": {
+      "title": "Filters",
+      "close": "Close"
+    },
+    "rowsPerPage": "Rows per page:",
+    "error": "Error:"
+  },
+  "card": {
+    "matches": "Matches",
+    "wins": "Wins",
+    "losses": "Losses",
+    "draws": "Draws",
+    "ppm": "Pts/Match"
+  },
 
   "teams": {
-    "title": "Zespoły",
-    "subtitle": "Sprawdź swoje...",
-    "button": {
-      "addTeam": "DODAJ ZESPÓŁ"
-    },
-    "legend": {
-      "wins": "Wygrane",
-      "losses": "Przegrane",
-      "draws": "Remisy"
+    "title": "Teams",
+    "subtitle": "2 v 2 team statistics",
+    "filter": {
+      "allPlayers": "All players"
     },
     "stats": {
-      "matches": "Liczba wszystkich meczy: ",
-      "points": "Liczba zdobytych punktów",
-      "winPercentage": "Wygrane",
-      "lossPercentage": "Przegrane",
-      "drawPercentage": "Zremisowane",
-      "pointsPerMatch": "Punkty na mecz"
+      "matches": "Matches",
+      "points": "Points",
+      "pointsPerMatch": "Pts/M",
+      "winPercentage": "Wins"
+    },
+    "legend": {
+      "wins": "Wins",
+      "losses": "Losses",
+      "draws": "Draws",
+      "goalsFor": "Goals for",
+      "goalsAgainst": "Goals against"
+    },
+    "history": {
+      "lastMatches": "Last matches"
     }
   },
 

@@ -7,6 +7,7 @@ import {
   DataSnapshot,
 } from "firebase/database";
 import { rtdb } from "../services/firebase";
+import { ResultOption } from "../../pages/matches/types";
 
 interface RawMatch {
   player1: string;
@@ -14,11 +15,12 @@ interface RawMatch {
   rival1: string;
   rival2: string;
   result: string; // np. "5-3"
-  date: string; // ISO-string albo timestamp zapisany jako string
+  date: string; // ISO‑string albo timestamp zapisany jako string
 }
 
 export interface PlayerStats {
-  lastResult: string;
+  lastResult: string; // np. "5 : 3"
+  lastOutcome: ResultOption; // "WIN" | "DRAW" | "LOSS"
   weekMatches: number;
   winPercent: number;
   avgGoals: number;
@@ -33,31 +35,32 @@ const sameCalendarWeek = (d: Date) => {
   const now = new Date();
   const monday = new Date(now);
   monday.setHours(0, 0, 0, 0);
-  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7)); // poniedziałek
+  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
   const nextMonday = new Date(monday);
   nextMonday.setDate(monday.getDate() + 7);
   return d >= monday && d < nextMonday;
 };
 
+const eq = (a?: string, b?: string) =>
+  (a || "").toLowerCase() === (b || "").toLowerCase();
+
 /**
- * Hook pobierający statystyki konkretnego gracza na podstawie danych
- * z Firebase Realtime Database.
- *
- * @param player nazwa gracza (dokładnie tak jak w bazie)
- * @param dbPath ścieżka w RTDB zawierająca node z meczami (domyślnie root "/")
+ * Hook pobierający statystyki konkretnego gracza (case‑insensitive).
+ * @param player nazwa gracza (dowolna wielkość liter)
+ * @param dbPath ścieżka w RTDB (domyślnie "/")
  */
 export const usePlayerStats = (player: string, dbPath: string = "/") => {
   const [stats, setStats] = useState<PlayerStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("[HOOK] Pobieram dane z Firebase...");
     const q = query(ref(rtdb, dbPath), orderByChild("date"));
 
     const handleSnap = (snap: DataSnapshot) => {
       if (!snap.exists()) {
         setStats({
           lastResult: "-",
+          lastOutcome: "DRAW",
           weekMatches: 0,
           winPercent: 0,
           avgGoals: 0,
@@ -67,18 +70,19 @@ export const usePlayerStats = (player: string, dbPath: string = "/") => {
       }
 
       const all: RawMatch[] = [];
-      snap.forEach((child) => {
+      snap.forEach((child: DataSnapshot) => {
         all.push(child.val() as RawMatch);
-        // nie zwracamy wartości, żeby uniknąć błędu typu
       });
 
+      // --- filtrowanie uczestnictwa (case‑insensitive) ---
       const myMatches = all.filter((m) =>
-        [m.player1, m.player2, m.rival1, m.rival2].includes(player)
+        [m.player1, m.player2, m.rival1, m.rival2].some((n) => eq(n, player))
       );
 
       if (!myMatches.length) {
         setStats({
           lastResult: "-",
+          lastOutcome: "DRAW",
           weekMatches: 0,
           winPercent: 0,
           avgGoals: 0,
@@ -94,7 +98,7 @@ export const usePlayerStats = (player: string, dbPath: string = "/") => {
       const lastMatch = myMatches[0];
       const lastResult = lastMatch.result.replace("-", " : ");
 
-      const weekMatches = myMatches.filter((m) =>
+      const weekMatchesArr = myMatches.filter((m) =>
         sameCalendarWeek(new Date(m.date))
       );
 
@@ -103,16 +107,28 @@ export const usePlayerStats = (player: string, dbPath: string = "/") => {
 
       myMatches.forEach((m) => {
         const { home, away } = parseScore(m.result);
-        const isHome = [m.player1, m.player2].includes(player);
+        const isHome = [m.player1, m.player2].some((n) => eq(n, player));
         const myGoals = isHome ? home : away;
         const rivalGoals = isHome ? away : home;
         goals += myGoals;
         if (myGoals > rivalGoals) wins += 1;
       });
 
+      const { home: lastHome, away: lastAway } = parseScore(lastMatch.result);
+      const isLastHome = [lastMatch.player1, lastMatch.player2].some((n) =>
+        eq(n, player)
+      );
+      const myLastGoals = isLastHome ? lastHome : lastAway;
+      const rivalLastGoals = isLastHome ? lastAway : lastHome;
+
+      let lastOutcome: ResultOption = "DRAW";
+      if (myLastGoals > rivalLastGoals) lastOutcome = "WIN";
+      else if (myLastGoals < rivalLastGoals) lastOutcome = "LOSS";
+
       setStats({
         lastResult,
-        weekMatches: weekMatches.length,
+        lastOutcome,
+        weekMatches: weekMatchesArr.length,
         winPercent: Math.round((wins / myMatches.length) * 100),
         avgGoals: parseFloat((goals / myMatches.length).toFixed(1)),
       });

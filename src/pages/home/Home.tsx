@@ -1,3 +1,4 @@
+// src/pages/home/Home.tsx
 import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Box, Typography, useTheme, keyframes } from "@mui/material";
@@ -13,6 +14,7 @@ import statsImg from "../../assets/cardsPhoto5.png";
 import tableImg from "../../assets/cardsPhoto1.png";
 import teamsImg from "../../assets/cardsPhoto2.png";
 import rankingImg from "../../assets/auth_photo.jpg";
+import { useAuth } from "../../common/context/AuthContext";
 
 interface CardItem {
   header: string;
@@ -64,16 +66,25 @@ const shine = keyframes`
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 `;
-
 const MotionTypography = motion(Typography);
 
 const Home: React.FC = () => {
   const { t } = useTranslation();
   const cards = useMemo(() => cardsConfig(t), [t]);
   const theme = useTheme();
-  const animatedGradient = `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main}, ${theme.palette.primary.main})`;
-  const userName = "Bartek";
+  const { user } = useAuth();
 
+  /** surowe „grzesiek” z maila */
+  const emailName = user?.email?.split("@")[0] || "Player";
+
+  /** ładny nagłówek „Grzesiek” */
+  const userName =
+    emailName.charAt(0).toUpperCase() + emailName.slice(1).toLowerCase();
+
+  /** klucz do hooków/statystyk: zawsze małe litery */
+  const playerKey = emailName.toLowerCase();
+
+  // --- ładowanie sekcji ---
   const [scoreboardLoaded, setScoreboardLoaded] = useState(false);
   const [statsLoaded, setStatsLoaded] = useState(false);
   const [imagesLoaded, setImagesLoaded] = useState(0);
@@ -81,22 +92,29 @@ const Home: React.FC = () => {
   const cardsLoaded = imagesLoaded === cards.length;
   const allLoaded = scoreboardLoaded && statsLoaded && cardsLoaded;
 
-  const handleScoreboardLoaded = useCallback(() => {
-    setScoreboardLoaded(true);
-  }, []);
+  const handleScoreboardLoaded = useCallback(
+    () => setScoreboardLoaded(true),
+    []
+  );
+  const handleStatsLoaded = useCallback(() => setStatsLoaded(true), []);
+  const handleCardLoaded = useCallback(
+    () => setImagesLoaded((prev) => prev + 1),
+    []
+  );
 
-  const handleStatsLoaded = useCallback(() => {
-    setStatsLoaded(true);
-  }, []);
-
-  const handleCardLoaded = useCallback(() => {
-    setImagesLoaded((prev) => prev + 1);
-  }, []);
+  const animatedGradient = `linear-gradient(90deg,
+    ${theme.palette.primary.main},
+    ${theme.palette.secondary.main},
+    ${theme.palette.primary.main})`;
 
   return (
     <Box className={styles.container} sx={{ width: "100%" }}>
-      <HomeScoreboard ready={allLoaded} onLoaded={handleScoreboardLoaded} />
+      {/* --- SCOREBOARD --- */}
+      <Box sx={{ display: { xs: "none", lg: "block" } }}>
+        <HomeScoreboard ready={allLoaded} onLoaded={handleScoreboardLoaded} />
+      </Box>
 
+      {/* --- NAGŁÓWEK --- */}
       <Box sx={{ mt: 4, px: 3, maxWidth: 1800, mx: "auto" }}>
         <MotionTypography
           variant="h3"
@@ -130,12 +148,14 @@ const Home: React.FC = () => {
         </Typography>
       </Box>
 
+      {/* --- STATYSTYKI --- */}
       <HomeStats
-        player={userName}
+        player={playerKey} // ← klucz w małych literach
         ready={allLoaded}
         onLoaded={handleStatsLoaded}
       />
 
+      {/* --- KARTY --- */}
       <Box sx={{ mt: 6, mb: 1, px: 3, maxWidth: 1800, mx: "auto" }}>
         <Title subtitle={t("home.subtitle")} title={t("home.title")} />
       </Box>

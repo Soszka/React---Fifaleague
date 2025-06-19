@@ -63,36 +63,34 @@ const PPM_OPTIONS = ["0-1", "1-2", "2-3"];
 
 const MotionRow = motion(TableRow, { forwardMotionProps: true });
 
-const FilterSelect = ({
-  value,
-  onChange,
-  label,
-  options,
-}: {
+const FilterSelect: React.FC<{
   value: string | null;
   onChange: (v: string | null) => void;
   label: string;
   options: readonly string[];
-}) => (
-  <FormControl
-    size="small"
-    sx={{ minWidth: 180, width: { xs: "100%", md: "auto" } }}
-  >
-    <InputLabel>{label}</InputLabel>
-    <Select
-      label={label}
-      value={value ?? ""}
-      onChange={(e) => onChange(e.target.value || null)}
+}> = ({ value, onChange, label, options }) => {
+  const { t } = useTranslation();
+  return (
+    <FormControl
+      size="small"
+      sx={{ minWidth: 180, width: { xs: "100%", md: "auto" } }}
     >
-      <MenuItem value="">Brak</MenuItem>
-      {options.map((o) => (
-        <MenuItem key={o} value={o}>
-          {o}
-        </MenuItem>
-      ))}
-    </Select>
-  </FormControl>
-);
+      <InputLabel>{label}</InputLabel>
+      <Select
+        label={label}
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value || null)}
+      >
+        <MenuItem value="">{t("ranking.select.none")}</MenuItem>
+        {options.map((o) => (
+          <MenuItem key={o} value={o}>
+            {o}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+};
 
 const buildPlayersStats = (matches: MatchUi[]): PlayerRow[] => {
   const map = new Map<string, PlayerRow>();
@@ -119,16 +117,11 @@ const buildPlayersStats = (matches: MatchUi[]): PlayerRow[] => {
       p.looses += 1;
     }
   };
-
   matches.forEach((m) => {
-    const [g1, g2] = m.score
-      .split(":" as const)
-      .map((n) => parseInt(n.trim(), 10));
+    const [g1, g2] = m.score.split(":").map((n) => parseInt(n.trim(), 10));
     const result = g1 === g2 ? "draw" : g1 > g2 ? "team1Win" : "team2Win";
-
     const team1Players = m.team1.split("&").map((p) => p.trim());
     const team2Players = m.team2.split("&").map((p) => p.trim());
-
     team1Players.forEach((player) =>
       add(
         player,
@@ -142,7 +135,6 @@ const buildPlayersStats = (matches: MatchUi[]): PlayerRow[] => {
       )
     );
   });
-
   const arr = Array.from(map.values());
   arr.forEach((p) => (p.pointsPerMatch = p.points / p.matches));
   return arr;
@@ -151,47 +143,16 @@ const buildPlayersStats = (matches: MatchUi[]): PlayerRow[] => {
 const columns: {
   id: keyof PlayerRow | "position";
   label: string;
-  labelFallback: string;
   numeric?: boolean;
 }[] = [
-  { id: "position", label: "table.column.position", labelFallback: "Lp." },
-  { id: "player", label: "table.column.player", labelFallback: "Gracz" },
-  {
-    id: "matches",
-    label: "table.column.matches",
-    labelFallback: "Mecze",
-    numeric: true,
-  },
-  {
-    id: "wins",
-    label: "table.column.wins",
-    labelFallback: "Wygrane",
-    numeric: true,
-  },
-  {
-    id: "looses",
-    label: "table.column.looses",
-    labelFallback: "Porażki",
-    numeric: true,
-  },
-  {
-    id: "draws",
-    label: "table.column.draws",
-    labelFallback: "Remisy",
-    numeric: true,
-  },
-  {
-    id: "points",
-    label: "table.column.points",
-    labelFallback: "Pkt",
-    numeric: true,
-  },
-  {
-    id: "pointsPerMatch",
-    label: "table.column.ppm",
-    labelFallback: "Pkt/Mecz",
-    numeric: true,
-  },
+  { id: "position", label: "ranking.column.position" },
+  { id: "player", label: "ranking.column.player" },
+  { id: "matches", label: "ranking.column.matches", numeric: true },
+  { id: "wins", label: "ranking.column.wins", numeric: true },
+  { id: "looses", label: "ranking.column.looses", numeric: true },
+  { id: "draws", label: "ranking.column.draws", numeric: true },
+  { id: "points", label: "ranking.column.points", numeric: true },
+  { id: "pointsPerMatch", label: "ranking.column.ppm", numeric: true },
 ];
 
 const RankingPage: React.FC = () => {
@@ -199,9 +160,7 @@ const RankingPage: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { matches, loading, error } = useAllMatches();
-
   const players = useMemo(() => buildPlayersStats(matches), [matches]);
-
   const [playerFilter, setPlayerFilter] = useState<string | null>(null);
   const [matchesFilter, setMatchesFilter] = useState<string | null>(null);
   const [pointsFilter, setPointsFilter] = useState<string | null>(null);
@@ -211,7 +170,6 @@ const RankingPage: React.FC = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filterDialogOpen, setFilterDialogOpen] = useState(false);
-
   const handleClearFilters = () => {
     setPlayerFilter(null);
     setMatchesFilter(null);
@@ -219,28 +177,24 @@ const RankingPage: React.FC = () => {
     setPpmFilter(null);
     setPage(0);
   };
-
   const medalColor = (pos?: number) => {
     if (pos === 1) return "#D4AF37";
     if (pos === 2) return "#C0C0C0";
     if (pos === 3) return "#CD7F32";
     return theme.palette.text.primary;
   };
-
   const uniquePlayers = useMemo(
     () => players.map((p) => p.player).sort(),
     [players]
   );
-
   const rangeFilter = (data: PlayerRow[], r: string, key: keyof PlayerRow) => {
     if (r === "100<") return data.filter((d) => (d[key] as number) > 100);
-    const [min, max] = r.split("-" as const).map(Number);
+    const [min, max] = r.split("-").map(Number);
     return data.filter((d) => {
       const v = d[key] as number;
       return v >= min && v <= max;
     });
   };
-
   const applyFilters = (data: PlayerRow[]) => {
     let out = [...data];
     if (playerFilter) out = out.filter((p) => p.player === playerFilter);
@@ -249,7 +203,6 @@ const RankingPage: React.FC = () => {
     if (ppmFilter) out = rangeFilter(out, ppmFilter, "pointsPerMatch");
     return out;
   };
-
   const sortData = (data: PlayerRow[]) =>
     [...data].sort((a, b) => {
       const A = a[orderBy] as number | string;
@@ -258,7 +211,6 @@ const RankingPage: React.FC = () => {
       if (A > B) return order === "asc" ? 1 : -1;
       return 0;
     });
-
   const processed = useMemo(() => {
     const filtered = applyFilters(players);
     const sorted = sortData(filtered);
@@ -272,18 +224,15 @@ const RankingPage: React.FC = () => {
     orderBy,
     order,
   ]);
-
   const paginated = useMemo(() => {
     const start = page * rowsPerPage;
     return processed.slice(start, start + rowsPerPage);
   }, [processed, page, rowsPerPage]);
-
   const handleSort = (prop: keyof PlayerRow | "position") => {
     const isAsc = orderBy === prop && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(prop as keyof PlayerRow);
   };
-
   const ClearButton = (
     <Button
       variant="contained"
@@ -298,16 +247,12 @@ const RankingPage: React.FC = () => {
         px: 2,
       }}
     >
-      {t("table.button.clear", "Wyczyść")}
+      {t("ranking.button.clear")}
     </Button>
   );
-
   return (
     <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: 4 }}>
-      <Title
-        title={t("playerTable.title", "Graczy")}
-        subtitle={t("playerTable.subtitle", "Sprawdź ranking ...")}
-      />
+      <Title title={t("ranking.title")} subtitle={t("ranking.subtitle")} />
       <Paper
         elevation={4}
         className={styles.container}
@@ -327,31 +272,30 @@ const RankingPage: React.FC = () => {
             <FilterSelect
               value={playerFilter}
               onChange={setPlayerFilter}
-              label={t("table.select.player", "Gracz")}
+              label={t("ranking.select.player")}
               options={uniquePlayers}
             />
             <FilterSelect
               value={matchesFilter}
               onChange={setMatchesFilter}
-              label={t("table.select.matches", "Mecze")}
+              label={t("ranking.select.matches")}
               options={MATCH_OPTIONS}
             />
             <FilterSelect
               value={pointsFilter}
               onChange={setPointsFilter}
-              label={t("table.select.points", "Punkty")}
+              label={t("ranking.select.points")}
               options={POINTS_OPTIONS}
             />
             <FilterSelect
               value={ppmFilter}
               onChange={setPpmFilter}
-              label={t("table.select.ppm", "Pkt/Mecz")}
+              label={t("ranking.select.ppm")}
               options={PPM_OPTIONS}
             />
             {ClearButton}
           </Box>
         )}
-
         {isMobile && (
           <>
             <Button
@@ -360,40 +304,38 @@ const RankingPage: React.FC = () => {
               onClick={() => setFilterDialogOpen(true)}
               sx={{ mb: 2 }}
             >
-              {t("table.button.filter", "Filtruj")}
+              {t("ranking.button.filter")}
             </Button>
             <Dialog
               open={filterDialogOpen}
               onClose={() => setFilterDialogOpen(false)}
               fullWidth
             >
-              <DialogTitle>
-                {t("table.filterDialog.title", "Filtry")}
-              </DialogTitle>
+              <DialogTitle>{t("ranking.filterDialog.title")}</DialogTitle>
               <DialogContent sx={{ pt: 2, pb: 1 }}>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                   <FilterSelect
                     value={playerFilter}
                     onChange={setPlayerFilter}
-                    label={t("table.select.player", "Gracz")}
+                    label={t("ranking.select.player")}
                     options={uniquePlayers}
                   />
                   <FilterSelect
                     value={matchesFilter}
                     onChange={setMatchesFilter}
-                    label={t("table.select.matches", "Mecze")}
+                    label={t("ranking.select.matches")}
                     options={MATCH_OPTIONS}
                   />
                   <FilterSelect
                     value={pointsFilter}
                     onChange={setPointsFilter}
-                    label={t("table.select.points", "Punkty")}
+                    label={t("ranking.select.points")}
                     options={POINTS_OPTIONS}
                   />
                   <FilterSelect
                     value={ppmFilter}
                     onChange={setPpmFilter}
-                    label={t("table.select.ppm", "Pkt/Mecz")}
+                    label={t("ranking.select.ppm")}
                     options={PPM_OPTIONS}
                   />
                   {ClearButton}
@@ -401,14 +343,13 @@ const RankingPage: React.FC = () => {
               </DialogContent>
               <DialogActions>
                 <Button onClick={() => setFilterDialogOpen(false)}>
-                  {t("table.filterDialog.close", "Zamknij")}
+                  {t("ranking.filterDialog.close")}
                 </Button>
               </DialogActions>
             </Dialog>
           </>
         )}
-
-        {loading && (
+        {loading && !isMobile && (
           <TableContainer
             component={Paper}
             elevation={0}
@@ -441,13 +382,25 @@ const RankingPage: React.FC = () => {
             </Table>
           </TableContainer>
         )}
-
+        {loading && isMobile && (
+          <Box>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Card key={i} sx={{ mb: 2 }}>
+                <CardContent>
+                  <Skeleton variant="text" width="50%" />
+                  <Skeleton variant="text" width="30%" />
+                  <Skeleton variant="text" width="40%" />
+                  <Skeleton variant="text" width="35%" />
+                </CardContent>
+              </Card>
+            ))}
+          </Box>
+        )}
         {error && (
           <Typography color="error" align="center" sx={{ my: 4 }}>
-            Błąd: {error.message}
+            {t("ranking.error")} {error.message}
           </Typography>
         )}
-
         {!loading && !error && !isMobile && (
           <TableContainer
             component={Paper}
@@ -467,7 +420,7 @@ const RankingPage: React.FC = () => {
                         direction={orderBy === col.id ? order : "asc"}
                         onClick={() => handleSort(col.id)}
                       >
-                        {t(col.label, col.labelFallback)}
+                        {t(col.label)}
                       </TableSortLabel>
                     </TableCell>
                   ))}
@@ -517,11 +470,10 @@ const RankingPage: React.FC = () => {
                 setRowsPerPage(parseInt(e.target.value, 10));
                 setPage(0);
               }}
-              labelRowsPerPage={t("table.rowsPerPage", "Wierszy na stronę:")}
+              labelRowsPerPage={t("ranking.rowsPerPage")}
             />
           </TableContainer>
         )}
-
         {!loading && !error && isMobile && (
           <>
             {paginated.map((player) => (
@@ -558,31 +510,31 @@ const RankingPage: React.FC = () => {
                       {player.player}
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 0.5 }}>
-                      Mecze:{" "}
+                      {t("card.matches")}:{" "}
                       <Box component="span" sx={{ fontWeight: 600 }}>
                         {player.matches}
                       </Box>
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 0.5 }}>
-                      Wygrane:{" "}
+                      {t("card.wins")}:{" "}
                       <Box component="span" sx={{ fontWeight: 600 }}>
                         {player.wins}
                       </Box>
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 0.5 }}>
-                      Porażki:{" "}
+                      {t("card.losses")}:{" "}
                       <Box component="span" sx={{ fontWeight: 600 }}>
                         {player.looses}
                       </Box>
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 0.5 }}>
-                      Remisy:{" "}
+                      {t("card.draws")}:{" "}
                       <Box component="span" sx={{ fontWeight: 600 }}>
                         {player.draws}
                       </Box>
                     </Typography>
                     <Typography variant="body2">
-                      Pkt/Mecz:{" "}
+                      {t("card.ppm")}:{" "}
                       <Box component="span" sx={{ fontWeight: 600 }}>
                         {player.pointsPerMatch.toFixed(2)}
                       </Box>
@@ -601,7 +553,7 @@ const RankingPage: React.FC = () => {
                 setRowsPerPage(parseInt(e.target.value, 10));
                 setPage(0);
               }}
-              labelRowsPerPage={t("table.rowsPerPage", "Wierszy na stronę:")}
+              labelRowsPerPage={t("ranking.rowsPerPage")}
             />
           </>
         )}

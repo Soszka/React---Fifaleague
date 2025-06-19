@@ -9,6 +9,7 @@ import TeamsPage from "./pages/teams/Teams";
 import Matches from "./pages/matches/Matches";
 import StatsPage from "./pages/stats/Stats";
 import AboutPage from "./pages/about/About";
+import RequireAuth from "./common/routing/RequireAuth";
 
 interface Props {
   toggleTheme: () => void;
@@ -21,15 +22,17 @@ export function AppRoutes({ toggleTheme }: Props) {
 
       <Route path="/auth/*" element={<Auth />} />
 
-      <Route path="/app/*" element={<Navigation toggleTheme={toggleTheme} />}>
-        <Route index element={<Navigate to="home" replace />} />
-        <Route path="home" element={<Home />} />
-        <Route path="table" element={<TablePage />} />
-        <Route path="ranking" element={<RankingPage />} />
-        <Route path="teams" element={<TeamsPage />} />
-        <Route path="matches" element={<Matches />} />
-        <Route path="stats" element={<StatsPage />} />
-        <Route path="about" element={<AboutPage />} />
+      <Route element={<RequireAuth />}>
+        <Route path="/app/*" element={<Navigation toggleTheme={toggleTheme} />}>
+          <Route index element={<Navigate to="home" replace />} />
+          <Route path="home" element={<Home />} />
+          <Route path="table" element={<TablePage />} />
+          <Route path="ranking" element={<RankingPage />} />
+          <Route path="teams" element={<TeamsPage />} />
+          <Route path="matches" element={<Matches />} />
+          <Route path="stats" element={<StatsPage />} />
+          <Route path="about" element={<AboutPage />} />
+        </Route>
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

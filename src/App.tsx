@@ -1,9 +1,11 @@
+// src/App.tsx
 import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import { getTheme } from "./theme";
 import { AppRoutes } from "./AppRoutes";
 import { useState, useMemo } from "react";
 import { BrowserRouter } from "react-router-dom";
 import Footer from "./common/UI/Footer";
+import { AuthProvider } from "./common/context/AuthContext";
 
 export default function App() {
   const [mode, setMode] = useState<"light" | "dark">("light");
@@ -14,17 +16,20 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <BrowserRouter>
-        {/* GŁÓWNY flex‑kontener SPA */}
-        <Box
-          sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
-        >
-          {/* cały “środek” aplikacji */}
-          <AppRoutes toggleTheme={toggleTheme} />
-          {/* stopka przyklejona na dole */}
-          <Footer />
-        </Box>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              minHeight: "100vh",
+            }}
+          >
+            <AppRoutes toggleTheme={toggleTheme} />
+            <Footer />
+          </Box>
+        </BrowserRouter>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

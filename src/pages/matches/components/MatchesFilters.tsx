@@ -109,21 +109,23 @@ const MatchesFilters: React.FC<Props> = ({
         clearOnEscape
       />
 
-      <FormControl size="small" sx={{ width: controlWidth }}>
-        <InputLabel>{t("matches.filters.result")}</InputLabel>
-        <Select
-          value={resultFilter}
-          label={t("matches.filters.result")}
-          onChange={(e) =>
-            onResultFilterChange(e.target.value as FilterResultOption)
-          }
-        >
-          <MenuItem value="">{t("matches.filters.none")}</MenuItem>
-          <MenuItem value="WIN">{t("matches.outcome.win")}</MenuItem>
-          <MenuItem value="LOSS">{t("matches.outcome.loss")}</MenuItem>
-          <MenuItem value="DRAW">{t("matches.outcome.draw")}</MenuItem>
-        </Select>
-      </FormControl>
+      {!showAll && (
+        <FormControl size="small" sx={{ width: controlWidth }}>
+          <InputLabel>{t("matches.filters.result")}</InputLabel>
+          <Select
+            value={resultFilter}
+            label={t("matches.filters.result")}
+            onChange={(e) =>
+              onResultFilterChange(e.target.value as FilterResultOption)
+            }
+          >
+            <MenuItem value="">{t("matches.filters.none")}</MenuItem>
+            <MenuItem value="WIN">{t("matches.outcome.win")}</MenuItem>
+            <MenuItem value="LOSS">{t("matches.outcome.loss")}</MenuItem>
+            <MenuItem value="DRAW">{t("matches.outcome.draw")}</MenuItem>
+          </Select>
+        </FormControl>
+      )}
 
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker

@@ -1,3 +1,4 @@
+// src/pages/home/components/HomeStats.tsx
 import React, { useEffect } from "react";
 import { Box, Typography, Paper, Skeleton, useTheme } from "@mui/material";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
@@ -7,13 +8,14 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { usePlayerStats } from "../../../common/hooks/usePlayerStats";
+import { ResultOption } from "../../matches/types";
 import styles from "./home-stats.module.scss";
 import { useTranslation } from "react-i18next";
 
 interface HighlightItemProps {
   icon: React.ReactNode;
   label: string;
-  value: string;
+  value: React.ReactNode;
   gradient: string;
   ariaLabel?: string;
   onClick?: () => void;
@@ -59,7 +61,7 @@ const HighlightItem: React.FC<HighlightItemProps> = ({
         >
           <Typography
             variant="h3"
-            component="p"
+            component="div" // ← changed from "p" to "div"
             className={styles.valueText}
             sx={{ color: textColor }}
           >
@@ -105,7 +107,7 @@ const HomeStats: React.FC<HomeStatsProps> = ({
   onLoaded,
 }) => {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { stats, loading } = usePlayerStats(player, dbPath);
 
@@ -143,32 +145,78 @@ const HomeStats: React.FC<HomeStatsProps> = ({
 
   const iconSizes = { xs: "2.8rem", sm: "4rem", md: "5rem", lg: "6rem" };
 
+  const lastOutcome = (stats.lastOutcome || "DRAW") as ResultOption;
+
+  const resultColor = (r: ResultOption) => {
+    if (theme.palette.mode === "dark") {
+      if (r === "WIN") return theme.palette.success.light;
+      if (r === "LOSS") return theme.palette.error.light;
+      return theme.palette.warning.light;
+    }
+    if (r === "WIN") return theme.palette.success.main;
+    if (r === "LOSS") return theme.palette.error.main;
+    return theme.palette.warning.main;
+  };
+
+  const letterMap: Record<"pl" | "en", Record<ResultOption, string>> = {
+    pl: { WIN: "Z", DRAW: "R", LOSS: "P" },
+    en: { WIN: "W", DRAW: "D", LOSS: "L" },
+  };
+  const currentLang = i18n.language.startsWith("pl") ? "pl" : "en";
+  const lastLetter = letterMap[currentLang][lastOutcome];
+  const lastBg = resultColor(lastOutcome);
+  const lastFg = theme.palette.getContrastText(lastBg);
+
+  const lastResultValue = (
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+      <Box component="span">{stats.lastResult.replace(/\s*:\s*/, ":")}</Box>
+      <Box
+        component="span"
+        sx={{
+          px: "0.30em",
+          py: "0.05em",
+          borderRadius: "0.25em",
+          backgroundColor: lastBg,
+          color: lastFg,
+          fontWeight: 600,
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          lineHeight: 1,
+          fontSize: "calc(1em - 10px)",
+        }}
+      >
+        {lastLetter}
+      </Box>
+    </Box>
+  );
+
   const highlightData: HighlightItemProps[] = [
     {
       icon: <SportsScoreIcon sx={{ fontSize: iconSizes, color: iconColor }} />,
       label: t("homeStats.lastResult"),
-      value: stats.lastResult,
+      value: lastResultValue,
       gradient: gradients[0],
       onClick: () => navigate("/app/matches"),
     },
     {
       icon: <EventNoteIcon sx={{ fontSize: iconSizes, color: iconColor }} />,
       label: t("homeStats.weekMatches"),
-      value: stats.weekMatches.toString(),
+      value: <>{stats.weekMatches}</>,
       gradient: gradients[1],
       onClick: () => navigate("/app/matches"),
     },
     {
       icon: <EmojiEventsIcon sx={{ fontSize: iconSizes, color: iconColor }} />,
       label: t("homeStats.winPercent"),
-      value: `${stats.winPercent}%`,
+      value: <>{`${stats.winPercent}%`}</>,
       gradient: gradients[2],
       onClick: () => navigate("/app/stats"),
     },
     {
       icon: <TrendingUpIcon sx={{ fontSize: iconSizes, color: iconColor }} />,
       label: t("homeStats.avgGoals"),
-      value: stats.avgGoals.toString().replace(".", ","),
+      value: <>{stats.avgGoals.toString().replace(".", ",")}</>,
       gradient: gradients[3],
       onClick: () => navigate("/app/stats"),
     },

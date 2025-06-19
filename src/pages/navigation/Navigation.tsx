@@ -1,4 +1,3 @@
-// src/pages/navigation/Navigation.tsx
 import { useState } from "react";
 import { Outlet, NavLink, useLocation } from "react-router-dom";
 import {
@@ -96,7 +95,6 @@ export default function Navigation({ toggleTheme }: Props) {
 
   return (
     <Box sx={{ display: "flex", overflowX: "hidden" }}>
-      {/* ---------- GÓRNY PASEK ---------- */}
       <AppBar
         position="fixed"
         color="default"
@@ -126,7 +124,6 @@ export default function Navigation({ toggleTheme }: Props) {
             sx={{ height: 42, mr: 2, display: { xs: "none", sm: "block" } }}
           />
 
-          {/* nazwa + podtytuł */}
           <Typography
             sx={{
               flexGrow: 1,
@@ -163,7 +160,6 @@ export default function Navigation({ toggleTheme }: Props) {
         </Toolbar>
       </AppBar>
 
-      {/* ---------- SZUFLADA ---------- */}
       <Box
         component="nav"
         sx={{
@@ -177,7 +173,6 @@ export default function Navigation({ toggleTheme }: Props) {
           }),
         }}
       >
-        {/* mobile */}
         <Drawer
           variant="temporary"
           open={drawerOpen && !isDesktop}
@@ -194,7 +189,6 @@ export default function Navigation({ toggleTheme }: Props) {
           {drawer}
         </Drawer>
 
-        {/* desktop */}
         <Drawer
           variant="persistent"
           open={drawerOpen && isDesktop}
@@ -210,12 +204,11 @@ export default function Navigation({ toggleTheme }: Props) {
         </Drawer>
       </Box>
 
-      {/* ---------- GŁÓWNA ZAWARTOŚĆ ---------- */}
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          minWidth: 0, // ② POZWÓL flex-childowi się kurczyć
+          minWidth: 0,
           pt: { xs: 7, sm: 8 },
           px: 0,
           pb: 3,
@@ -226,7 +219,7 @@ export default function Navigation({ toggleTheme }: Props) {
             }),
         }}
       >
-        <Outlet />
+        <Outlet context={{ isNavVisible: drawerOpen && isDesktop }} />
       </Box>
     </Box>
   );

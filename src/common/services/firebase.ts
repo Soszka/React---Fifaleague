@@ -1,4 +1,11 @@
 import { initializeApp } from "firebase/app";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  User,
+} from "firebase/auth";
 import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
@@ -13,3 +20,13 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export const rtdb = getDatabase(app);
+export const auth = getAuth(app);
+
+// helpers
+export const login = (email: string, password: string) =>
+  signInWithEmailAndPassword(auth, email, password);
+
+export const logout = () => signOut(auth);
+
+export const listenAuth = (cb: (u: User | null) => void) =>
+  onAuthStateChanged(auth, cb);

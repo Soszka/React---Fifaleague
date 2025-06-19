@@ -1,3 +1,4 @@
+// src/pages/matches/Matches.tsx
 import React, { useMemo, useState } from "react";
 import { Box, Paper, useTheme, useMediaQuery } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -17,6 +18,9 @@ import {
   Match,
 } from "../../common/context/MatchesContext";
 import { NotificationProvider } from "../../common/context/NotificationContext";
+import { useAuth } from "../../common/context/AuthContext";
+
+const normalizeTeam = (a: string, b: string) => [a, b].sort().join(" & ");
 
 const getOutcome = (score: string): ResultOption => {
   const [g1, g2] = score.split(" : ").map((n) => parseInt(n.trim(), 10));
@@ -24,12 +28,20 @@ const getOutcome = (score: string): ResultOption => {
   return g1 > g2 ? "WIN" : "LOSS";
 };
 
+const eq = (a = "", b = "") => a.toLowerCase() === b.toLowerCase();
+
 const MatchesScreen: React.FC = () => {
   const { matches, loading, error } = useMatches();
   const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const currentUser = "Bartek";
+
+  // aktualnie zalogowany gracz
+  const { user } = useAuth();
+  const emailName = user?.email?.split("@")[0] || "";
+  const currentUserKey = emailName.toLowerCase(); // do porównań
+  const currentUserLabel =
+    emailName.charAt(0).toUpperCase() + emailName.slice(1).toLowerCase(); // do UI
 
   const [showAll, setShowAll] = useState(false);
   const [rivalFilter, setRivalFilter] = useState<string | null>(null);
@@ -61,8 +73,8 @@ const MatchesScreen: React.FC = () => {
   const uniqueTeams = useMemo(() => {
     const set = new Set<string>();
     matches.forEach((m) => {
-      set.add(`${m.player1} & ${m.player2}`);
-      set.add(`${m.rival1} & ${m.rival2}`);
+      set.add(normalizeTeam(m.player1, m.player2));
+      set.add(normalizeTeam(m.rival1, m.rival2));
     });
     return [...set].sort();
   }, [matches]);
@@ -70,10 +82,11 @@ const MatchesScreen: React.FC = () => {
   const buildRows = useMemo<RowData[]>(() => {
     return matches
       .map<RowData>((m) => {
-        const team1 = `${m.player1} & ${m.player2}`;
-        const team2 = `${m.rival1} & ${m.rival2}`;
-        const userInTeam1 = team1.includes(currentUser);
-        const userInTeam2 = team2.includes(currentUser);
+        const team1 = normalizeTeam(m.player1, m.player2);
+        const team2 = normalizeTeam(m.rival1, m.rival2);
+
+        const userInTeam1 = team1.toLowerCase().includes(currentUserKey);
+        const userInTeam2 = team2.toLowerCase().includes(currentUserKey);
 
         let team = team1;
         let rival = team2;
@@ -83,7 +96,7 @@ const MatchesScreen: React.FC = () => {
           team = team2;
           rival = team1;
           const [g1, g2] = m.result.split("-");
-          score = `${g2} : ${g1}`;
+          score = `${g2.trim()} : ${g1.trim()}`;
         }
 
         return {
@@ -98,19 +111,28 @@ const MatchesScreen: React.FC = () => {
       .filter((row) => {
         if (
           (!showAll &&
-            !row.team.includes(currentUser) &&
-            !row.rival.includes(currentUser)) ||
+            !row.team.toLowerCase().includes(currentUserKey) &&
+            !row.rival.toLowerCase().includes(currentUserKey)) ||
           (rivalFilter &&
-            row.team !== rivalFilter &&
-            row.rival !== rivalFilter) ||
+            !eq(row.team, rivalFilter) &&
+            !eq(row.rival, rivalFilter)) ||
           (resultFilter && row.outcome !== resultFilter) ||
           (dateFrom && row.date < dateFrom.valueOf()) ||
           (dateTo && row.date > dateTo.valueOf())
-        )
+        ) {
           return false;
+        }
         return true;
       });
-  }, [matches, showAll, rivalFilter, resultFilter, dateFrom, dateTo]);
+  }, [
+    matches,
+    showAll,
+    rivalFilter,
+    resultFilter,
+    dateFrom,
+    dateTo,
+    currentUserKey,
+  ]);
 
   const sortedRows = useMemo(() => {
     const rows = [...buildRows].sort((a, b) => {
@@ -167,10 +189,11 @@ const MatchesScreen: React.FC = () => {
       >
         <Title
           title={t("matches.title") as string}
-          subtitle={t("matches.subtitle") as string}
+          subtitle={
+            t("matches.subtitle", { player: currentUserLabel }) as string
+          }
         />
       </Box>
-
       <Paper
         elevation={4}
         className={styles.container}

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, memo, useCallback } from "react";
 import {
   Accordion,
   AccordionDetails,
@@ -18,11 +18,12 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import ReactApexChart from "react-apexcharts";
 import Title from "../../common/UI/Title";
 import { useAllMatches, MatchUi } from "../../common/hooks/useAllMatches";
-import ReactApexChart from "react-apexcharts";
+import { useOutletContext } from "react-router-dom";
 
-interface TeamAccordionData {
+interface TeamData {
   players: string;
   matches: number;
   wins: number;
@@ -37,24 +38,31 @@ interface TeamAccordionData {
   trophy?: string;
 }
 
-const parseScore = (score: string): [number, number] => {
-  const parts = score.split(/[-:]/).map((n) => n.trim());
-  return [parseInt(parts[0], 10) || 0, parseInt(parts[1], 10) || 0];
+const parseScore = (s: string): [number, number] => {
+  const m = s.match(/\d+/g) ?? [];
+  return [parseInt(m[0] || "0", 10), parseInt(m[1] || "0", 10)];
 };
 
-const formatNames = (players: string) =>
-  players
+const formatNames = (p: string) =>
+  p
     .split(" & ")
-    .map((p) => p.trim())
-    .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+    .map((n) => n.trim())
+    .map((n) => n.charAt(0).toUpperCase() + n.slice(1))
     .join(" & ");
 
-const buildTeamsData = (matches: MatchUi[]): TeamAccordionData[] => {
-  const map = new Map<string, TeamAccordionData>();
-  const get = (team: string) => {
-    if (!map.has(team))
-      map.set(team, {
-        players: team,
+const normalize = (t: string) =>
+  t
+    .split("&")
+    .map((p) => p.trim().toLowerCase())
+    .sort()
+    .join(" & ");
+
+const buildTeams = (matches: MatchUi[]): TeamData[] => {
+  const map = new Map<string, TeamData>();
+  const get = (t: string) => {
+    if (!map.has(t))
+      map.set(t, {
+        players: t,
         matches: 0,
         wins: 0,
         losses: 0,
@@ -66,18 +74,11 @@ const buildTeamsData = (matches: MatchUi[]): TeamAccordionData[] => {
         goalsAgainst: 0,
         goalsDiff: 0,
       });
-    return map.get(team)!;
+    return map.get(t)!;
   };
-  const norm = (team: string) =>
-    team
-      .split("&")
-      .map((p) => p.trim().toLowerCase())
-      .sort((a, b) => a.localeCompare(b))
-      .join(" & ");
-
   matches.forEach((m) => {
-    const t1 = norm(m.team1);
-    const t2 = norm(m.team2);
+    const t1 = normalize(m.team1);
+    const t2 = normalize(m.team2);
     const [g1, g2] = parseScore(m.score);
     const A = get(t1);
     const B = get(t2);
@@ -87,7 +88,6 @@ const buildTeamsData = (matches: MatchUi[]): TeamAccordionData[] => {
     A.goalsAgainst += g2;
     B.goalsFor += g2;
     B.goalsAgainst += g1;
-
     if (g1 === g2) {
       A.draws += 1;
       B.draws += 1;
@@ -103,59 +103,142 @@ const buildTeamsData = (matches: MatchUi[]): TeamAccordionData[] => {
       B.points += 3;
     }
   });
-
   map.forEach((t) => {
     t.pointsPerMatch = t.matches ? t.points / t.matches : 0;
     t.winPercentage = t.matches ? (t.wins / t.matches) * 100 : 0;
     t.goalsDiff = t.goalsFor - t.goalsAgainst;
   });
-
-  const arr = Array.from(map.values()).sort(
+  const list = Array.from(map.values()).sort(
     (a, b) =>
       b.points - a.points ||
       b.goalsDiff - a.goalsDiff ||
       b.goalsFor - a.goalsFor
   );
-  arr.forEach((t, i) => {
+  list.forEach((t, i) => {
     if (i === 0) t.trophy = "🥇";
     else if (i === 1) t.trophy = "🥈";
     else if (i === 2) t.trophy = "🥉";
   });
-  return arr;
+  return list;
 };
 
-interface DetailsProps {
-  team: TeamAccordionData;
+const chartDefaults = {
+  chart: {
+    toolbar: { show: false },
+    parentHeightOffset: 0,
+    animations: { enabled: false },
+  },
+  dataLabels: { enabled: true },
+};
+
+const Bar = memo(
+  ({
+    data,
+    labels,
+    colors,
+    mode,
+  }: {
+    data: number[];
+    labels: string[];
+    colors: string[];
+    mode: "light" | "dark";
+  }) => (
+    <ReactApexChart
+      type="bar"
+      width="100%"
+      height={260}
+      series={[{ name: labels[0], data }]}
+      options={{
+        ...chartDefaults,
+        theme: { mode },
+        colors,
+        plotOptions: {
+          bar: { horizontal: false, columnWidth: "50%", distributed: true },
+        },
+        grid: { padding: { left: 16, right: 0, top: 0, bottom: 0 } },
+        xaxis: {
+          categories: labels,
+          labels: { style: { colors: "#888" } },
+          axisBorder: { show: false },
+          axisTicks: { show: false },
+        },
+        yaxis: {
+          min: 0,
+          max: Math.max(...data, 1),
+          tickAmount: Math.max(...data, 1),
+          labels: { style: { colors: "#888" } },
+        },
+        legend: { show: false },
+      }}
+    />
+  )
+);
+
+const Pie = memo(
+  ({
+    series,
+    labels,
+    colors,
+    mode,
+  }: {
+    series: number[];
+    labels: string[];
+    colors: string[];
+    mode: "light" | "dark";
+  }) => (
+    <ReactApexChart
+      type="pie"
+      width="100%"
+      height={260}
+      series={series}
+      options={{
+        ...chartDefaults,
+        theme: { mode },
+        labels,
+        colors,
+        legend: { position: "bottom" },
+      }}
+    />
+  )
+);
+
+interface DetailProps {
+  team: TeamData;
   matches: MatchUi[];
 }
 
-const TeamDetails: React.FC<DetailsProps> = ({ team, matches }) => {
+const Details = memo(({ team, matches }: DetailProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
-  const isBelow1400 = useMediaQuery("(max-width:1399px)");
-  const isXsScreen = useMediaQuery(theme.breakpoints.only("xs"));
-
-  const normalize = (s: string) =>
+  const { isNavVisible = false } =
+    useOutletContext<{ isNavVisible?: boolean }>() ?? {};
+  const sideBySideBreakpoint = isNavVisible
+    ? "@media (min-width:1450px)"
+    : theme.breakpoints.up("lg");
+  const veryWideBreakpoint = isNavVisible
+    ? "(min-width:1900px)"
+    : "(min-width:1750px)";
+  const isSideBySideLayout = useMediaQuery(sideBySideBreakpoint);
+  const isVeryWideLayout = useMediaQuery(veryWideBreakpoint);
+  const isXs = useMediaQuery(theme.breakpoints.only("xs"));
+  const norm = (s: string) =>
     s
       .split("&")
       .map((p) => p.trim().toLowerCase())
       .sort()
       .join(" & ");
-
   const teamMatches = useMemo(
     () =>
       matches
         .filter(
           (m) =>
-            normalize(m.team1) === team.players ||
-            normalize(m.team2) === team.players
+            norm(m.team1) === team.players || norm(m.team2) === team.players
         )
         .sort((a, b) => b.date - a.date),
     [matches, team.players]
   );
-
-  const chartColors = isDark
+  const colors = isDark
     ? [
         theme.palette.success.light,
         theme.palette.error.light,
@@ -166,85 +249,52 @@ const TeamDetails: React.FC<DetailsProps> = ({ team, matches }) => {
         theme.palette.error.main,
         theme.palette.warning.main,
       ];
-
-  const maxValue = Math.max(team.wins, team.losses, team.draws);
-
+  const limit = !isSideBySideLayout || isVeryWideLayout ? 8 : 4;
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: { xs: "column", md: "row" },
+        display: "grid",
         gap: 2,
+        gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+        [sideBySideBreakpoint]: {
+          gridTemplateColumns: "300px 300px 1fr",
+        },
       }}
     >
-      <Card elevation={3} sx={{ p: 1, width: { xs: "100%", md: 300 } }}>
-        <ReactApexChart
-          type="bar"
-          width="100%"
-          height={260}
-          series={[
-            {
-              name: t("teams.legend.wins"),
-              data: [team.wins, team.losses, team.draws],
-            },
+      <Card elevation={3} sx={{ p: 1 }}>
+        <Bar
+          data={[team.wins, team.losses, team.draws]}
+          labels={[
+            t("teams.legend.wins"),
+            t("teams.legend.losses"),
+            t("teams.legend.draws"),
           ]}
-          options={{
-            theme: { mode: theme.palette.mode },
-            chart: { toolbar: { show: false }, parentHeightOffset: 0 },
-            colors: chartColors,
-            plotOptions: {
-              bar: { horizontal: false, columnWidth: "50%", distributed: true },
-            },
-            grid: { padding: { left: 16, right: 0, top: 0, bottom: 0 } },
-            xaxis: {
-              categories: [
-                t("teams.legend.wins"),
-                t("teams.legend.losses"),
-                t("teams.legend.draws"),
-              ],
-              labels: { style: { colors: theme.palette.text.primary } },
-              axisBorder: { show: false },
-              axisTicks: { show: false },
-            },
-            yaxis: {
-              min: 0,
-              max: maxValue === 0 ? 1 : maxValue,
-              tickAmount: maxValue === 0 ? 1 : maxValue,
-              labels: { style: { colors: theme.palette.text.primary } },
-            },
-            dataLabels: { enabled: true },
-            legend: { show: false },
-          }}
+          colors={colors}
+          mode={theme.palette.mode as "light" | "dark"}
         />
       </Card>
-
-      <Card elevation={3} sx={{ p: 1, width: { xs: "100%", md: 300 } }}>
-        <ReactApexChart
-          type="pie"
-          width="100%"
-          height={260}
+      <Card elevation={3} sx={{ p: 1 }}>
+        <Pie
           series={[team.goalsFor, team.goalsAgainst]}
-          options={{
-            theme: { mode: theme.palette.mode },
-            chart: { toolbar: { show: false }, parentHeightOffset: 0 },
-            labels: [
-              t("teams.legend.goalsFor"),
-              t("teams.legend.goalsAgainst"),
-            ],
-            colors: [chartColors[0], chartColors[1]],
-            dataLabels: { enabled: true },
-            legend: { position: "bottom" },
-          }}
+          labels={[t("teams.legend.goalsFor"), t("teams.legend.goalsAgainst")]}
+          colors={[colors[0], colors[1]]}
+          mode={theme.palette.mode as "light" | "dark"}
         />
       </Card>
-
-      <Card elevation={3} sx={{ flex: 1 }}>
+      <Card
+        elevation={3}
+        sx={{
+          gridColumn: { xs: "1", md: "1 / -1" },
+          [sideBySideBreakpoint]: {
+            gridColumn: "auto",
+          },
+        }}
+      >
         <CardContent>
           <Box sx={{ width: "100%", mx: "auto" }}>
             <Typography variant="subtitle2" gutterBottom>
               {t("teams.history.lastMatches")}
             </Typography>
-
             <Box
               component={motion.div}
               initial="hidden"
@@ -259,24 +309,22 @@ const TeamDetails: React.FC<DetailsProps> = ({ team, matches }) => {
               }}
               sx={{
                 display: "grid",
-                gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+                gridTemplateColumns: isVeryWideLayout ? "1fr 1fr" : "1fr",
                 gap: 2,
               }}
             >
-              {teamMatches.slice(0, isBelow1400 ? 4 : 8).map((m, idx) => {
+              {teamMatches.slice(0, limit).map((m, idx) => {
                 const [g1, g2] = parseScore(m.score);
-                const normalizedTeam1 = normalize(m.team1);
-                const normalizedTeam2 = normalize(m.team2);
-
-                const isTeam1 = normalizedTeam1 === team.players;
+                const nt1 = norm(m.team1);
+                const isTeam1 = nt1 === team.players;
                 const teamScore = isTeam1 ? g1 : g2;
-                const opponentScore = isTeam1 ? g2 : g1;
-                const isWin = teamScore > opponentScore;
-                const isDraw = teamScore === opponentScore;
-
-                const opponent = isTeam1 ? normalizedTeam2 : normalizedTeam1;
-
-                const outcomeBg = isDraw
+                const oppScore = isTeam1 ? g2 : g1;
+                const isDraw = teamScore === oppScore;
+                const isWin = teamScore > oppScore;
+                const opponent = formatNames(
+                  isTeam1 ? normalize(m.team2) : normalize(m.team1)
+                );
+                const bg = isDraw
                   ? isDark
                     ? theme.palette.warning.light
                     : theme.palette.warning.main
@@ -287,9 +335,7 @@ const TeamDetails: React.FC<DetailsProps> = ({ team, matches }) => {
                   : isDark
                   ? theme.palette.error.light
                   : theme.palette.error.main;
-
                 const dateStr = new Date(m.date).toLocaleDateString("pl-PL");
-
                 return (
                   <Box
                     key={idx}
@@ -325,22 +371,22 @@ const TeamDetails: React.FC<DetailsProps> = ({ team, matches }) => {
                     </Typography>
                     <Typography
                       variant="body2"
-                      noWrap={!isXsScreen}
+                      noWrap={!isXs}
                       sx={{
                         flex: 1,
                         minWidth: 0,
                         textAlign: "left",
-                        wordBreak: isXsScreen ? "break-word" : "normal",
+                        wordBreak: isXs ? "break-word" : "normal",
                       }}
                     >
                       {formatNames(team.players)}
                     </Typography>
                     <Chip
                       icon={<SportsSoccerIcon />}
-                      label={m.score}
+                      label={`${teamScore} : ${oppScore}`}
                       size="small"
                       sx={{
-                        bgcolor: outcomeBg,
+                        bgcolor: bg,
                         color: isDark
                           ? theme.palette.common.white
                           : theme.palette.common.black,
@@ -357,15 +403,15 @@ const TeamDetails: React.FC<DetailsProps> = ({ team, matches }) => {
                     />
                     <Typography
                       variant="body2"
-                      noWrap={!isXsScreen}
+                      noWrap={!isXs}
                       sx={{
                         flex: 1,
                         minWidth: 0,
                         textAlign: "right",
-                        wordBreak: isXsScreen ? "break-word" : "normal",
+                        wordBreak: isXs ? "break-word" : "normal",
                       }}
                     >
-                      {formatNames(opponent)}
+                      {opponent}
                     </Typography>
                   </Box>
                 );
@@ -376,20 +422,25 @@ const TeamDetails: React.FC<DetailsProps> = ({ team, matches }) => {
       </Card>
     </Box>
   );
-};
+});
 
-const MotionAccordion = motion(Accordion);
+const MotionAccordion = memo(motion(Accordion, { forwardMotionProps: true }));
 
 const TeamsPage: React.FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
-
+  const isCompact = useMediaQuery("(max-width:1439px)");
   const { matches, loading, error } = useAllMatches();
-  const teams = useMemo(() => buildTeamsData(matches), [matches]);
-
-  const [selectedPlayer, setSelectedPlayer] = useState<string>("");
-  const playersList = useMemo(() => {
+  const teams = useMemo(() => buildTeams(matches), [matches]);
+  const [playerFilter, setPlayerFilter] = useState("");
+  const [expanded, setExpanded] = useState<string | false>(false);
+  const handleExpand = useCallback(
+    (team: string) => (_: unknown, isExp: boolean) =>
+      setExpanded(isExp ? team : false),
+    []
+  );
+  const players = useMemo(() => {
     const set = new Set<string>();
     matches.forEach((m) =>
       m.team1
@@ -399,23 +450,25 @@ const TeamsPage: React.FC = () => {
     );
     return Array.from(set).sort();
   }, [matches]);
-
-  const filteredTeams = useMemo(
+  const visibleTeams = useMemo(
     () =>
-      selectedPlayer
+      playerFilter
         ? teams.filter((t) =>
             t.players
               .split(" & ")
-              .some(
-                (player) =>
-                  player.toLowerCase() === selectedPlayer.toLowerCase()
-              )
+              .some((p) => p.toLowerCase() === playerFilter.toLowerCase())
           )
         : teams,
-    [teams, selectedPlayer]
+    [teams, playerFilter]
   );
-
-  const nameBgLight = ["#FFFACD", "#E6E6FA", "#F0FFF0", "#FFF0F5", "#E0F7FA"];
+  const nameBgLight = [
+    "#f8fafc",
+    "#e2e8f0",
+    "#dbeafe",
+    "#eff6ff",
+    "#f1f5f9",
+    "#cbd5e1",
+  ];
   const nameBgDark = ["#424242", "#37474F", "#303030", "#263238", "#455A64"];
   const rowBg = isDark ? theme.palette.grey[900] : theme.palette.action.hover;
 
@@ -426,11 +479,17 @@ const TeamsPage: React.FC = () => {
           title={t("teams.title") as string}
           subtitle={t("teams.subtitle") as string}
         />
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} variant="rectangular" height={140} sx={{ my: 1 }} />
+        {Array.from({ length: 8 }).map((_, i) => (
+          <Skeleton
+            key={i}
+            variant="rectangular"
+            height={isCompact ? 120 : 91}
+            sx={{ my: 1 }}
+          />
         ))}
       </Box>
     );
+
   if (error)
     return (
       <Typography color="error" align="center" sx={{ my: 4 }}>
@@ -444,31 +503,34 @@ const TeamsPage: React.FC = () => {
         title={t("teams.title") as string}
         subtitle={t("teams.subtitle") as string}
       />
-
       <Box sx={{ my: 2, display: "flex", gap: 2 }}>
         <Select
-          value={selectedPlayer}
-          onChange={(e) => setSelectedPlayer(e.target.value)}
+          value={playerFilter}
+          onChange={(e) => setPlayerFilter(e.target.value)}
           displayEmpty
           size="small"
           sx={{ minWidth: 200 }}
         >
           <MenuItem value="">{t("teams.filter.allPlayers")}</MenuItem>
-          {playersList.map((p) => (
+          {players.map((p) => (
             <MenuItem key={p} value={p}>
               {formatNames(p)}
             </MenuItem>
           ))}
         </Select>
       </Box>
-
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-        {filteredTeams.map((team, idx) => (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: { xs: 3, md: 2, lg: 2 },
+        }}
+      >
+        {visibleTeams.map((team, idx) => (
           <MotionAccordion
             key={team.players}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2, delay: idx * 0.04 }}
+            expanded={expanded === team.players}
+            onChange={handleExpand(team.players)}
             disableGutters
             square
             sx={{
@@ -483,24 +545,26 @@ const TeamsPage: React.FC = () => {
               expandIcon={<ExpandMoreIcon />}
               sx={{
                 p: 0,
-                minHeight: { xs: "auto", md: 91 },
-                height: { xs: "auto", md: 91 },
-                "&.Mui-expanded": { minHeight: { xs: "auto", md: 91 } },
+                pr: 1.25,
+                minHeight: isCompact ? "auto" : 91,
+                "&.Mui-expanded": { minHeight: isCompact ? "auto" : 91 },
                 "& .MuiAccordionSummary-content": {
                   m: 0,
                   display: "flex",
-                  alignItems: { xs: "flex-start", md: "center" },
+                  alignItems: isCompact ? "flex-start" : "center",
                   width: "100%",
-                  flexDirection: { xs: "column", md: "row" },
+                  flexDirection: isCompact ? "column" : "row",
                 },
               }}
             >
               <Box
                 sx={{
-                  height: { xs: "auto", md: 91 },
-                  width: { xs: "100%", md: 320 },
-                  minHeight: { xs: "auto", md: 91 },
-                  py: { xs: 1, md: 0 },
+                  height: isCompact ? "auto" : 91,
+                  width: "100%",
+                  [theme.breakpoints.up("lg")]: {
+                    width: isCompact ? "100%" : 320,
+                  },
+                  py: isCompact ? 2 : 0,
                   flexShrink: 0,
                   bgcolor: isDark
                     ? nameBgDark[idx % nameBgDark.length]
@@ -524,11 +588,14 @@ const TeamsPage: React.FC = () => {
               <Box
                 sx={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(4, 1fr)",
-                  flex: { md: 1 },
+                  gridTemplateColumns: {
+                    xs: "repeat(4, 1fr)",
+                    sm: "repeat(auto-fit, minmax(120px, 1fr))",
+                  },
+                  flex: { lg: 1 },
                   width: "100%",
                   gap: 1,
-                  pt: { xs: 1, md: 0 },
+                  pt: { xs: 1, lg: 0 },
                   px: { xs: 2, sm: 0 },
                   textAlign: "center",
                 }}
@@ -547,16 +614,36 @@ const TeamsPage: React.FC = () => {
                 ].map(({ label, value }) => (
                   <Box key={label} sx={{ minWidth: 0 }}>
                     <Typography
-                      variant="body2"
-                      sx={{ fontSize: { xs: "0.7rem", sm: "0.8rem" } }}
-                      color="text.secondary"
+                      variant="subtitle1"
+                      sx={{
+                        fontSize: {
+                          xs: "0.85rem",
+                          md: "1rem",
+                          lg: "1.1rem",
+                          xl: "1.1rem",
+                        },
+                        color: "text.secondary",
+                        "@media (max-width:500px)": {
+                          fontSize: "calc(0.85rem - 1.5px)",
+                        },
+                      }}
                     >
                       {label}
                     </Typography>
                     <Typography
                       variant="h6"
-                      sx={{ fontSize: { xs: "0.78rem", sm: "0.95rem" } }}
                       fontWeight={700}
+                      sx={{
+                        fontSize: {
+                          xs: "0.95rem",
+                          md: "1.15rem",
+                          lg: "1.3rem",
+                          xl: "1.3rem",
+                        },
+                        "@media (max-width:500px)": {
+                          fontSize: "calc(0.95rem - 1.5px)",
+                        },
+                      }}
                     >
                       {value}
                     </Typography>
@@ -565,7 +652,9 @@ const TeamsPage: React.FC = () => {
               </Box>
             </AccordionSummary>
             <AccordionDetails sx={{ pt: 2, pb: 2, px: { xs: 1, sm: 2 } }}>
-              <TeamDetails team={team} matches={matches} />
+              {expanded === team.players && (
+                <Details team={team} matches={matches} />
+              )}
             </AccordionDetails>
           </MotionAccordion>
         ))}

@@ -73,26 +73,29 @@ const FilterSelect = ({
   onChange: (v: string | null) => void;
   label: string;
   options: readonly string[];
-}) => (
-  <FormControl
-    size="small"
-    sx={{ minWidth: 180, width: { xs: "100%", md: "auto" } }}
-  >
-    <InputLabel>{label}</InputLabel>
-    <Select
-      label={label}
-      value={value ?? ""}
-      onChange={(e) => onChange(e.target.value || null)}
+}) => {
+  const { t } = useTranslation();
+  return (
+    <FormControl
+      size="small"
+      sx={{ minWidth: 180, width: { xs: "100%", md: "auto" } }}
     >
-      <MenuItem value="">Brak</MenuItem>
-      {options.map((o) => (
-        <MenuItem key={o} value={o}>
-          {o}
-        </MenuItem>
-      ))}
-    </Select>
-  </FormControl>
-);
+      <InputLabel>{label}</InputLabel>
+      <Select
+        label={label}
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value || null)}
+      >
+        <MenuItem value="">{t("common.none")}</MenuItem>
+        {options.map((o) => (
+          <MenuItem key={o} value={o}>
+            {o}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+};
 
 const buildTeamsStats = (matches: MatchUi[]): Team[] => {
   const map = new Map<string, Team>();
@@ -126,7 +129,9 @@ const buildTeamsStats = (matches: MatchUi[]): Team[] => {
       } else if (r === "draw") {
         t.draws += 1;
         t.points += 1;
-      } else t.looses += 1;
+      } else {
+        t.looses += 1;
+      }
     };
     add(team1, res === "team1Win" ? "win" : res === "draw" ? "draw" : "loss");
     add(team2, res === "team2Win" ? "win" : res === "draw" ? "draw" : "loss");
@@ -139,47 +144,16 @@ const buildTeamsStats = (matches: MatchUi[]): Team[] => {
 const columns: {
   id: keyof Team | "position";
   label: string;
-  labelFallback: string;
   numeric?: boolean;
 }[] = [
-  { id: "position", label: "table.column.position", labelFallback: "Lp." },
-  { id: "players", label: "table.column.team", labelFallback: "Drużyna" },
-  {
-    id: "matches",
-    label: "table.column.matches",
-    labelFallback: "Mecze",
-    numeric: true,
-  },
-  {
-    id: "wins",
-    label: "table.column.wins",
-    labelFallback: "Wygrane",
-    numeric: true,
-  },
-  {
-    id: "looses",
-    label: "table.column.looses",
-    labelFallback: "Porażki",
-    numeric: true,
-  },
-  {
-    id: "draws",
-    label: "table.column.draws",
-    labelFallback: "Remisy",
-    numeric: true,
-  },
-  {
-    id: "points",
-    label: "table.column.points",
-    labelFallback: "Pkt",
-    numeric: true,
-  },
-  {
-    id: "pointsPerMatch",
-    label: "table.column.ppm",
-    labelFallback: "Pkt/Mecz",
-    numeric: true,
-  },
+  { id: "position", label: "table.column.position" },
+  { id: "players", label: "table.column.team" },
+  { id: "matches", label: "table.column.matches", numeric: true },
+  { id: "wins", label: "table.column.wins", numeric: true },
+  { id: "looses", label: "table.column.looses", numeric: true },
+  { id: "draws", label: "table.column.draws", numeric: true },
+  { id: "points", label: "table.column.points", numeric: true },
+  { id: "pointsPerMatch", label: "table.column.ppm", numeric: true },
 ];
 
 const TablePage: React.FC = () => {
@@ -291,16 +265,13 @@ const TablePage: React.FC = () => {
         px: 2,
       }}
     >
-      {t("table.button.clear", "Wyczyść")}
+      {t("table.button.clear")}
     </Button>
   );
 
   return (
     <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: 4 }}>
-      <Title
-        title={t("table.title", "Tabela drużyn")}
-        subtitle={t("table.subtitle", "Ranking FIFA 2×2 – live")}
-      />
+      <Title title={t("table.title")} subtitle={t("table.subtitle")} />
       <Paper
         elevation={4}
         className={styles.container}
@@ -320,25 +291,25 @@ const TablePage: React.FC = () => {
             <FilterSelect
               value={playerFilter}
               onChange={setPlayerFilter}
-              label={t("table.select.player", "Gracz")}
+              label={t("table.select.player")}
               options={uniquePlayers}
             />
             <FilterSelect
               value={matchesFilter}
               onChange={setMatchesFilter}
-              label={t("table.select.matches", "Mecze")}
+              label={t("table.select.matches")}
               options={MATCH_OPTIONS}
             />
             <FilterSelect
               value={pointsFilter}
               onChange={setPointsFilter}
-              label={t("table.select.points", "Punkty")}
+              label={t("table.select.points")}
               options={POINTS_OPTIONS}
             />
             <FilterSelect
               value={ppmFilter}
               onChange={setPpmFilter}
-              label={t("table.select.ppm", "Pkt/Mecz")}
+              label={t("table.select.ppm")}
               options={PPM_OPTIONS}
             />
             {ClearButton}
@@ -353,40 +324,38 @@ const TablePage: React.FC = () => {
               onClick={() => setFilterDialogOpen(true)}
               sx={{ mb: 2 }}
             >
-              {t("table.button.filter", "Filtruj")}
+              {t("table.button.filter")}
             </Button>
             <Dialog
               open={filterDialogOpen}
               onClose={() => setFilterDialogOpen(false)}
               fullWidth
             >
-              <DialogTitle>
-                {t("table.filterDialog.title", "Filtry")}
-              </DialogTitle>
+              <DialogTitle>{t("table.filterDialog.title")}</DialogTitle>
               <DialogContent sx={{ pt: 2, pb: 1 }}>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                   <FilterSelect
                     value={playerFilter}
                     onChange={setPlayerFilter}
-                    label={t("table.select.player", "Gracz")}
+                    label={t("table.select.player")}
                     options={uniquePlayers}
                   />
                   <FilterSelect
                     value={matchesFilter}
                     onChange={setMatchesFilter}
-                    label={t("table.select.matches", "Mecze")}
+                    label={t("table.select.matches")}
                     options={MATCH_OPTIONS}
                   />
                   <FilterSelect
                     value={pointsFilter}
                     onChange={setPointsFilter}
-                    label={t("table.select.points", "Punkty")}
+                    label={t("table.select.points")}
                     options={POINTS_OPTIONS}
                   />
                   <FilterSelect
                     value={ppmFilter}
                     onChange={setPpmFilter}
-                    label={t("table.select.ppm", "Pkt/Mecz")}
+                    label={t("table.select.ppm")}
                     options={PPM_OPTIONS}
                   />
                   {ClearButton}
@@ -394,50 +363,64 @@ const TablePage: React.FC = () => {
               </DialogContent>
               <DialogActions>
                 <Button onClick={() => setFilterDialogOpen(false)}>
-                  {t("table.filterDialog.close", "Zamknij")}
+                  {t("table.filterDialog.close")}
                 </Button>
               </DialogActions>
             </Dialog>
           </>
         )}
 
-        {loading && (
-          <TableContainer
-            component={Paper}
-            elevation={0}
-            sx={{ overflow: "hidden" }}
-          >
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  {columns.map((col) => (
-                    <TableCell
-                      key={col.id}
-                      align={col.numeric ? "right" : "left"}
-                    >
-                      <Skeleton variant="text" width="80%" />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {Array.from({ length: 8 }).map((_, r) => (
-                  <TableRow key={r}>
-                    {columns.map((_, c) => (
-                      <TableCell key={c}>
-                        <Skeleton variant="text" width="90%" />
+        {loading &&
+          (isMobile ? (
+            <Box>
+              {Array.from({ length: 4 }).map((_, i) => (
+                <Card key={i} sx={{ mb: 2 }}>
+                  <CardContent>
+                    <Skeleton variant="text" width="60%" />
+                    <Skeleton variant="text" width="40%" />
+                    <Skeleton variant="text" width="30%" />
+                    <Skeleton variant="text" width="50%" />
+                  </CardContent>
+                </Card>
+              ))}
+            </Box>
+          ) : (
+            <TableContainer
+              component={Paper}
+              elevation={0}
+              sx={{ overflow: "hidden" }}
+            >
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    {columns.map((col) => (
+                      <TableCell
+                        key={col.id}
+                        align={col.numeric ? "right" : "left"}
+                      >
+                        <Skeleton variant="text" width="80%" />
                       </TableCell>
                     ))}
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
+                </TableHead>
+                <TableBody>
+                  {Array.from({ length: 8 }).map((_, r) => (
+                    <TableRow key={r}>
+                      {columns.map((_, c) => (
+                        <TableCell key={c}>
+                          <Skeleton variant="text" width="90%" />
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ))}
 
         {error && (
           <Typography color="error" align="center" sx={{ my: 4 }}>
-            Błąd: {error.message}
+            {error.message}
           </Typography>
         )}
 
@@ -460,7 +443,7 @@ const TablePage: React.FC = () => {
                         direction={orderBy === col.id ? order : "asc"}
                         onClick={() => handleSort(col.id)}
                       >
-                        {t(col.label, col.labelFallback)}
+                        {t(col.label)}
                       </TableSortLabel>
                     </TableCell>
                   ))}
@@ -507,7 +490,7 @@ const TablePage: React.FC = () => {
                 setRowsPerPage(parseInt(e.target.value, 10));
                 setPage(0);
               }}
-              labelRowsPerPage={t("table.rowsPerPage", "Wierszy na stronę:")}
+              labelRowsPerPage={t("table.rowsPerPage")}
             />
           </TableContainer>
         )}
@@ -548,31 +531,31 @@ const TablePage: React.FC = () => {
                       {team.players}
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 0.5 }}>
-                      Mecze:{" "}
+                      {t("table.card.matches")}:{" "}
                       <Box component="span" sx={{ fontWeight: 600 }}>
                         {team.matches}
                       </Box>
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 0.5 }}>
-                      Wygrane:{" "}
+                      {t("table.card.wins")}:{" "}
                       <Box component="span" sx={{ fontWeight: 600 }}>
                         {team.wins}
                       </Box>
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 0.5 }}>
-                      Porażki:{" "}
+                      {t("table.card.losses")}:{" "}
                       <Box component="span" sx={{ fontWeight: 600 }}>
                         {team.looses}
                       </Box>
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 0.5 }}>
-                      Remisy:{" "}
+                      {t("table.card.draws")}:{" "}
                       <Box component="span" sx={{ fontWeight: 600 }}>
                         {team.draws}
                       </Box>
                     </Typography>
                     <Typography variant="body2">
-                      Pkt/Mecz:{" "}
+                      {t("table.card.ppm")}:{" "}
                       <Box component="span" sx={{ fontWeight: 600 }}>
                         {team.pointsPerMatch.toFixed(2)}
                       </Box>
@@ -591,7 +574,7 @@ const TablePage: React.FC = () => {
                 setRowsPerPage(parseInt(e.target.value, 10));
                 setPage(0);
               }}
-              labelRowsPerPage={t("table.rowsPerPage", "Wierszy na stronę:")}
+              labelRowsPerPage={t("table.rowsPerPage")}
             />
           </>
         )}

@@ -1,5 +1,5 @@
 // src/pages/About/About.tsx
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -28,7 +28,7 @@ const Accordion = styled(MuiAccordion)(({ theme }) => ({
     transform: "translateY(-3px) scale(1.015)",
     boxShadow: theme.shadows[8],
   },
-  "&:before": { display: "none" }, // usuwa standardową linię MUI
+  "&:before": { display: "none" },
 }));
 
 const AccordionSummary = styled((props: any) => (
@@ -74,6 +74,13 @@ const About: React.FC = () => {
     returnObjects: true,
   }) as { question: string; answer: string }[];
 
+  const [expanded, setExpanded] = useState<string | false>(false);
+
+  const handleChange =
+    (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
+      setExpanded(isExpanded ? panel : false);
+    };
+
   return (
     <Box
       sx={{
@@ -85,16 +92,24 @@ const About: React.FC = () => {
     >
       <Title title={t("about.title")} subtitle={t("about.subtitle")} />
 
-      {faqItems.map((qa, index) => (
-        <Accordion key={index} disableGutters>
-          <AccordionSummary>
-            <Typography>{qa.question}</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>{qa.answer}</Typography>
-          </AccordionDetails>
-        </Accordion>
-      ))}
+      {faqItems.map((qa, index) => {
+        const panelId = `panel${index}`;
+        return (
+          <Accordion
+            key={index}
+            expanded={expanded === panelId}
+            onChange={handleChange(panelId)}
+            disableGutters
+          >
+            <AccordionSummary>
+              <Typography>{qa.question}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>{qa.answer}</Typography>
+            </AccordionDetails>
+          </Accordion>
+        );
+      })}
     </Box>
   );
 };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import {
@@ -7,33 +7,80 @@ import {
   IconButton,
   Button,
   InputAdornment,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  useTheme,
+  CircularProgress,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useTranslation } from "react-i18next";
-
+import {
+  NotificationProvider,
+  useNotification,
+} from "../../common/context/NotificationContext";
+import { useAuth } from "../../common/context/AuthContext";
 import styles from "./auth.module.scss";
 import Logo from "../../assets/Logo.png";
 import Title from "../../common/UI/Title";
 
 type FormValues = { email: string; password: string };
 
+const USERS = ["Damian", "Bartek", "Grzesiek", "Darek", "Marek", "Adrian"];
+
 export default function Auth() {
-  const { t } = useTranslation();
+  return (
+    <NotificationProvider>
+      <AuthInner />
+    </NotificationProvider>
+  );
+}
+
+function AuthInner() {
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const { login, loading: authLoading } = useAuth();
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<FormValues>();
-  const navigate = useNavigate();
-  const [hide, setHide] = useState(true);
+  const [hidePassword, setHidePassword] = useState(true);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const { notify } = useNotification();
+  const emailValue = watch("email");
+  const passwordValue = watch("password");
 
-  const onSubmit = () => navigate("/navigation/home");
+  const onSubmit = async ({ email, password }: FormValues) => {
+    try {
+      await login(email, password);
+      navigate("/app/home", { replace: true });
+    } catch {
+      notify("Błędne dane logowania", "error");
+    }
+  };
+
+  const handleUserSelect = (name: string) => {
+    const email = `${name.toLowerCase()}@${name.toLowerCase()}.com`;
+    const password = `${name.charAt(0).toUpperCase()}${name
+      .slice(1)
+      .toLowerCase()}123`;
+    setValue("email", email, { shouldDirty: true });
+    setValue("password", password, { shouldDirty: true });
+    setDialogOpen(false);
+    notify("Użytkownik wstawiony – kliknij Log in", "success");
+  };
 
   return (
     <div className={styles.auth}>
       <div className={styles.authContainer}>
         <div className={styles.authContent}>
-          <Title title={t("auth.subtitle")} subtitle={t("auth.started")} />
+          <Title title="Get started" subtitle="Log in to Efubol League" />
 
           <Box
             component="form"
@@ -41,15 +88,16 @@ export default function Auth() {
             className={styles.authForm}
           >
             <TextField
-              label={t("auth.email")}
+              label="Email"
               type="email"
               fullWidth
               margin="normal"
+              InputLabelProps={{ shrink: !!emailValue }}
               {...register("email", {
-                required: t("auth.errors.emailRequired"),
+                required: "Email is required",
                 pattern: {
                   value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: t("auth.errors.emailInvalid"),
+                  message: "Invalid email address",
                 },
               })}
               error={!!errors.email}
@@ -58,24 +106,29 @@ export default function Auth() {
 
             <Box className={styles.passwordField}>
               <TextField
-                label={t("auth.password")}
-                type={hide ? "password" : "text"}
+                label="Password"
+                type={hidePassword ? "password" : "text"}
                 fullWidth
                 margin="normal"
+                InputLabelProps={{ shrink: !!passwordValue }}
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: { value: 6, message: "Min 6 characters" },
+                })}
                 error={!!errors.password}
                 helperText={errors.password?.message}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton
-                        onClick={() => setHide(!hide)}
+                        onClick={() => setHidePassword(!hidePassword)}
                         edge="end"
                         aria-label={
-                          hide ? t("auth.toggle.off") : t("auth.toggle.on")
+                          hidePassword ? "Show password" : "Hide password"
                         }
                         className={styles.passwordToggle}
                       >
-                        {hide ? <VisibilityOff /> : <Visibility />}
+                        {hidePassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -87,14 +140,14 @@ export default function Auth() {
               type="submit"
               variant="contained"
               className={styles.loginButton}
+              disabled={authLoading}
               sx={{
                 mt: 3,
-                "&:hover": {
-                  backgroundColor: (theme) => theme.palette.grey[800],
-                },
+                "&:hover": { backgroundColor: (t) => t.palette.grey[800] },
               }}
+              endIcon={authLoading ? <CircularProgress size={18} /> : null}
             >
-              {t("auth.login")}
+              Log in
             </Button>
           </Box>
         </div>
@@ -105,16 +158,16 @@ export default function Auth() {
           className={styles.adminBar}
           sx={{
             mt: -1,
-            backgroundColor: (theme) => theme.palette.common.black,
-            color: (theme) => theme.palette.common.white,
-            py: 1.2,
+            fontSize: "0.875rem",
+            backgroundColor: (t) => t.palette.common.black,
+            color: (t) => t.palette.common.white,
+            py: 1,
             borderRadius: "0 0 10px 10px",
-            "&:hover": {
-              backgroundColor: (theme) => theme.palette.grey[800],
-            },
+            "&:hover": { backgroundColor: (t) => t.palette.grey[800] },
           }}
+          onClick={() => setDialogOpen(true)}
         >
-          Przetestuj aplikację jako admin
+          Test application
         </Button>
       </div>
 
@@ -124,9 +177,36 @@ export default function Auth() {
 
       <div className={styles.footer}>
         <p>
-          {t("auth.footer.text")} <span>{t("auth.footer.author")}</span>
+          Created by <span>Bartlomiej Socha</span>
         </p>
       </div>
+
+      <Dialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        maxWidth="sm"
+        PaperProps={{ sx: { minWidth: "350px", minHeight: 220 } }}
+      >
+        <DialogTitle sx={{ bgcolor: theme.palette.grey[300] }}>
+          Select user
+        </DialogTitle>
+        <DialogContent sx={{ pt: 2 }}>
+          <FormControl fullWidth sx={{ mt: 3 }}>
+            <InputLabel id="user-select-label">User</InputLabel>
+            <Select
+              labelId="user-select-label"
+              label="User"
+              onChange={(e) => handleUserSelect(e.target.value as string)}
+            >
+              {USERS.map((u) => (
+                <MenuItem key={u} value={u}>
+                  {u}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

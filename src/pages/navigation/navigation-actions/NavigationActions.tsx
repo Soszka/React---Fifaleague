@@ -11,10 +11,11 @@ import LanguageIcon from "@mui/icons-material/Language";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
-import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useTheme } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../common/context/AuthContext"; // 🆕 ścieżka wg projektu
 
 interface Props {
   toggleTheme: () => void;
@@ -23,16 +24,25 @@ interface Props {
 export default function NavigationActions({ toggleTheme }: Props) {
   const { i18n, t } = useTranslation();
   const theme = useTheme();
+  const navigate = useNavigate();
+  const { logout } = useAuth(); // 🆕
   const [anchorLang, setAnchorLang] = useState<null | HTMLElement>(null);
   const [anchorUser, setAnchorUser] = useState<null | HTMLElement>(null);
 
   const languages = [
-    { code: "en", label: "English", flag: "🇬🇧" },
-    { code: "pl", label: "Polski", flag: "🇵🇱" },
+    { code: "en", label: "English" },
+    { code: "pl", label: "Polski" },
   ];
+
+  const handleLogout = async () => {
+    await logout();
+    setAnchorUser(null);
+    navigate("/auth", { replace: true });
+  };
 
   return (
     <>
+      {/* --- JĘZYK --- */}
       <Tooltip title={t("navigation.language")}>
         <IconButton
           color="inherit"
@@ -54,13 +64,14 @@ export default function NavigationActions({ toggleTheme }: Props) {
               setAnchorLang(null);
             }}
             selected={i18n.language === code}
-            sx={{ display: "flex", alignItems: "center", gap: 1, px: 2 }}
+            sx={{ px: 2 }}
           >
             {label}
           </MenuItem>
         ))}
       </Menu>
 
+      {/* --- THEME --- */}
       <Tooltip title={t("navigation.theme")}>
         <IconButton color="inherit" onClick={toggleTheme}>
           {theme.palette.mode === "dark" ? (
@@ -71,6 +82,7 @@ export default function NavigationActions({ toggleTheme }: Props) {
         </IconButton>
       </Tooltip>
 
+      {/* --- GITHUB --- */}
       <Tooltip title="GitHub">
         <IconButton
           color="inherit"
@@ -82,6 +94,7 @@ export default function NavigationActions({ toggleTheme }: Props) {
         </IconButton>
       </Tooltip>
 
+      {/* --- UŻYTKOWNIK --- */}
       <Tooltip title={t("navigation.account")}>
         <IconButton
           color="inherit"
@@ -96,16 +109,7 @@ export default function NavigationActions({ toggleTheme }: Props) {
         onClose={() => setAnchorUser(null)}
       >
         <MenuItem
-          onClick={() => setAnchorUser(null)}
-          sx={{ display: "flex", alignItems: "center", gap: 1, px: 2 }}
-        >
-          <ListItemIcon sx={{ minWidth: 0 }}>
-            <PersonIcon fontSize="small" />
-          </ListItemIcon>
-          {t("navigation.profile")}
-        </MenuItem>
-        <MenuItem
-          onClick={() => setAnchorUser(null)}
+          onClick={handleLogout}
           sx={{ display: "flex", alignItems: "center", gap: 1, px: 2 }}
         >
           <ListItemIcon sx={{ minWidth: 0 }}>

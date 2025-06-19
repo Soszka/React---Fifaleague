@@ -57,7 +57,7 @@
   "home.card.ranking.description": "Sprawdź, kto jest najlepszy w lidze dzięki naszemu rankingowi. Zobacz, jak zmienia się pozycja graczy w miarę postępu rozgrywek i kto zasługuje na miano MVP.",
 
   "homeStats": {
-    "lastResult": "Wynik ostatniego rozegranego meczu",
+    "lastResult": "Wynik ostatniego meczu",
     "weekMatches": "Mecze rozegrane w tym tygodniu",
     "winPercent": "Procent wygranych spotkań",
     "avgGoals": "Średnia zdobytych goli na mecz"
@@ -145,73 +145,100 @@
     }
   },
 
-  "table.subtitle": "Sprawdź...",
-  "table.title": "Tabelę",
-  "table.filter.label": "Filtruj",
-  "table.column.players": "Zawodnicy",
-  "table.column.matches": "Mecze",
-  "table.column.wins": "Zwycięstwa",
-  "table.column.looses": "Porażki",
-  "table.column.draws": "Remisy",
-  "table.column.points": "Punkty",
-  "table.column.pointsPerMetch": "Pkt/M",
-  "table.noData": "Brak danych pasujących do filtra",
-  "table.select.player": "Zawodnik",
-  "table.select.matches": "Mecze",
-  "table.select.points": "Punkty",
-  "table.select.ppm": "Punkty na mecz",
-  "table.button.clear": "Wyczyść",
-  "table.select.clear": "Wyczyść",
+  "table": {
+    "title": "Tabela drużyn",
+    "subtitle": "Ranking FIFA 2×2 – live",
+    "column": {
+      "position": "Lp.",
+      "team": "Drużyna",
+      "matches": "Mecze",
+      "wins": "Wygrane",
+      "looses": "Porażki",
+      "draws": "Remisy",
+      "points": "Pkt",
+      "ppm": "Pkt/Mecz"
+    },
+    "select": {
+      "player": "Gracz",
+      "matches": "Mecze",
+      "points": "Punkty",
+      "ppm": "Pkt/Mecz"
+    },
+    "button": {
+      "clear": "Wyczyść",
+      "filter": "Filtruj"
+    },
+    "filterDialog": {
+      "title": "Filtry",
+      "close": "Zamknij"
+    },
+    "rowsPerPage": "Wierszy na stronę:",
+    "card": {
+      "matches": "Mecze",
+      "wins": "Wygrane",
+      "losses": "Porażki",
+      "draws": "Remisy",
+      "ppm": "Pkt/Mecz"
+    }
+  },
 
-  "ranking.subtitle": "Sprawdź ranking...",
-  "ranking.title": "Graczy",
-  "ranking.column.playerName": "Gracz",
-  "ranking.column.matches": "Mecze",
-  "ranking.column.wins": "Zwycięstwa",
-  "ranking.column.looses": "Porażki",
-  "ranking.column.draws": "Remisy",
-  "ranking.column.points": "Punkty",
-  "ranking.column.pointsPerMetch": "Pkt/M",
-  "ranking.noData": "Brak wyników pasujących do filtra",
-  "ranking.select.matches": "Mecze",
-  "ranking.select.points": "Punkty",
-  "ranking.select.ppm": "Punkty na mecz",
-  "ranking.select.clear": "Wyczyść",
-  "ranking.button.clear": "Wyczyść",
+  "ranking": {
+    "title": "Ranking graczy",
+    "subtitle": "Sprawdź ranking zawodników",
+    "column": {
+      "position": "Lp.",
+      "player": "Gracz",
+      "matches": "Mecze",
+      "wins": "Wygrane",
+      "looses": "Porażki",
+      "draws": "Remisy",
+      "points": "Pkt",
+      "ppm": "Pkt/Mecz"
+    },
+    "button": {
+      "clear": "Wyczyść",
+      "filter": "Filtruj"
+    },
+    "select": {
+      "player": "Gracz",
+      "matches": "Mecze",
+      "points": "Punkty",
+      "ppm": "Pkt/Mecz",
+      "none": "Brak"
+    },
+    "filterDialog": {
+      "title": "Filtry",
+      "close": "Zamknij"
+    },
+    "rowsPerPage": "Wierszy na stronę:",
+    "error": "Błąd:"
+  },
+  "card": {
+    "matches": "Mecze",
+    "wins": "Wygrane",
+    "losses": "Porażki",
+    "draws": "Remisy",
+    "ppm": "Pkt/Mecz"
+  },
 
   "teams": {
-    "title": "Zespoły",
-    "subtitle": "Analiza drużyn FIFA 2×2 – live",
+    "title": "Drużyny",
+    "subtitle": "Statystyki zespołów",
     "filter": {
       "allPlayers": "Wszyscy gracze"
     },
     "stats": {
       "matches": "Mecze",
-      "wins": "Wygrane",
-      "losses": "Porażki",
-      "draws": "Remisy",
       "points": "Punkty",
-      "pointsPerMatch": "Pkt/Mecz",
-      "winPercentage": "% zwycięstw"
+      "pointsPerMatch": "PKT/M",
+      "winPercentage": "Zwycięstwa"
     },
     "legend": {
       "wins": "Wygrane",
       "losses": "Porażki",
       "draws": "Remisy",
-      "goalsFor": "Zdobyte gole",
-      "goalsAgainst": "Stracone gole"
-    },
-    "card": {
-      "winRatio": "Procent zwycięstw",
-      "avgPoints": "Średnia punktów na mecz",
-      "goalBalance": "Bilans bramek",
-      "goalsFor": "Strzelone",
-      "goalsAgainst": "Stracone"
-    },
-    "tabs": {
-      "overview": "Przegląd",
-      "goals": "Bramki",
-      "history": "Historia"
+      "goalsFor": "Gole zdobyte",
+      "goalsAgainst": "Gole stracone"
     },
     "history": {
       "lastMatches": "Ostatnie mecze"
@@ -363,6 +390,7 @@
   },
   "common": {
     "cancel": "Anuluj",
-    "save": "Zapisz"
+    "save": "Zapisz",
+    "none": "Brak"
   }
 }
