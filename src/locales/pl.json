@@ -42,9 +42,11 @@
 
   "home.title": "Stronie",
   "home.subtitle": "Co znajdziesz na ...",
+  "home.greeting": "Witaj {{name}}",
+  "home.greeting.desc": "Zapraszamy do kolejnej dawki pasjonujących meczów, statystyk i piłkarskich emocji, które już czekają na Twoje odkrycie!",
   "home.last.matches": "OSTATNIE MECZE",
-  "home.card.about.title": "FIFA LEAGUE",
-  "home.card.about.description": "Rozgrywki ligowe w FIFA, pełne emocji i niespodzianek dla każdego fana. Śledź wszystkie mecze na żywo i bądź na bieżąco z wynikami oraz wydarzeniami.",
+  "home.card.about.title": "EFUTBOL LEAGUE",
+  "home.card.about.description": "Rozgrywki ligowe eFutbol, pełne emocji i niespodzianek dla każdego fana. Śledź wszystkie mecze na żywo i bądź na bieżąco z wynikami oraz wydarzeniami.",
   "home.card.matches.title": "MECZE",
   "home.card.matches.description": "Zobacz nadchodzące mecze i wyniki spotkań w naszej lidze. Nie przegap żadnej akcji i dołącz do naszej społeczności kibiców, którzy śledzą każdą minutę gry.",
   "home.card.stats.title": "STATYSTYKI",
@@ -58,17 +60,17 @@
 
   "homeStats": {
     "lastResult": "Wynik ostatniego meczu",
-    "weekMatches": "Mecze rozegrane w tym tygodniu",
+    "weekMatches": "Mecze w tym tygodniu",
     "winPercent": "Procent wygranych spotkań",
     "avgGoals": "Średnia zdobytych goli na mecz"
   },
 
   "about": {
-    "title": "FIFA 2x2 League",
-    "subtitle": "Witamy w",
+    "title": "eFutbol 2x2 League",
+    "subtitle": "Witamy w...",
     "description": {
-      "header": "Dlaczego warto dołączyć do \"FIFA League\"?",
-      "content": "Aplikacja \"FIFA League\" to idealne miejsce do zarządzania swoimi meczami 2x2, śledzenia wyników i wspólnego rywalizowania z przyjaciółmi. Z łatwością możesz dodawać nowe mecze, wybierać przeciwników, ustawiać wyniki, a także potwierdzać wyniki rywali. Analizuj swoje statystyki, śledź postępy i zdobywaj punkty, aby awansować na szczyt rankingu. Dołącz do naszej społeczności graczy, aby zwiększyć swoje umiejętności i dobrze się bawić, grając w ulubioną grę!",
+      "header": "Dlaczego warto dołączyć do \"EFUTBOL League\"?",
+      "content": "Aplikacja \"EFUTBOL League\" to idealne miejsce do zarządzania swoimi meczami 2x2, śledzenia wyników i wspólnego rywalizowania z przyjaciółmi. Z łatwością możesz dodawać nowe mecze, wybierać przeciwników, ustawiać wyniki, a także potwierdzać wyniki rywali. Analizuj swoje statystyki, śledź postępy i zdobywaj punkty, aby awansować na szczyt rankingu. Dołącz do naszej społeczności graczy, aby zwiększyć swoje umiejętności i dobrze się bawić, grając w ulubioną grę!",
       "button": {
         "teams": "Zespoły"
       }
@@ -146,8 +148,8 @@
   },
 
   "table": {
-    "title": "Tabela drużyn",
-    "subtitle": "Ranking FIFA 2×2 – live",
+    "title": "Tabelę drużyn",
+    "subtitle": "Sprawdź ...",
     "column": {
       "position": "Lp.",
       "team": "Drużyna",

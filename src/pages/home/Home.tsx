@@ -137,14 +137,11 @@ const Home: React.FC = () => {
                 : "0 2px 4px rgba(0,0,0,0.1)",
           }}
         >
-          {t("home.greeting", `Witaj ${userName}`)}
+          {t("home.greeting", { name: userName })}
         </MotionTypography>
 
         <Typography variant="h6" sx={{ mt: 1 }}>
-          {t(
-            "home.greeting.desc",
-            "Zapraszamy do kolejnej dawki pasjonujących meczów, statystyk i piłkarskich emocji, które już czekają na Twoje odkrycie!"
-          )}
+          {t("home.greeting.desc")}
         </Typography>
       </Box>
 
