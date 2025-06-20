@@ -14,10 +14,7 @@ import tableImg from "../../assets/cardsPhoto1.png";
 import teamsImg from "../../assets/cardsPhoto2.png";
 import rankingImg from "../../assets/auth_photo.jpg";
 import { useAuth } from "../../common/context/AuthContext";
-import {
-  stripDiacritics,
-  restoreDiacritics,
-} from "../../common/utils/nameUtils";
+import { restoreDiacritics } from "../../common/utils/nameUtils";
 
 interface CardItem {
   header: string;
@@ -79,7 +76,6 @@ const Home: React.FC = () => {
 
   const emailName = user?.email?.split("@")[0] || "Player";
   const userDisplayName = restoreDiacritics(emailName);
-  const playerKey = stripDiacritics(userDisplayName).toLowerCase();
 
   const [scoreboardLoaded, setScoreboardLoaded] = useState(false);
   const [statsLoaded, setStatsLoaded] = useState(false);
