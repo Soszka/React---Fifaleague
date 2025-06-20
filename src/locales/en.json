@@ -18,6 +18,11 @@
     "en": "English"
   },
 
+  "auth": {
+    "selectUserDesc": "Please select the user you want to log in as",
+    "userInserted": "User details filled – click Log in"
+  },
+
   "home.title": "Home",
   "home.subtitle": "What you’ll find on ...",
   "home.greeting": "Welcome {{name}}",

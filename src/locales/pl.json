@@ -5,6 +5,8 @@
     "password": "Enter your password",
     "started": "Log in to get...",
     "subtitle": "Started",
+    "selectUserDesc": "Proszę wybierz użytkownika, na którego chcesz się zalogować",
+    "userInserted": "Użytkownik wstawiony – kliknij Log in",
     "errors": {
       "emailRequired": "You must enter a value",
       "emailInvalid": "Not a valid email",

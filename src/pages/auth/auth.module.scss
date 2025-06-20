@@ -25,6 +25,12 @@
   flex-direction: column;
 }
 
+.langSwitch {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
 .authContent {
   padding: 40px;
   display: flex;
