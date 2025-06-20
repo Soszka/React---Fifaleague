@@ -1,7 +1,7 @@
 {
   "auth": {
     "title": "Zaloguj się",
-    "subtitle": "Zaloguj się do Efutbol League",
+    "subtitle": "Zacznij od...",
     "login": "Zaloguj",
     "email": "Email",
     "password": "Hasło",
@@ -34,6 +34,7 @@
   "nav.menu.table": "Tabela",
   "nav.menu.teams": "Zespoły",
   "nav.menu.ranking": "Ranking",
+
   "navigation": {
     "language": "Język",
     "theme": "Przełącz motyw",
@@ -41,12 +42,13 @@
     "profile": "Profil",
     "logout": "Wyloguj się"
   },
+
   "language": {
     "pl": "Polski",
     "en": "Angielski"
   },
 
-  "home.title": "Stronie",
+  "home.title": "Strona główna",
   "home.subtitle": "Co znajdziesz na ...",
   "home.greeting": "Witaj {{name}}",
   "home.greeting.desc": "Zapraszamy do kolejnej dawki pasjonujących meczów, statystyk i piłkarskich emocji, które już czekają na Twoje odkrycie!",
@@ -58,7 +60,7 @@
   "home.card.stats.title": "STATYSTYKI",
   "home.card.stats.description": "Szczegółowe statystyki drużyn i graczy, aktualizowane na bieżąco. Odkryj, kto jest liderem pod względem bramek, asyst i innych kluczowych statystyk.",
   "home.card.table.title": "TABELA",
-  "home.card.table.description": "Aktualna tabela ligowa, śledź pozycje swoich ulubionych zespołów. Zobacz, kto ma największe szanse na zwycięstwo w tym sezonie i jakie są prognozy ekspertów.",
+  "home.card.table.description": "Aktualna tabela ligowa – śledź pozycje swoich ulubionych zespołów. Zobacz, kto ma największe szanse na zwycięstwo w tym sezonie i jakie są prognozy ekspertów.",
   "home.card.teams.title": "ZESPOŁY",
   "home.card.teams.description": "Informacje o drużynach, zawodnikach i ich historiach. Poznaj składy, strategie oraz najważniejsze momenty każdej drużyny w rozgrywkach.",
   "home.card.ranking.title": "RANKING",
@@ -72,11 +74,11 @@
   },
 
   "about": {
-    "title": "eFutbol 2x2 League",
+    "title": "EFUBOL 2x2 League",
     "subtitle": "Witamy w...",
     "description": {
-      "header": "Dlaczego warto dołączyć do \"EFUTBOL League\"?",
-      "content": "Aplikacja \"EFUTBOL League\" to idealne miejsce do zarządzania swoimi meczami 2x2, śledzenia wyników i wspólnego rywalizowania z przyjaciółmi. Z łatwością możesz dodawać nowe mecze, wybierać przeciwników, ustawiać wyniki, a także potwierdzać wyniki rywali. Analizuj swoje statystyki, śledź postępy i zdobywaj punkty, aby awansować na szczyt rankingu. Dołącz do naszej społeczności graczy, aby zwiększyć swoje umiejętności i dobrze się bawić, grając w ulubioną grę!",
+      "header": "Dlaczego warto dołączyć do \"EFUBOL League\"?",
+      "content": "Aplikacja \"EFUBOL League\" to idealne miejsce do zarządzania swoimi meczami 2x2, śledzenia wyników i wspólnego rywalizowania z przyjaciółmi. Z łatwością możesz dodawać nowe mecze, wybierać przeciwników, ustawiać wyniki, a także potwierdzać wyniki rywali. Analizuj swoje statystyki, śledź postępy i zdobywaj punkty, aby awansować na szczyt rankingu. Dołącz do naszej społeczności graczy, aby zwiększyć swoje umiejętności i dobrze się bawić, grając w ulubioną grę!",
       "button": {
         "teams": "Zespoły"
       }
@@ -154,7 +156,7 @@
   },
 
   "table": {
-    "title": "Tabelę drużyn",
+    "title": "Tabela drużyn",
     "subtitle": "Sprawdź ...",
     "column": {
       "position": "Lp.",
@@ -191,8 +193,8 @@
   },
 
   "ranking": {
-    "title": "Ranking graczy",
-    "subtitle": "Sprawdź ranking zawodników",
+    "title": "Ranking",
+    "subtitle": "Sprawdź ranking...",
     "column": {
       "position": "Lp.",
       "player": "Gracz",
@@ -221,6 +223,7 @@
     "rowsPerPage": "Wierszy na stronę:",
     "error": "Błąd:"
   },
+
   "card": {
     "matches": "Mecze",
     "wins": "Wygrane",
@@ -231,7 +234,7 @@
 
   "teams": {
     "title": "Drużyny",
-    "subtitle": "Statystyki zespołów",
+    "subtitle": "Zweryfikuj różne drużyny...",
     "filter": {
       "allPlayers": "Wszyscy gracze"
     },
@@ -254,8 +257,8 @@
   },
 
   "matches": {
-    "title": "Mecze 2x2",
-    "subtitle": "Analiza historii meczów",
+    "title": "Mecze",
+    "subtitle": "Przeanalizuj historię meczów...",
     "filters": {
       "myMatches": "Moje mecze",
       "allMatches": "Wszystkie mecze",
@@ -317,9 +320,10 @@
       "error": "Wystąpił błąd"
     }
   },
+
   "stats": {
     "title": "Statystyki",
-    "subtitle": "Szczegółowa analiza Twoich meczów",
+    "subtitle": "Zweryfikuj swoje statystyki...",
     "tabs": {
       "matches": "Mecze",
       "wins": "Zwycięstwa",
@@ -397,6 +401,7 @@
       }
     }
   },
+
   "common": {
     "cancel": "Anuluj",
     "save": "Zapisz",

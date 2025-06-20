@@ -27,6 +27,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import PercentIcon from "@mui/icons-material/Percent";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
+import { useAuth } from "../../common/context/AuthContext";
 
 type Outcome = "win" | "draw" | "loss";
 
@@ -95,6 +96,11 @@ const StatsPage: React.FC = () => {
       ? theme.palette.grey[100]
       : theme.palette.grey[900];
 
+  const { user: authUser } = useAuth();
+  const loggedName = authUser?.email?.split("@")[0] || "";
+  const loggedLabel =
+    loggedName.charAt(0).toUpperCase() + loggedName.slice(1).toLowerCase();
+
   const players = useMemo(() => {
     const s = new Set<string>();
     matches.forEach((m) => {
@@ -107,9 +113,12 @@ const StatsPage: React.FC = () => {
   const [user, setUser] = useState("");
   useEffect(() => {
     if (!user && players.length) {
-      setUser(players.includes("Bartek") ? "Bartek" : players[0]);
+      const defaultPlayer = players.includes(loggedLabel)
+        ? loggedLabel
+        : players[0];
+      setUser(defaultPlayer);
     }
-  }, [players, user]);
+  }, [players, user, loggedLabel]);
 
   const [tab, setTab] = useState(0);
 

@@ -142,7 +142,7 @@ const Home: React.FC = () => {
           {t("home.greeting", { name: userName })}
         </MotionTypography>
 
-        <Typography variant="h6" sx={{ mt: 1 }}>
+        <Typography variant="h6" sx={{ mt: 0 }}>
           {t("home.greeting.desc")}
         </Typography>
       </Box>

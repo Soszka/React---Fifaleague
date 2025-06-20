@@ -1,61 +1,736 @@
  (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a/src/pages/auth/auth.module.scss b/src/pages/auth/auth.module.scss
-index d3eb53bca0f3994ad57f5ff867fe8af059f55fba..14aff49d783f7fae23037301d191c1d32ebd467e 100644
---- a/src/pages/auth/auth.module.scss
-+++ b/src/pages/auth/auth.module.scss
-@@ -55,41 +55,51 @@
-   width: 140px;
-   height: 45px;
-   font-size: 20px;
-   color: #fff;
- }
+diff --git a/src/locales/en.json b/src/locales/en.json
+index 483ac373086c854283d155f2284c49b85786488f..ce1092fc5dbb9e48f3998afb5e63b5dc553fc8b7 100644
+--- a/src/locales/en.json
++++ b/src/locales/en.json
+@@ -1,56 +1,57 @@
+ {
+   "nav.menu.home": "Home",
+   "nav.menu.about": "About",
+   "nav.menu.matches": "Matches",
+   "nav.menu.stats": "Stats",
+   "nav.menu.table": "Table",
+   "nav.menu.teams": "Teams",
+   "nav.menu.ranking": "Ranking",
+   "navigation": {
+     "language": "Language",
+     "theme": "Toggle theme",
+     "account": "Account",
+     "profile": "Profile",
+     "logout": "Log out"
+   },
+   "language": {
+     "pl": "Polish",
+     "en": "English"
+   },
  
- .adminBar {
-   width: 100%;
- }
- 
- .authLogo {
-   position: absolute;
-   top: 5%;
-   left: 5%;
- 
-   img {
-     width: 10rem;
-     height: 10rem;
-   }
- 
-   @media (max-width: 1300px) {
-     display: none;
-   }
- }
- 
-+
- .footer {
-   color: #fff;
-   position: absolute;
-   bottom: 0;
-   left: 50%;
--  transform: translate(-50%, -50%);
-+  transform: translateX(-50%);
-+  width: 100%;
-+  text-align: center;
- 
-   p {
-     font-size: 18px;
-+    margin-top: 1rem;
- 
-     span {
-       font-weight: 700;
-       letter-spacing: 1px;
+   "auth": {
+-    "title": "Get started",
+-    "subtitle": "Log in to Efubol League",
++    "title": "Login",
++    "subtitle": "Start by logging in...",
+     "login": "Log in",
+     "email": "Email",
+     "password": "Password",
+     "testApplication": "Test application",
+     "selectUser": "Select user",
+     "selectUserDesc": "Please select the user you want to log in as",
+     "userLabel": "User",
+     "userInserted": "User details filled – click Log in",
++    "loginError": "Invalid login data",
+     "errors": {
+       "loginError": "Invalid login data",
+       "emailRequired": "Email is required",
+       "emailInvalid": "Invalid email address",
+       "passwordRequired": "Password is required",
+       "passwordMin": "Min 6 characters"
+     },
+     "toggle": {
+       "off": "Show password",
+       "on": "Hide password"
+     },
+     "footer": {
+       "text": "Created by",
+       "author": "Bartlomiej Socha"
      }
-   }
-+
-+  @media (max-width: 600px) {
-+    p {
-+      margin-top: 2rem;
-+    }
-+  }
+   },
+ 
+   "home.title": "Home",
+   "home.subtitle": "What you’ll find on ...",
+   "home.greeting": "Welcome {{name}}",
+   "home.greeting.desc": "Join us for another dose of thrilling matches, stats and football excitement waiting to be discovered!",
+   "home.last.matches": "LAST MATCHES",
+   "home.card.about.title": "EFUBOL LEAGUE",
+   "home.card.about.description": "EFUBOL league competitions, full of excitement and surprises for every fan. Follow all matches live and stay up to date with scores and events.",
+   "home.card.matches.title": "MATCHES",
+@@ -173,115 +174,115 @@
+     "select": {
+       "player": "Player",
+       "matches": "Matches",
+       "points": "Points",
+       "ppm": "Pts/Match"
+     },
+     "button": {
+       "clear": "Clear",
+       "filter": "Filter"
+     },
+     "filterDialog": {
+       "title": "Filters",
+       "close": "Close"
+     },
+     "rowsPerPage": "Rows per page:",
+     "card": {
+       "matches": "Matches",
+       "wins": "Wins",
+       "losses": "Losses",
+       "draws": "Draws",
+       "ppm": "Pts/Match"
+     }
+   },
+ 
+   "ranking": {
+-    "title": "Players ranking",
+-    "subtitle": "Check the ranking",
++    "title": "Ranking",
++    "subtitle": "Check the ranking...",
+     "column": {
+       "position": "Pos.",
+       "player": "Player",
+       "matches": "Matches",
+       "wins": "Wins",
+       "looses": "Losses",
+       "draws": "Draws",
+       "points": "Pts",
+       "ppm": "Pts/Match"
+     },
+     "button": {
+       "clear": "Clear",
+       "filter": "Filter"
+     },
+     "select": {
+       "player": "Player",
+       "matches": "Matches",
+       "points": "Points",
+       "ppm": "Pts/Match",
+       "none": "None"
+     },
+     "filterDialog": {
+       "title": "Filters",
+       "close": "Close"
+     },
+     "rowsPerPage": "Rows per page:",
+     "error": "Error:"
+   },
+   "card": {
+     "matches": "Matches",
+     "wins": "Wins",
+     "losses": "Losses",
+     "draws": "Draws",
+     "ppm": "Pts/Match"
+   },
+ 
+   "teams": {
+     "title": "Teams",
+-    "subtitle": "2 v 2 team statistics",
++    "subtitle": "Verify different teams...",
+     "filter": {
+       "allPlayers": "All players"
+     },
+     "stats": {
+       "matches": "Matches",
+       "points": "Points",
+       "pointsPerMatch": "Pts/M",
+       "winPercentage": "Wins"
+     },
+     "legend": {
+       "wins": "Wins",
+       "losses": "Losses",
+       "draws": "Draws",
+       "goalsFor": "Goals for",
+       "goalsAgainst": "Goals against"
+     },
+     "history": {
+       "lastMatches": "Last matches"
+     }
+   },
+ 
+   "matches": {
+-    "title": "2v2 Matches",
+-    "subtitle": "Match history analysis",
++    "title": "Matches",
++    "subtitle": "Analyze match history...",
+     "filters": {
+       "myMatches": "My Matches",
+       "allMatches": "All Matches",
+       "filter": "Filter",
+       "team": "Team",
+       "result": "Result",
+       "none": "None",
+       "from": "From",
+       "to": "To",
+       "clear": "Clear"
+     },
+     "actions": {
+       "add": "Add Match",
+       "edit": "Edit",
+       "delete": "Delete"
+     },
+     "card": {
+       "players": "Players",
+       "rival": "Rival",
+       "score": "Score",
+       "date": "Date"
+     },
+     "table": {
+       "team": "Team",
+       "rival": "Rival",
+@@ -301,51 +302,51 @@
+     "dialogs": {
+       "addMatch": "Add Match",
+       "editMatch": "Edit Match",
+       "deleteMatch": "Delete Match",
+       "deleteConfirmPrefix": "Are you sure you want to delete"
+     },
+     "form": {
+       "player1": "Player 1",
+       "player2": "Player 2",
+       "rival1": "Rival 1",
+       "rival2": "Rival 2",
+       "date": "Date",
+       "scoreHome": "Home score",
+       "scoreAway": "Away score"
+     },
+     "messages": {
+       "addSuccess": "Match added",
+       "updateSuccess": "Match updated",
+       "deleteSuccess": "Match removed",
+       "error": "An error occurred"
+     }
+   },
+ 
+   "stats": {
+     "title": "Statistics",
+-    "subtitle": "Detailed analysis of your matches",
++    "subtitle": "Verify your statistics...",
+     "tabs": {
+       "matches": "Matches",
+       "wins": "Wins",
+       "losses": "Losses",
+       "points": "Points",
+       "ppm": "Points per Match"
+     },
+     "charts": {
+       "matches": "Matches",
+       "wins": "Wins",
+       "losses": "Losses",
+       "points": "Points",
+       "ppm": "PPM"
+     },
+     "outcome": {
+       "win": "Win",
+       "loss": "Loss",
+       "draw": "Draw"
+     },
+     "cards": {
+       "matches": {
+         "title": "Match Stats",
+         "totalLabel": "Total Matches",
+         "winsLabel": "Wins",
+         "drawsLabel": "Draws",
+diff --git a/src/locales/pl.json b/src/locales/pl.json
+index b4e5470d90bd9ddba45f03ee7b09529f899ec824..449ab8786b842965c29195922e2e607da9281dab 100644
+--- a/src/locales/pl.json
++++ b/src/locales/pl.json
+@@ -1,29 +1,29 @@
+ {
+   "auth": {
+-    "title": "Zaloguj się",
+-    "subtitle": "Zaloguj się do Efutbol League",
++    "title": "Zalogowania",
++    "subtitle": "Zacznij od zalogowania...",
+     "login": "Zaloguj",
+     "email": "Email",
+     "password": "Hasło",
+     "testApplication": "Wypróbuj aplikację",
+     "selectUser": "Wybierz użytkownika",
+     "selectUserDesc": "Proszę wybierz użytkownika, na którego chcesz się zalogować",
+     "userLabel": "Użytkownik",
+     "userInserted": "Dane użytkownika wstawione – kliknij Zaloguj",
+     "loginError": "Błędne dane logowania",
+     "errors": {
+       "emailRequired": "Wpisz adres e-mail",
+       "emailInvalid": "Niepoprawny adres e-mail",
+       "passwordRequired": "Wpisz hasło",
+       "passwordMin": "Min 6 znaków"
+     },
+     "toggle": {
+       "off": "Pokaż hasło",
+       "on": "Ukryj hasło"
+     },
+     "footer": {
+       "text": "Stworzone przez",
+       "author": "Bartłomiej Socha"
+     }
+   },
+ 
+@@ -169,115 +169,115 @@
+     "select": {
+       "player": "Gracz",
+       "matches": "Mecze",
+       "points": "Punkty",
+       "ppm": "Pkt/Mecz"
+     },
+     "button": {
+       "clear": "Wyczyść",
+       "filter": "Filtruj"
+     },
+     "filterDialog": {
+       "title": "Filtry",
+       "close": "Zamknij"
+     },
+     "rowsPerPage": "Wierszy na stronę:",
+     "card": {
+       "matches": "Mecze",
+       "wins": "Wygrane",
+       "losses": "Porażki",
+       "draws": "Remisy",
+       "ppm": "Pkt/Mecz"
+     }
+   },
+ 
+   "ranking": {
+-    "title": "Ranking graczy",
+-    "subtitle": "Sprawdź ranking zawodników",
++    "title": "Ranking",
++    "subtitle": "Sprawdź ranking...",
+     "column": {
+       "position": "Lp.",
+       "player": "Gracz",
+       "matches": "Mecze",
+       "wins": "Wygrane",
+       "looses": "Porażki",
+       "draws": "Remisy",
+       "points": "Pkt",
+       "ppm": "Pkt/Mecz"
+     },
+     "button": {
+       "clear": "Wyczyść",
+       "filter": "Filtruj"
+     },
+     "select": {
+       "player": "Gracz",
+       "matches": "Mecze",
+       "points": "Punkty",
+       "ppm": "Pkt/Mecz",
+       "none": "Brak"
+     },
+     "filterDialog": {
+       "title": "Filtry",
+       "close": "Zamknij"
+     },
+     "rowsPerPage": "Wierszy na stronę:",
+     "error": "Błąd:"
+   },
+   "card": {
+     "matches": "Mecze",
+     "wins": "Wygrane",
+     "losses": "Porażki",
+     "draws": "Remisy",
+     "ppm": "Pkt/Mecz"
+   },
+ 
+   "teams": {
+     "title": "Drużyny",
+-    "subtitle": "Statystyki zespołów",
++    "subtitle": "Zweryfikuj różne drużyny...",
+     "filter": {
+       "allPlayers": "Wszyscy gracze"
+     },
+     "stats": {
+       "matches": "Mecze",
+       "points": "Punkty",
+       "pointsPerMatch": "PKT/M",
+       "winPercentage": "Zwycięstwa"
+     },
+     "legend": {
+       "wins": "Wygrane",
+       "losses": "Porażki",
+       "draws": "Remisy",
+       "goalsFor": "Gole zdobyte",
+       "goalsAgainst": "Gole stracone"
+     },
+     "history": {
+       "lastMatches": "Ostatnie mecze"
+     }
+   },
+ 
+   "matches": {
+-    "title": "Mecze 2x2",
+-    "subtitle": "Analiza historii meczów",
++    "title": "Mecze",
++    "subtitle": "Przeanalizuj historię meczów...",
+     "filters": {
+       "myMatches": "Moje mecze",
+       "allMatches": "Wszystkie mecze",
+       "filter": "Filtruj",
+       "team": "Drużyna",
+       "result": "Wynik",
+       "none": "Brak",
+       "from": "Od",
+       "to": "Do",
+       "clear": "Wyczyść"
+     },
+     "actions": {
+       "add": "Dodaj mecz",
+       "edit": "Edytuj",
+       "delete": "Usuń"
+     },
+     "card": {
+       "players": "Gracze",
+       "rival": "Przeciwnik",
+       "score": "Wynik",
+       "date": "Data"
+     },
+     "table": {
+       "team": "Drużyna",
+       "rival": "Przeciwnik",
+@@ -297,51 +297,51 @@
+     "dialogs": {
+       "addMatch": "Dodaj mecz",
+       "editMatch": "Edytuj mecz",
+       "deleteMatch": "Usuń mecz",
+       "deleteConfirmPrefix": "Czy na pewno chcesz usunąć",
+       "deleteConfirm": "Usuń mecz {{team1}} vs {{team2}} ({{date}})?"
+     },
+     "form": {
+       "player1": "Zawodnik 1",
+       "player2": "Zawodnik 2",
+       "rival1": "Rywal 1",
+       "rival2": "Rywal 2",
+       "date": "Data",
+       "scoreHome": "Wynik drużyny 1",
+       "scoreAway": "Wynik drużyny 2"
+     },
+     "messages": {
+       "addSuccess": "Dodano mecz",
+       "updateSuccess": "Pomyślnie zaktualizowano mecz",
+       "deleteSuccess": "Usunięto mecz",
+       "error": "Wystąpił błąd"
+     }
+   },
+   "stats": {
+     "title": "Statystyki",
+-    "subtitle": "Szczegółowa analiza Twoich meczów",
++    "subtitle": "Zweryfikuj swoje statystyki...",
+     "tabs": {
+       "matches": "Mecze",
+       "wins": "Zwycięstwa",
+       "losses": "Porażki",
+       "points": "Punkty",
+       "ppm": "Punkty na mecz"
+     },
+     "charts": {
+       "matches": "Mecze",
+       "wins": "Zwycięstwa",
+       "losses": "Porażki",
+       "points": "Punkty",
+       "ppm": "PPM"
+     },
+     "outcome": {
+       "win": "Zwycięstwo",
+       "loss": "Porażka",
+       "draw": "Remis"
+     },
+     "cards": {
+       "matches": {
+         "title": "Statystyki meczów",
+         "totalLabel": "Łącznie meczów",
+         "winsLabel": "Zwycięstwa",
+         "drawsLabel": "Remisy",
+diff --git a/src/pages/auth/Auth.tsx b/src/pages/auth/Auth.tsx
+index ed6ffc0385aa87428d7c9d04bdcca1b0a9d40439..9ad82b2b34aacb7f02794762f1a0e40b1d86fc0e 100644
+--- a/src/pages/auth/Auth.tsx
++++ b/src/pages/auth/Auth.tsx
+@@ -212,59 +212,60 @@ function AuthInner() {
+             borderRadius: "0 0 10px 10px",
+             "&:hover": { backgroundColor: (t) => t.palette.grey[800] },
+           }}
+           onClick={() => setDialogOpen(true)}
+         >
+           {t("auth.testApplication")}
+         </Button>
+       </div>
+ 
+       <div className={styles.authLogo}>
+         <img src={Logo} alt="Logo" />
+       </div>
+ 
+       <div className={styles.footer}>
+         <p>
+           {t("auth.footer.text")} <span>{t("auth.footer.author")}</span>
+         </p>
+       </div>
+ 
+       <Dialog
+         open={dialogOpen}
+         onClose={() => {
+           setDialogOpen(false);
+           setSelectedUser("");
+         }}
+-        maxWidth="sm"
+-        PaperProps={{ sx: { minWidth: "350px", minHeight: 260 } }}
++        fullWidth
++        maxWidth="xs"
++        PaperProps={{ sx: { width: { xs: "95%", sm: 400 }, minHeight: 260 } }}
+       >
+-        <DialogTitle sx={{ bgcolor: theme.palette.grey[300] }}>
++        <DialogTitle sx={{ bgcolor: theme.palette.grey[300], py: 1.5 }}>
+           {t("auth.selectUser")}
+         </DialogTitle>
+-        <DialogContent sx={{ pt: 2 }}>
+-          <Typography sx={{ mt: 2 }}>{t("auth.selectUserDesc")}</Typography>
+-          <FormControl fullWidth sx={{ mt: 2.5 }}>
++        <DialogContent sx={{ pt: 1.5, px: 2 }}>
++          <Typography sx={{ mt: 1.5 }}>{t("auth.selectUserDesc")}</Typography>
++          <FormControl fullWidth sx={{ mt: 2 }}>
+             <InputLabel id="user-select-label">{t("auth.userLabel")}</InputLabel>
+             <Select
+               labelId="user-select-label"
+               label={t("auth.userLabel")}
+               value={selectedUser}
+               onChange={(e) => setSelectedUser(e.target.value as string)}
+             >
+               {USERS.map((u) => (
+                 <MenuItem key={u} value={u}>
+                   {u}
+                 </MenuItem>
+               ))}
+             </Select>
+           </FormControl>
+         </DialogContent>
+         <DialogActions>
+           <Button onClick={() => setDialogOpen(false)}>{t("common.cancel")}</Button>
+           <Button
+             variant="contained"
+             disabled={!selectedUser}
+             onClick={handleUserInsert}
+           >
+             {t("common.save")}
+           </Button>
+         </DialogActions>
+diff --git a/src/pages/home/Home.tsx b/src/pages/home/Home.tsx
+index 93e7fd3f69b38dcf9ce63e6400cff4fba3fbb5bb..4c15abd8d168b4f3ce1b9ba3c29216b3f0cfbd27 100644
+--- a/src/pages/home/Home.tsx
++++ b/src/pages/home/Home.tsx
+@@ -120,51 +120,51 @@ const Home: React.FC = () => {
+           variant="h3"
+           initial={{ opacity: 0, y: 12 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ duration: 2.8, ease: [0.25, 1, 0.5, 1] }}
+           sx={{
+             fontWeight: 800,
+             lineHeight: 1.25, // więcej miejsca na ogonki
+             pb: "0.15em", // drobny oddech pod baseline
+             letterSpacing: -0.5,
+             display: "inline-block", // brak przycinania przy animacji
+             overflow: "visible", // zamiast hidden
+             background: animatedGradient,
+             backgroundSize: "200% auto",
+             WebkitBackgroundClip: "text",
+             WebkitTextFillColor: "transparent",
+             animation: `${shine} 6s linear infinite`,
+             textShadow:
+               theme.palette.mode === "dark"
+                 ? "0 0 4px rgba(255,255,255,0.2)"
+                 : "0 2px 4px rgba(0,0,0,0.1)",
+           }}
+         >
+           {t("home.greeting", { name: userName })}
+         </MotionTypography>
+ 
+-        <Typography variant="h6" sx={{ mt: 1 }}>
++        <Typography variant="h6" sx={{ mt: 0 }}>
+           {t("home.greeting.desc")}
+         </Typography>
+       </Box>
+ 
+       {/* --- STATYSTYKI --- */}
+       <HomeStats
+         player={playerKey} // ← klucz w małych literach
+         ready={allLoaded}
+         onLoaded={handleStatsLoaded}
+       />
+ 
+       {/* --- KARTY --- */}
+       <Box sx={{ mt: 6, mb: 1, px: 3, maxWidth: 1800, mx: "auto" }}>
+         <Title subtitle={t("home.subtitle")} title={t("home.title")} />
+       </Box>
+ 
+       <div className={styles.cards}>
+         {cards.map((card) => (
+           <HomeCard
+             key={card.link}
+             header={card.header}
+             content={card.content}
+             image={card.image}
+             link={card.link}
+             ready={allLoaded}
+diff --git a/src/pages/home/home.module.scss b/src/pages/home/home.module.scss
+index 9f812abec9ccdc0994d2a7fd6a7357ea77f1acb2..a8d792888ed309aca0da493de755ccfd09df340c 100644
+--- a/src/pages/home/home.module.scss
++++ b/src/pages/home/home.module.scss
+@@ -1,18 +1,18 @@
+ /* kontener strony głównej */
+ .container {
+   width: 100%;
+   box-sizing: border-box;
  }
+ 
+ /* siatka kart */
+ .cards {
+   display: flex;
+   flex-wrap: wrap;
+   max-width: 1800px;
+   margin: 0 auto;
+   gap: 32px;
+   padding: 0 24px 32px;
+ 
+-  margin-top: 32px;
++  margin-top: 22px;
+   justify-content: center;
+ }
+diff --git a/src/pages/stats/Stats.tsx b/src/pages/stats/Stats.tsx
+index ea21a7bcea7fe5ec2801679307836063b1da8fff..a76fff6962c530f53ea8d9cb582de9b5c56e0c6f 100644
+--- a/src/pages/stats/Stats.tsx
++++ b/src/pages/stats/Stats.tsx
+@@ -5,50 +5,51 @@ import {
+   CardContent,
+   List,
+   ListItem,
+   ListItemIcon,
+   ListItemText,
+   MenuItem,
+   Select,
+   Skeleton,
+   Tab,
+   Tabs,
+   Typography,
+   useTheme,
+ } from "@mui/material";
+ import { SvgIconProps } from "@mui/material/SvgIcon";
+ import { useTranslation } from "react-i18next";
+ import Title from "../../common/UI/Title";
+ import { useAllMatches } from "../../common/hooks/useAllMatches";
+ import ReactApexChart from "react-apexcharts";
+ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+ import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
+ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+ import CancelIcon from "@mui/icons-material/Cancel";
+ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+ import PercentIcon from "@mui/icons-material/Percent";
+ import QueryStatsIcon from "@mui/icons-material/QueryStats";
++import { useAuth } from "../../common/context/AuthContext";
+ 
+ type Outcome = "win" | "draw" | "loss";
+ 
+ const TabPanel = ({
+   value,
+   index,
+   children,
+ }: {
+   value: number;
+   index: number;
+   children: React.ReactNode;
+ }) => (value === index ? <Box sx={{ mt: 2 }}>{children}</Box> : null);
+ 
+ const pointsForOutcome = (o: Outcome) =>
+   o === "win" ? 3 : o === "draw" ? 1 : 0;
+ 
+ const ChartSkeleton: React.FC = () => (
+   <Card sx={{ flex: 1, p: 2 }}>
+     <Skeleton variant="rectangular" width="100%" height={360} />
+   </Card>
+ );
+ 
+ const InfoSkeleton: React.FC = () => (
+   <Card sx={{ flex: 1 }}>
+     <CardContent>
+@@ -73,65 +74,73 @@ const InfoSkeleton: React.FC = () => (
+ 
+ const StatsPage: React.FC = () => {
+   const { t } = useTranslation();
+   const theme = useTheme();
+   const { matches } = useAllMatches();
+   const loadingData = matches.length === 0;
+ 
+   const [canRenderCharts, setCanRenderCharts] = useState(false);
+ 
+   useEffect(() => {
+     if (!loadingData) {
+       const timer = setTimeout(() => {
+         setCanRenderCharts(true);
+       }, 100);
+       return () => clearTimeout(timer);
+     } else {
+       setCanRenderCharts(false);
+     }
+   }, [loadingData]);
+ 
+   const textColor =
+     theme.palette.mode === "dark"
+       ? theme.palette.grey[100]
+       : theme.palette.grey[900];
+ 
++  const { user: authUser } = useAuth();
++  const loggedName = authUser?.email?.split("@")[0] || "";
++  const loggedLabel =
++    loggedName.charAt(0).toUpperCase() + loggedName.slice(1).toLowerCase();
++
+   const players = useMemo(() => {
+     const s = new Set<string>();
+     matches.forEach((m) => {
+       m.team1.split("&").forEach((p: string) => s.add(p.trim()));
+       m.team2.split("&").forEach((p: string) => s.add(p.trim()));
+     });
+     return Array.from(s).sort();
+   }, [matches]);
+ 
+   const [user, setUser] = useState("");
+   useEffect(() => {
+     if (!user && players.length) {
+-      setUser(players.includes("Bartek") ? "Bartek" : players[0]);
++      const defaultPlayer = players.includes(loggedLabel)
++        ? loggedLabel
++        : players[0];
++      setUser(defaultPlayer);
+     }
+-  }, [players, user]);
++  }, [players, user, loggedLabel]);
+ 
+   const [tab, setTab] = useState(0);
+ 
+   const normPlayers = (team: string) => team.split("&").map((p) => p.trim());
+ 
+   const getOutcomeForUser = (score: string, isUserTeam1: boolean): Outcome => {
+     const delim = score.includes(":") ? ":" : "-";
+     const [g1, g2] = score.split(delim).map((n) => parseInt(n.trim(), 10));
+     if (g1 === g2) return "draw";
+     const team1Won = g1 > g2;
+     return team1Won === isUserTeam1 ? "win" : "loss";
+   };
+ 
+   const userMatches = useMemo(
+     () =>
+       matches.filter(
+         (m) =>
+           normPlayers(m.team1).includes(user) ||
+           normPlayers(m.team2).includes(user)
+       ),
+     [matches, user]
+   );
+ 
+   const outcomeCounts = useMemo(() => {
+     let win = 0,
  
 EOF
 )

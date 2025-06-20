@@ -234,15 +234,16 @@ function AuthInner() {
           setDialogOpen(false);
           setSelectedUser("");
         }}
-        maxWidth="sm"
-        PaperProps={{ sx: { minWidth: "350px", minHeight: 260 } }}
+        fullWidth
+        maxWidth="xs"
+        PaperProps={{ sx: { width: { xs: "95%", sm: 400 }, minHeight: 260 } }}
       >
-        <DialogTitle sx={{ bgcolor: theme.palette.grey[300] }}>
+        <DialogTitle sx={{ bgcolor: theme.palette.grey[300], py: 1.5 }}>
           {t("auth.selectUser")}
         </DialogTitle>
-        <DialogContent sx={{ pt: 2 }}>
-          <Typography sx={{ mt: 2 }}>{t("auth.selectUserDesc")}</Typography>
-          <FormControl fullWidth sx={{ mt: 2.5 }}>
+        <DialogContent sx={{ pt: 1.5, px: 2 }}>
+          <Typography sx={{ mt: 1.5 }}>{t("auth.selectUserDesc")}</Typography>
+          <FormControl fullWidth sx={{ mt: 2 }}>
             <InputLabel id="user-select-label">{t("auth.userLabel")}</InputLabel>
             <Select
               labelId="user-select-label"

@@ -19,8 +19,8 @@
   },
 
   "auth": {
-    "title": "Get started",
-    "subtitle": "Log in to Efubol League",
+    "title": "Log in",
+    "subtitle": "Start by...",
     "login": "Log in",
     "email": "Email",
     "password": "Password",
@@ -29,6 +29,7 @@
     "selectUserDesc": "Please select the user you want to log in as",
     "userLabel": "User",
     "userInserted": "User details filled – click Log in",
+    "loginError": "Invalid login data",
     "errors": {
       "loginError": "Invalid login data",
       "emailRequired": "Email is required",
@@ -73,7 +74,7 @@
 
   "about": {
     "title": "EFUBOL 2x2 League",
-    "subtitle": "Welcome to",
+    "subtitle": "Welcome to ...",
     "description": {
       "header": "Why join the \"EFUBOL League\"?",
       "content": "\"EFUBOL League\" is the perfect place to manage your 2v2 matches, track results, and compete with friends. You can easily add new matches, choose opponents, set the score, and confirm your rivals’ results. Analyze your statistics, follow your progress, and earn points to climb to the top of the rankings. Join our community of players to improve your skills and have fun playing your favorite game!",
@@ -159,7 +160,7 @@
 
   "table": {
     "title": "Teams table",
-    "subtitle": "EFUBOL 2×2 rankings – live",
+    "subtitle": "Check...",
     "column": {
       "position": "Pos.",
       "team": "Team",
@@ -195,8 +196,8 @@
   },
 
   "ranking": {
-    "title": "Players ranking",
-    "subtitle": "Check the ranking",
+    "title": "Ranking",
+    "subtitle": "Check the...",
     "column": {
       "position": "Pos.",
       "player": "Player",
@@ -235,7 +236,7 @@
 
   "teams": {
     "title": "Teams",
-    "subtitle": "2 v 2 team statistics",
+    "subtitle": "Verify different ...",
     "filter": {
       "allPlayers": "All players"
     },
@@ -258,8 +259,8 @@
   },
 
   "matches": {
-    "title": "2v2 Matches",
-    "subtitle": "Match history analysis",
+    "title": "Matches",
+    "subtitle": "Analyze history of ...",
     "filters": {
       "myMatches": "My Matches",
       "allMatches": "All Matches",
@@ -323,7 +324,7 @@
 
   "stats": {
     "title": "Statistics",
-    "subtitle": "Detailed analysis of your matches",
+    "subtitle": "Verify your ...",
     "tabs": {
       "matches": "Matches",
       "wins": "Wins",
