@@ -21,6 +21,7 @@ import { useTranslation } from "react-i18next";
 import ReactApexChart from "react-apexcharts";
 import Title from "../../common/UI/Title";
 import { useAllMatches, MatchUi } from "../../common/hooks/useAllMatches";
+import { formatDisplayName } from "../../common/utils/nameUtils";
 import { useOutletContext } from "react-router-dom";
 
 interface TeamData {
@@ -46,8 +47,7 @@ const parseScore = (s: string): [number, number] => {
 const formatNames = (p: string) =>
   p
     .split(" & ")
-    .map((n) => n.trim())
-    .map((n) => n.charAt(0).toUpperCase() + n.slice(1))
+    .map((n) => formatDisplayName(n.trim()))
     .join(" & ");
 
 const normalize = (t: string) =>

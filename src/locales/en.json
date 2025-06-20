@@ -406,5 +406,8 @@
     "cancel": "Cancel",
     "save": "Save",
     "none": "None"
+  },
+  "footer": {
+    "copy": "© {{year}} eFutbol League · All rights reserved."
   }
 }

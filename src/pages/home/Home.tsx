@@ -15,7 +15,6 @@ import tableImg from "../../assets/cardsPhoto1.png";
 import teamsImg from "../../assets/cardsPhoto2.png";
 import rankingImg from "../../assets/auth_photo.jpg";
 import { useAuth } from "../../common/context/AuthContext";
-import { formatDisplayName } from "../../common/utils/nameUtils";
 
 interface CardItem {
   header: string;
@@ -79,7 +78,8 @@ const Home: React.FC = () => {
   const emailName = user?.email?.split("@")[0] || "Player";
 
   /** ładny nagłówek „Grzesiek” */
-  const userName = formatDisplayName(emailName);
+  const userName =
+    emailName.charAt(0).toUpperCase() + emailName.slice(1).toLowerCase();
 
   /** klucz do hooków/statystyk: zawsze małe litery */
   const playerKey = emailName.toLowerCase();
@@ -115,7 +115,7 @@ const Home: React.FC = () => {
       </Box>
 
       {/* --- NAGŁÓWEK --- */}
-      <Box sx={{ mt: { xs: 1.875, md: 4 }, px: 3, maxWidth: 1800, mx: "auto" }}>
+      <Box sx={{ mt: 4, px: 3, maxWidth: 1800, mx: "auto" }}>
         <MotionTypography
           variant="h3"
           initial={{ opacity: 0, y: 12 }}
