@@ -30,6 +30,7 @@
     "userLabel": "User",
     "userInserted": "User details filled – click Log in",
     "errors": {
+      "loginError": "Invalid login data",
       "emailRequired": "Email is required",
       "emailInvalid": "Invalid email address",
       "passwordRequired": "Password is required",

@@ -123,9 +123,11 @@ const Home: React.FC = () => {
           transition={{ duration: 2.8, ease: [0.25, 1, 0.5, 1] }}
           sx={{
             fontWeight: 800,
-            lineHeight: 1.1,
+            lineHeight: 1.25, // więcej miejsca na ogonki
+            pb: "0.15em", // drobny oddech pod baseline
             letterSpacing: -0.5,
-            overflow: "hidden",
+            display: "inline-block", // brak przycinania przy animacji
+            overflow: "visible", // zamiast hidden
             background: animatedGradient,
             backgroundSize: "200% auto",
             WebkitBackgroundClip: "text",

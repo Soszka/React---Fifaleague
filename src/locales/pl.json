@@ -10,6 +10,7 @@
     "selectUserDesc": "Proszę wybierz użytkownika, na którego chcesz się zalogować",
     "userLabel": "Użytkownik",
     "userInserted": "Dane użytkownika wstawione – kliknij Zaloguj",
+    "loginError": "Błędne dane logowania",
     "errors": {
       "emailRequired": "Wpisz adres e-mail",
       "emailInvalid": "Niepoprawny adres e-mail",
@@ -21,7 +22,7 @@
       "on": "Ukryj hasło"
     },
     "footer": {
-      "text": "Wszelkie prawa zastrzeżone. Autor:",
+      "text": "Stworzone przez",
       "author": "Bartłomiej Socha"
     }
   },

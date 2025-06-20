@@ -84,7 +84,7 @@ function AuthInner() {
       await login(email, password);
       navigate("/app/home", { replace: true });
     } catch {
-      notify("Błędne dane logowania", "error");
+      notify(t("auth.loginError"), "error");
     }
   };
 
@@ -106,7 +106,7 @@ function AuthInner() {
     <div className={styles.auth}>
       <div className={styles.authContainer}>
         <div className={styles.langSwitch}>
-          <Tooltip title={t("navigation.language")}> 
+          <Tooltip title="Language">
             <IconButton onClick={(e) => setLangAnchor(e.currentTarget)}>
               <LanguageIcon />
             </IconButton>
@@ -241,8 +241,8 @@ function AuthInner() {
           {t("auth.selectUser")}
         </DialogTitle>
         <DialogContent sx={{ pt: 2 }}>
-          <Typography sx={{ mt: 1 }}>{t("auth.selectUserDesc")}</Typography>
-          <FormControl fullWidth sx={{ mt: 3 }}>
+          <Typography sx={{ mt: 2 }}>{t("auth.selectUserDesc")}</Typography>
+          <FormControl fullWidth sx={{ mt: 2.5 }}>
             <InputLabel id="user-select-label">{t("auth.userLabel")}</InputLabel>
             <Select
               labelId="user-select-label"

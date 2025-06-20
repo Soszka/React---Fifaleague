@@ -77,19 +77,29 @@
   }
 }
 
+
 .footer {
   color: #fff;
   position: absolute;
   bottom: 0;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
+  width: 100%;
+  text-align: center;
 
   p {
     font-size: 18px;
+    margin-top: 1rem;
 
     span {
       font-weight: 700;
       letter-spacing: 1px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    p {
+      margin-top: 2rem;
     }
   }
 }

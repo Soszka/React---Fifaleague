@@ -9,12 +9,12 @@ export interface TitleProps {
 
 const expand = keyframes`
   from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
+  to   { transform: scaleX(1); }
 `;
 
 const shine = keyframes`
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%);  }
 `;
 
 const MotionBox = motion(Box);
@@ -27,7 +27,8 @@ const Title: React.FC<TitleProps> = ({ title, subtitle }) => {
       : theme.palette.primary.main;
 
   return (
-    <Box sx={{ width: "100%", mb: { xs: 2, md: 3 } }}>
+    <Box sx={{ width: "100%", mb: { md: 1 } }}>
+      {/* podtytuł */}
       <MotionBox
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -42,22 +43,26 @@ const Title: React.FC<TitleProps> = ({ title, subtitle }) => {
         </Typography>
       </MotionBox>
 
+      {/* tytuł + belka */}
       <MotionBox
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-        sx={{ display: "flex", alignItems: "flex-end" }}
+        sx={{ display: "flex", alignItems: "baseline" }}
       >
         <Typography
           variant="h3"
           sx={{
             fontWeight: 800,
-            lineHeight: 1.1,
+            lineHeight: 1.25, // <-- więcej miejsca na ogonki
+            pb: "0.15em", //   i lekki „oddech” pod linią bazową
             mr: 2,
+            fontSize: { xs: "2rem", md: "3rem" },
             background: `linear-gradient(90deg, ${accent} 0%, ${theme.palette.secondary.main} 100%)`,
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             letterSpacing: -0.5,
+            display: "inline-block", // <-- zapobiega przycinaniu
           }}
         >
           {title}
