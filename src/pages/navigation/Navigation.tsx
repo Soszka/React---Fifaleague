@@ -58,7 +58,7 @@ export default function Navigation({ toggleTheme }: Props) {
 
   const drawer = (
     <Box sx={{ width: drawerWidth }}>
-      <Typography variant="h6" sx={{ my: 2, textAlign: "center" }}>
+      <Typography variant="h6" sx={{ my: 1.7, textAlign: "center" }}>
         eFutbol League
       </Typography>
 
@@ -225,7 +225,7 @@ export default function Navigation({ toggleTheme }: Props) {
         sx={{
           flexGrow: 1,
           minWidth: 0,
-          pt: { xs: 7, sm: 8 },
+          pt: { xs: 7, sm: 7 },
           px: 0,
           pb: 3,
           transition: (th) =>

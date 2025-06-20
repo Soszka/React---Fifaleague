@@ -102,7 +102,7 @@ const Home: React.FC = () => {
       <Box sx={{ display: { xs: "none", lg: "block" } }}>
         <HomeScoreboard ready={allLoaded} onLoaded={handleScoreboardLoaded} />
       </Box>
-      <Box sx={{ mt: 4, px: 3, maxWidth: 1800, mx: "auto" }}>
+      <Box sx={{ mt: 2, px: 3, maxWidth: 1800, mx: "auto" }}>
         <MotionTypography
           variant="h3"
           initial={{ opacity: 0, y: 12 }}

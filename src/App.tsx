@@ -2,7 +2,7 @@
 import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import { getTheme } from "./theme";
 import { AppRoutes } from "./AppRoutes";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { BrowserRouter, useLocation } from "react-router-dom";
 import Footer from "./common/UI/Footer";
 import { AuthProvider, useAuth } from "./common/context/AuthContext";
@@ -16,6 +16,9 @@ export default function App() {
   const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { user } = useAuth();
     const location = useLocation();
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, [location.pathname]);
     const isAuth = location.pathname.startsWith("/auth");
     return (
       <Box

@@ -32,6 +32,8 @@ export default function NavigationActions({ toggleTheme }: Props) {
   const languages = [
     { code: "en", label: "English" },
     { code: "pl", label: "Polski" },
+    { code: "es", label: "Español" },
+    { code: "de", label: "Deutsch" },
   ];
 
   const handleLogout = async () => {

@@ -45,7 +45,9 @@
 
   "language": {
     "pl": "Polski",
-    "en": "Angielski"
+    "en": "Angielski",
+    "es": "Hiszpański",
+    "de": "Niemiecki"
   },
 
   "home.title": "Stronie",

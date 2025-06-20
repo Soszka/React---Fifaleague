@@ -1,112 +1,46 @@
  (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a/src/pages/home/Home.tsx b/src/pages/home/Home.tsx
-index 4c15abd8d168b4f3ce1b9ba3c29216b3f0cfbd27..96f13de96a5a369f684a3d1fe7eb1daac7ee1ccb 100644
---- a/src/pages/home/Home.tsx
-+++ b/src/pages/home/Home.tsx
-@@ -1,42 +1,43 @@
- // src/pages/home/Home.tsx
- import React, { useCallback, useMemo, useState } from "react";
- import { useTranslation } from "react-i18next";
- import { Box, Typography, useTheme, keyframes } from "@mui/material";
- import { motion } from "framer-motion";
- import HomeScoreboard from "./home-scoreboard/HomeScoreboard";
- import HomeCard from "./home-card/HomeCard";
- import HomeStats from "./home-stats/HomeStats";
- import Title from "../../common/UI/Title";
- import styles from "./home.module.scss";
- import aboutImg from "../../assets/cardsPhoto4.png";
- import matchesImg from "../../assets/cardsPhoto3.png";
- import statsImg from "../../assets/cardsPhoto5.png";
- import tableImg from "../../assets/cardsPhoto1.png";
- import teamsImg from "../../assets/cardsPhoto2.png";
- import rankingImg from "../../assets/auth_photo.jpg";
- import { useAuth } from "../../common/context/AuthContext";
-+import { formatDisplayName } from "../../common/utils/nameUtils";
+diff --git a/src/theme/overrides.ts b/src/theme/overrides.ts
+index ae3fe7a0dffef177db3e99baf4b849de892a68af..dd87349baccea5fcf2db4e33e9368237290ec8fe 100644
+--- a/src/theme/overrides.ts
++++ b/src/theme/overrides.ts
+@@ -1,26 +1,37 @@
+ import { Components } from "@mui/material/styles";
  
- interface CardItem {
-   header: string;
-   content: string;
-   image: string;
-   link: string;
- }
- 
- const cardsConfig = (t: ReturnType<typeof useTranslation>["t"]): CardItem[] => [
-   {
-     header: t("home.card.about.title"),
-     content: t("home.card.about.description"),
-     image: aboutImg,
-     link: "/app/about",
+ export const componentOverrides: Components = {
+   MuiButton: {
+     styleOverrides: {
+       root: {
+         borderRadius: 8,
+         textTransform: "none",
+       },
+     },
    },
-   {
-     header: t("home.card.matches.title"),
-     content: t("home.card.matches.description"),
-     image: matchesImg,
-     link: "/app/matches",
+ 
+   MuiAppBar: {
+     defaultProps: {
+       color: "primary",
+       elevation: 0,
+     },
+     styleOverrides: {
+       root: {
+         backgroundColor: "var(--mui-palette-background-default)",
+         color: "var(--mui-palette-text-primary)",
+         boxShadow: "none",
+       },
+     },
    },
-   {
-     header: t("home.card.table.title"),
-     content: t("home.card.table.description"),
-     image: tableImg,
-diff --git a/src/pages/home/Home.tsx b/src/pages/home/Home.tsx
-index 4c15abd8d168b4f3ce1b9ba3c29216b3f0cfbd27..96f13de96a5a369f684a3d1fe7eb1daac7ee1ccb 100644
---- a/src/pages/home/Home.tsx
-+++ b/src/pages/home/Home.tsx
-@@ -55,53 +56,52 @@ const cardsConfig = (t: ReturnType<typeof useTranslation>["t"]): CardItem[] => [
-     link: "/app/teams",
-   },
-   {
-     header: t("home.card.ranking.title"),
-     content: t("home.card.ranking.description"),
-     image: rankingImg,
-     link: "/app/ranking",
-   },
- ];
- 
- const shine = keyframes`
-   0% { background-position: -200% 0; }
-   100% { background-position: 200% 0; }
- `;
- const MotionTypography = motion(Typography);
- 
- const Home: React.FC = () => {
-   const { t } = useTranslation();
-   const cards = useMemo(() => cardsConfig(t), [t]);
-   const theme = useTheme();
-   const { user } = useAuth();
- 
-   /** surowe „grzesiek” z maila */
-   const emailName = user?.email?.split("@")[0] || "Player";
- 
--  /** ładny nagłówek „Grzesiek” */
--  const userName =
--    emailName.charAt(0).toUpperCase() + emailName.slice(1).toLowerCase();
-+  /** ładny nagłówek „Grzesiek" z ogonkami */
-+  const userName = formatDisplayName(emailName);
- 
-   /** klucz do hooków/statystyk: zawsze małe litery */
-   const playerKey = emailName.toLowerCase();
- 
-   // --- ładowanie sekcji ---
-   const [scoreboardLoaded, setScoreboardLoaded] = useState(false);
-   const [statsLoaded, setStatsLoaded] = useState(false);
-   const [imagesLoaded, setImagesLoaded] = useState(0);
- 
-   const cardsLoaded = imagesLoaded === cards.length;
-   const allLoaded = scoreboardLoaded && statsLoaded && cardsLoaded;
- 
-   const handleScoreboardLoaded = useCallback(
-     () => setScoreboardLoaded(true),
-     []
-   );
-   const handleStatsLoaded = useCallback(() => setStatsLoaded(true), []);
-   const handleCardLoaded = useCallback(
-     () => setImagesLoaded((prev) => prev + 1),
-     []
-   );
- 
-   const animatedGradient = `linear-gradient(90deg,
-     ${theme.palette.primary.main},
-     ${theme.palette.secondary.main},
++
++  MuiToolbar: {
++    styleOverrides: {
++      root: {
++        minHeight: "54px",
++        "@media (min-width:600px)": {
++          minHeight: "62px",
++        },
++      },
++    },
++  },
+ };
  
 EOF
 )

@@ -1,0 +1,418 @@
+{
+  "nav.menu.home": "Inicio",
+  "nav.menu.about": "Acerca de",
+  "nav.menu.matches": "Partidos",
+  "nav.menu.stats": "Estadísticas",
+  "nav.menu.table": "Tabla",
+  "nav.menu.teams": "Equipos",
+  "nav.menu.ranking": "Clasificación",
+  "navigation": {
+    "language": "Idioma",
+    "theme": "Alternar tema",
+    "account": "Cuenta",
+    "profile": "Perfil",
+    "logout": "Cerrar sesión"
+  },
+  "language": {
+    "pl": "Polaco",
+    "en": "Inglés",
+    "es": "Español",
+    "de": "Alemán"
+  },
+
+  "auth": {
+    "title": "Iniciar sesión",
+    "subtitle": "Comienza por...",
+    "login": "Iniciar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "testApplication": "Probar la aplicación",
+    "selectUser": "Seleccionar usuario",
+    "selectUserDesc": "Por favor selecciona el usuario con el que quieres iniciar sesión",
+    "userLabel": "Usuario",
+    "userInserted": "Datos del usuario completados – haz clic en Iniciar sesión",
+    "loginError": "Datos de inicio de sesión inválidos",
+    "errors": {
+      "loginError": "Datos de inicio de sesión inválidos",
+      "emailRequired": "El correo electrónico es obligatorio",
+      "emailInvalid": "Correo electrónico inválido",
+      "passwordRequired": "La contraseña es obligatoria",
+      "passwordMin": "Mínimo 6 caracteres"
+    },
+    "toggle": {
+      "off": "Mostrar contraseña",
+      "on": "Ocultar contraseña"
+    },
+    "footer": {
+      "text": "Creado por",
+      "author": "Bartłomiej Socha"
+    }
+  },
+
+  "home.title": "Inicio",
+  "home.subtitle": "Lo que encontrarás en...",
+  "home.greeting": "Bienvenido {{name}}",
+  "home.greeting.desc": "¡Únete a nosotros para otra dosis de partidos emocionantes, estadísticas y la emoción del fútbol que te esperan!",
+  "home.last.matches": "ÚLTIMOS PARTIDOS",
+  "home.card.about.title": "EFUTBOL LEAGUE",
+  "home.card.about.description": "Competiciones de EFUTBOL LEAGUE, llenas de emoción y sorpresas para cada aficionado. Sigue todos los partidos en vivo y mantente al día con los marcadores y eventos.",
+  "home.card.matches.title": "PARTIDOS",
+  "home.card.matches.description": "Consulta los próximos partidos y resultados de nuestra liga. No te pierdas ni una sola jugada y únete a nuestra comunidad de aficionados que siguen cada minuto del juego.",
+  "home.card.stats.title": "ESTADÍSTICAS",
+  "home.card.stats.description": "Estadísticas detalladas de equipos y jugadores, actualizadas en tiempo real. Descubre quién lidera en goles, asistencias y otras métricas clave.",
+  "home.card.table.title": "TABLA",
+  "home.card.table.description": "Tabla de la liga actual – sigue la posición de tus equipos favoritos. Ve quién tiene más posibilidades de ganar esta temporada y qué predicen los expertos.",
+  "home.card.teams.title": "EQUIPOS",
+  "home.card.teams.description": "Información sobre equipos, jugadores y sus historias. Conoce las plantillas, estrategias y los momentos más importantes de cada equipo en la competición.",
+  "home.card.ranking.title": "CLASIFICACIÓN",
+  "home.card.ranking.description": "Consulta lo mejor de la liga con nuestra clasificación. Observa cómo cambian las posiciones de los jugadores a medida que avanza la competición y quién merece el título de MVP.",
+
+  "homeStats": {
+    "lastResult": "Resultado del último partido",
+    "weekMatches": "Partidos jugados esta semana",
+    "winPercent": "Porcentaje de victorias",
+    "avgGoals": "Goles promedio por partido"
+  },
+
+  "about": {
+    "title": "EFUTBOL LEAGUE 2x2",
+    "subtitle": "Bienvenido a...",
+    "description": {
+      "header": "¿Por qué unirse a \"EFUTBOL LEAGUE\"?",
+      "content": "\"EFUTBOL LEAGUE\" es el lugar perfecto para gestionar tus partidos 2v2, registrar resultados y competir con amigos. Puedes añadir nuevos partidos fácilmente, elegir rivales, establecer el marcador y confirmar los resultados de tus contrincantes. Analiza tus estadísticas, sigue tu progreso y gana puntos para escalar hasta la cima de la clasificación. ¡Únete a nuestra comunidad de jugadores para mejorar tus habilidades y disfrutar de tu juego favorito!",
+      "button": {
+        "teams": "Equipos"
+      }
+    },
+    "faqSubtitle": "Preguntas frecuentes",
+    "faqTitle": "Preguntas",
+    "faq": {
+      "questions": [
+        {
+          "question": "¿Cómo puedo añadir un nuevo partido a la app?",
+          "answer": "Para añadir un nuevo partido, ve a la sección \"Partidos\" y haz clic en el botón \"Añadir Partido\". Luego selecciona a tu compañero, elige los rivales e introduce el marcador del partido."
+        },
+        {
+          "question": "¿Qué estadísticas puedo consultar en la app?",
+          "answer": "Puedes consultar estadísticas como partidos jugados, victorias, derrotas y empates, así como estadísticas de equipo que muestran tus logros con diferentes compañeros."
+        },
+        {
+          "question": "¿La app genera un ranking de jugadores?",
+          "answer": "Sí, la app genera automáticamente un ranking de jugadores basado en los resultados de los partidos. Puedes verlo en la página \"Clasificación\"."
+        },
+        {
+          "question": "¿La app permite seguir los resultados de los equipos?",
+          "answer": "Sí. En la página \"Tabla\" encontrarás una lista de todos los equipos de dos jugadores y sus estadísticas (victorias, derrotas, empates y puntos)."
+        },
+        {
+          "question": "¿Puedo ver estadísticas detalladas de los equipos en los que juego?",
+          "answer": "Sí, en la página \"Equipos\" puedes consultar las estadísticas de cada equipo al que perteneces y revisar tu rendimiento con distintos compañeros."
+        },
+        {
+          "question": "¿Puedo cambiar la configuración de la aplicación?",
+          "answer": "Actualmente la app no permite cambiar la configuración. Todos los datos se actualizan automáticamente según los partidos jugados."
+        },
+        {
+          "question": "¿Necesito crear manualmente un equipo antes de jugar un partido?",
+          "answer": "No. Simplemente añade un partido seleccionando dos jugadores para tu lado: la app creará automáticamente un nuevo equipo si esa alineación no existe."
+        },
+        {
+          "question": "¿Necesito una cuenta para usar la app?",
+          "answer": "Sí. Debes iniciar sesión para usar la aplicación y añadir partidos."
+        },
+        {
+          "question": "¿Cómo se calculan los puntos en la clasificación y la tabla?",
+          "answer": "Los equipos ganan 3 puntos por victoria, 1 por empate y 0 por derrota. Los rankings se basan en el total de puntos acumulados."
+        },
+        {
+          "question": "¿Cuál es la diferencia entre el ranking de jugadores y la tabla de equipos?",
+          "answer": "El ranking de jugadores es individual. La tabla de equipos se centra en cada pareja de jugadores como un equipo independiente."
+        },
+        {
+          "question": "¿Puedo filtrar o buscar en la lista de partidos?",
+          "answer": "Sí. Puedes filtrar por nombre de rival, resultado o rango de fechas."
+        },
+        {
+          "question": "¿Puedo eliminar o editar un partido después de añadirlo?",
+          "answer": "Por ahora no se puede editar o eliminar un partido. Añade uno nuevo con los datos correctos o pide a un administrador que borre el anterior."
+        },
+        {
+          "question": "¿La app está disponible en inglés?",
+          "answer": "Sí, la aplicación está disponible en polaco e inglés, y puedes cambiar de idioma en cualquier momento."
+        },
+        {
+          "question": "¿Puedo cambiar la app a modo oscuro o claro?",
+          "answer": "Sí, la app soporta ambos temas. Usa el icono de sol/luna para alternar."
+        },
+        {
+          "question": "¿Cómo cierro sesión en la app?",
+          "answer": "Haz clic en el icono de perfil y selecciona \"Cerrar sesión\"."
+        },
+        {
+          "question": "¿Puedo usar la app en mi móvil?",
+          "answer": "Sí, la app es totalmente responsive."
+        },
+        {
+          "question": "¿La app soporta partidos 1v1?",
+          "answer": "No. La app está pensada para partidos 2v2."
+        }
+      ]
+    }
+  },
+
+  "table": {
+    "title": "Tabla de equipos",
+    "subtitle": "Consulta...",
+    "column": {
+      "position": "Pos.",
+      "team": "Equipo",
+      "matches": "Partidos",
+      "wins": "Victorias",
+      "looses": "Derrotas",
+      "draws": "Empates",
+      "points": "Pts",
+      "ppm": "Pts/Partido"
+    },
+    "select": {
+      "player": "Jugador",
+      "matches": "Partidos",
+      "points": "Puntos",
+      "ppm": "Pts/Partido"
+    },
+    "button": {
+      "clear": "Limpiar",
+      "filter": "Filtrar"
+    },
+    "filterDialog": {
+      "title": "Filtros",
+      "close": "Cerrar"
+    },
+    "rowsPerPage": "Filas por página:",
+    "card": {
+      "matches": "Partidos",
+      "wins": "Victorias",
+      "losses": "Derrotas",
+      "draws": "Empates",
+      "ppm": "Pts/Partido"
+    }
+  },
+
+  "ranking": {
+    "title": "Clasificación",
+    "subtitle": "Consulta...",
+    "column": {
+      "position": "Pos.",
+      "player": "Jugador",
+      "matches": "Partidos",
+      "wins": "Victorias",
+      "looses": "Derrotas",
+      "draws": "Empates",
+      "points": "Pts",
+      "ppm": "Pts/Partido"
+    },
+    "button": {
+      "clear": "Limpiar",
+      "filter": "Filtrar"
+    },
+    "select": {
+      "player": "Jugador",
+      "matches": "Partidos",
+      "points": "Puntos",
+      "ppm": "Pts/Partido",
+      "none": "Ninguno"
+    },
+    "filterDialog": {
+      "title": "Filtros",
+      "close": "Cerrar"
+    },
+    "rowsPerPage": "Filas por página:",
+    "error": "Error:"
+  },
+
+  "card": {
+    "matches": "Partidos",
+    "wins": "Victorias",
+    "losses": "Derrotas",
+    "draws": "Empates",
+    "ppm": "Pts/Partido"
+  },
+
+  "teams": {
+    "title": "Equipos",
+    "subtitle": "Verifica distintos...",
+    "filter": {
+      "allPlayers": "Todos los jugadores"
+    },
+    "stats": {
+      "matches": "Partidos",
+      "points": "Puntos",
+      "pointsPerMatch": "Pts/Partido",
+      "winPercentage": "Victorias"
+    },
+    "legend": {
+      "wins": "Victorias",
+      "losses": "Derrotas",
+      "draws": "Empates",
+      "goalsFor": "Goles a favor",
+      "goalsAgainst": "Goles en contra"
+    },
+    "history": {
+      "lastMatches": "Últimos partidos"
+    }
+  },
+
+  "matches": {
+    "title": "Partidos",
+    "subtitle": "Analiza el historial de...",
+    "filters": {
+      "myMatches": "Mis Partidos",
+      "allMatches": "Todos los Partidos",
+      "filter": "Filtrar",
+      "team": "Equipo",
+      "result": "Resultado",
+      "none": "Ninguno",
+      "from": "Desde",
+      "to": "Hasta",
+      "clear": "Limpiar"
+    },
+    "actions": {
+      "add": "Añadir Partido",
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "card": {
+      "players": "Jugadores",
+      "rival": "Rivales",
+      "score": "Marcador",
+      "date": "Fecha"
+    },
+    "table": {
+      "team": "Equipo",
+      "rival": "Rivales",
+      "result": "Resultado",
+      "date": "Fecha",
+      "actions": "Acciones"
+    },
+    "outcome": {
+      "win": "Victoria",
+      "loss": "Derrota",
+      "draw": "Empate"
+    },
+    "pagination": {
+      "rowsPerPage": "Filas por página:",
+      "all": "Todas"
+    },
+    "dialogs": {
+      "addMatch": "Añadir Partido",
+      "editMatch": "Editar Partido",
+      "deleteMatch": "Eliminar Partido",
+      "deleteConfirmPrefix": "¿Estás seguro de que quieres eliminar"
+    },
+    "form": {
+      "player1": "Jugador 1",
+      "player2": "Jugador 2",
+      "rival1": "Rival 1",
+      "rival2": "Rival 2",
+      "date": "Fecha",
+      "scoreHome": "Marcador local",
+      "scoreAway": "Marcador visitante"
+    },
+    "messages": {
+      "addSuccess": "Partido añadido",
+      "updateSuccess": "Partido actualizado",
+      "deleteSuccess": "Partido eliminado",
+      "error": "Ocurrió un error"
+    }
+  },
+
+  "stats": {
+    "title": "Estadísticas",
+    "subtitle": "Verifica tus...",
+    "tabs": {
+      "matches": "Partidos",
+      "wins": "Victorias",
+      "losses": "Derrotas",
+      "points": "Puntos",
+      "ppm": "Pts/Partido"
+    },
+    "charts": {
+      "matches": "Partidos",
+      "wins": "Victorias",
+      "losses": "Derrotas",
+      "points": "Puntos",
+      "ppm": "Pts/Partido"
+    },
+    "outcome": {
+      "win": "Victoria",
+      "loss": "Derrota",
+      "draw": "Empate"
+    },
+    "cards": {
+      "matches": {
+        "title": "Estadísticas de Partidos",
+        "totalLabel": "Partidos totales",
+        "winsLabel": "Victorias",
+        "drawsLabel": "Empates",
+        "lossesLabel": "Derrotas",
+        "winPercent": "% Victorias",
+        "totalPointsLabel": "Puntos totales",
+        "ppmLabel": "Pts/Partido",
+        "stabilityLabel": "Estabilidad reciente"
+      },
+      "wins": {
+        "title": "Estadísticas de Victorias",
+        "totalLabel": "Victorias totales",
+        "winPercentLabel": "% Victorias",
+        "recentLabel": "Victorias recientes",
+        "matchesLabel": "Partidos",
+        "drawsLabel": "Empates",
+        "lossesLabel": "Derrotas",
+        "totalPointsLabel": "Puntos totales",
+        "ppmLabel": "Pts/Partido"
+      },
+      "losses": {
+        "title": "Estadísticas de Derrotas",
+        "totalLabel": "Derrotas totales",
+        "lossPercentLabel": "% Derrotas",
+        "recentLabel": "Derrotas recientes",
+        "matchesLabel": "Partidos",
+        "winsLabel": "Victorias",
+        "drawsLabel": "Empates",
+        "totalPointsLabel": "Puntos totales",
+        "ppmLabel": "Pts/Partido"
+      },
+      "points": {
+        "title": "Estadísticas de Puntos",
+        "totalPointsLabel": "Puntos totales",
+        "avgPPMLabel": "Prom. Pts/Partido",
+        "matchesLabel": "Partidos",
+        "winsLabel": "Victorias",
+        "drawsLabel": "Empates",
+        "lossesLabel": "Derrotas",
+        "winPercentLabel": "% Victorias",
+        "stabilityLabel": "Estabilidad reciente"
+      },
+      "ppm": {
+        "title": "Estadísticas de Pts/Partido",
+        "avgPPMLabel": "Prom. Pts/Partido",
+        "stabilityLabel": "Estabilidad reciente",
+        "matchesLabel": "Partidos",
+        "winPercentLabel": "% Victorias",
+        "totalPointsLabel": "Puntos totales",
+        "winsLabel": "Victorias",
+        "drawsLabel": "Empates",
+        "lossesLabel": "Derrotas"
+      }
+    }
+  },
+
+  "common": {
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "none": "Ninguno"
+  },
+
+  "footer": {
+    "copy": "© {{year}} eFutbol League · Todos los derechos reservados."
+  }
+}

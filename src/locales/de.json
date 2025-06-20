@@ -1,0 +1,416 @@
+{
+  "nav.menu.home": "Startseite",
+  "nav.menu.about": "Über",
+  "nav.menu.matches": "Spiele",
+  "nav.menu.stats": "Statistiken",
+  "nav.menu.table": "Tabelle",
+  "nav.menu.teams": "Teams",
+  "nav.menu.ranking": "Rangliste",
+  "navigation": {
+    "language": "Sprache",
+    "theme": "Thema wechseln",
+    "account": "Konto",
+    "profile": "Profil",
+    "logout": "Abmelden"
+  },
+  "language": {
+    "pl": "Polnisch",
+    "en": "Englisch",
+    "es": "Spanisch",
+    "de": "Deutsch"
+  },
+
+  "auth": {
+    "title": "Anmelden",
+    "subtitle": "Beginnen Sie mit...",
+    "login": "Anmelden",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "testApplication": "Anwendung testen",
+    "selectUser": "Benutzer auswählen",
+    "selectUserDesc": "Bitte wählen Sie den Benutzer, mit dem Sie sich anmelden möchten",
+    "userLabel": "Benutzer",
+    "userInserted": "Benutzerdaten ausgefüllt – klicken Sie auf Anmelden",
+    "loginError": "Ungültige Anmeldedaten",
+    "errors": {
+      "loginError": "Ungültige Anmeldedaten",
+      "emailRequired": "E-Mail ist erforderlich",
+      "emailInvalid": "Ungültige E-Mail-Adresse",
+      "passwordRequired": "Passwort ist erforderlich",
+      "passwordMin": "Mindestens 6 Zeichen"
+    },
+    "toggle": {
+      "off": "Passwort anzeigen",
+      "on": "Passwort verbergen"
+    },
+    "footer": {
+      "text": "Erstellt von",
+      "author": "Bartlomiej Socha"
+    }
+  },
+
+  "home.title": "Startseite",
+  "home.subtitle": "Was Sie hier finden...",
+  "home.greeting": "Willkommen {{name}}",
+  "home.greeting.desc": "Erleben Sie eine weitere Dosis spannender Spiele, Statistiken und Fußball-Begeisterung, die darauf warten, entdeckt zu werden!",
+  "home.last.matches": "LETZTE SPIELE",
+  "home.card.about.title": "EFUTBOL LIGA",
+  "home.card.about.description": "Wettbewerbe der EFUTBOL Liga, voller Spannung und Überraschungen für jeden Fan. Verfolgen Sie alle Spiele live und bleiben Sie mit Ergebnissen und Events auf dem Laufenden.",
+  "home.card.matches.title": "SPIELE",
+  "home.card.matches.description": "Sehen Sie sich kommende Spiele und Ergebnisse in unserer Liga an. Verpassen Sie keinen Moment und schließen Sie sich unserer Community von Fans an, die jede Spielminute verfolgen.",
+  "home.card.stats.title": "STATISTIKEN",
+  "home.card.stats.description": "Detaillierte Team- und Spielerstatistiken, in Echtzeit aktualisiert. Entdecken Sie, wer bei Toren, Vorlagen und anderen wichtigen Kennzahlen führt.",
+  "home.card.table.title": "TABELLE",
+  "home.card.table.description": "Aktuelle Ligatabelle – verfolgen Sie die Platzierungen Ihrer Lieblingsteams. Sehen Sie, wer in dieser Saison die besten Chancen hat zu gewinnen und was Experten prognostizieren.",
+  "home.card.teams.title": "TEAMS",
+  "home.card.teams.description": "Informationen zu Teams, Spielern und ihren Historien. Lernen Sie die Aufstellungen, Strategien und die wichtigsten Momente jedes Teams im Wettkampf kennen.",
+  "home.card.ranking.title": "RANGLISTE",
+  "home.card.ranking.description": "Erkunden Sie die Besten der Liga mit unserer Rangliste. Sehen Sie, wie sich die Positionen der Spieler im Laufe des Wettbewerbs verändern und wer den MVP-Titel verdient.",
+
+  "homeStats": {
+    "lastResult": "Ergebnis des letzten Spiels",
+    "weekMatches": "Spiele diese Woche",
+    "winPercent": "Siegquote",
+    "avgGoals": "Ø Tore pro Spiel"
+  },
+
+  "about": {
+    "title": "EFUTBOL 2x2 Liga",
+    "subtitle": "Willkommen bei...",
+    "description": {
+      "header": "Warum der \"EFUTBOL Liga\" beitreten?",
+      "content": "\"EFUTBOL Liga\" ist der perfekte Ort, um deine 2v2-Spiele zu verwalten, Ergebnisse zu verfolgen und dich mit Freunden zu messen. Du kannst ganz einfach neue Spiele hinzufügen, Gegner wählen, das Ergebnis eingeben und die Ergebnisse deiner Rivalen bestätigen. Analysiere deine Statistiken, verfolge deinen Fortschritt und sammle Punkte, um an die Spitze der Rangliste zu gelangen. Werde Teil unserer Community von Spielern, um deine Fähigkeiten zu verbessern und Spaß an deinem Lieblingsspiel zu haben!",
+      "button": { "teams": "Teams" }
+    },
+    "faqSubtitle": "Häufig gestellt",
+    "faqTitle": "Fragen",
+    "faq": {
+      "questions": [
+        {
+          "question": "Wie kann ich ein neues Spiel in der App hinzufügen?",
+          "answer": "Um ein neues Spiel hinzuzufügen, gehen Sie zum Abschnitt „Spiele“ und klicken Sie auf „Spiel hinzufügen“. Wählen Sie dann Ihren Mitspieler, die Gegner und geben Sie das Ergebnis ein."
+        },
+        {
+          "question": "Welche Statistiken kann ich in der App verfolgen?",
+          "answer": "Sie können Ihre Spielstatistiken wie Anzahl der gespielten Spiele, Siege, Niederlagen und Unentschieden verfolgen sowie Teamstatistiken, die Ihre Erfolge mit verschiedenen Partnern anzeigen."
+        },
+        {
+          "question": "Erstellt die App eine Spielerrangliste?",
+          "answer": "Ja, die App erstellt automatisch eine Spielerrangliste basierend auf den Spielergebnissen. Die aktuelle Rangliste sehen Sie auf der Seite „Rangliste“."
+        },
+        {
+          "question": "Ermöglicht die App die Verfolgung von Teamergebnissen?",
+          "answer": "Ja. Auf der Seite „Tabelle“ finden Sie eine Liste aller Zwei-Spieler-Teams mit ihren Spielstatistiken (Anzahl Siege, Niederlagen, Unentschieden und Punkte)."
+        },
+        {
+          "question": "Kann ich detaillierte Statistiken für die Teams sehen, in denen ich spiele?",
+          "answer": "Ja, auf der Seite „Teams“ können Sie die Statistiken jedes Teams, dem Sie angehören, einsehen und Ihre Leistung mit verschiedenen Partnern überprüfen."
+        },
+        {
+          "question": "Kann ich die Anwendungseinstellungen ändern?",
+          "answer": "Derzeit können keine Einstellungen geändert werden. Alle Ergebnisse und Statistiken werden automatisch basierend auf den gespielten Spielen aktualisiert."
+        },
+        {
+          "question": "Muss ich ein Team manuell erstellen, bevor ich ein Spiel spiele?",
+          "answer": "Nein, Sie müssen kein Team manuell erstellen. Fügen Sie einfach ein Spiel hinzu, indem Sie zwei Spieler für Ihre Seite auswählen – die App erstellt automatisch ein neues Team, wenn diese Kombination noch nicht existiert."
+        },
+        {
+          "question": "Brauche ich ein Konto, um die App zu nutzen?",
+          "answer": "Ja, Sie müssen angemeldet sein, um die Anwendung zu nutzen und Spiele hinzuzufügen. Ein Konto ist erforderlich, wenn Sie die App starten."
+        },
+        {
+          "question": "Wie werden Punkte in der Rangliste und Tabelle berechnet?",
+          "answer": "Teams erhalten 3 Punkte für einen Sieg, 1 Punkt für ein Unentschieden und 0 Punkte für eine Niederlage. Die Spielerrangliste und die Teamtabelle basieren auf den insgesamt gesammelten Punkten."
+        },
+        {
+          "question": "Was ist der Unterschied zwischen der Spielerrangliste und der Teamtabelle?",
+          "answer": "Die Spielerrangliste ist für einzelne Spieler und zeigt die Gesamtbilanz jeder Person. Die Teamtabelle konzentriert sich auf Zwei-Spieler-Teams – jedes einzigartige Paar wird als eigenes Team gezählt. Sie können in mehreren Teams (mit verschiedenen Partnern) auftreten, und all diese Teams werden in der Tabelle aufgeführt."
+        },
+        {
+          "question": "Kann ich in der Spieleliste filtern oder suchen?",
+          "answer": "Ja, die Spieleliste verfügt über Filterfunktionen. Sie können nur Ihre eigenen Spiele oder alle Spiele anzeigen und die Liste nach Gegnername, Ergebnis (Sieg, Unentschieden, Niederlage) oder Datumsbereich eingrenzen."
+        },
+        {
+          "question": "Kann ich ein Spiel nach dem Hinzufügen bearbeiten oder löschen?",
+          "answer": "Derzeit gibt es keine Option, ein Spiel nach dem Hinzufügen zu bearbeiten oder zu löschen. Wenn Sie einen Fehler gemacht haben, fügen Sie das Spiel einfach mit den korrekten Daten erneut hinzu. Die falsche Eintragung können Sie ignorieren oder einen Administrator bitten, sie zu entfernen."
+        },
+        {
+          "question": "Ist die App auf Englisch verfügbar?",
+          "answer": "Ja, die Anwendung ist sowohl auf Polnisch als auch auf Englisch verfügbar. Sie können jederzeit die Sprache wechseln – klicken Sie dazu auf das Sprachsymbol (Globus) im Menü und wählen Sie Ihre bevorzugte Sprache."
+        },
+        {
+          "question": "Kann ich die App in den Dunkel- oder Hellmodus schalten?",
+          "answer": "Ja, die App unterstützt sowohl Licht- als auch Dunkelmodus. Sie können das Design im Menü (Sonne/Mond-Symbol) umschalten – ein Klick darauf wechselt die Farben der Oberfläche."
+        },
+        {
+          "question": "Wie melde ich mich von der App ab?",
+          "answer": "Klicken Sie auf das Profil-Symbol oben rechts und wählen Sie „Abmelden“. Die App kehrt dann zum Login-Bildschirm zurück."
+        },
+        {
+          "question": "Kann ich die Anwendung auf meinem Telefon nutzen?",
+          "answer": "Ja, die App ist vollständig responsiv und funktioniert in einem mobilen Browser. Sie können sie auf Ihrem Telefon oder Tablet genauso verwenden wie am Computer."
+        },
+        {
+          "question": "Unterstützt die App 1-gegen-1-Spiele oder nur 2x2?",
+          "answer": "Die App ist für 2x2-Teamspiele ausgelegt und unterstützt keine Einzelspiele. Alle Statistiken und Ranglisten basieren auf Zwei-Spieler-Teamwettbewerben."
+        }
+      ]
+    }
+  },
+
+  "table": {
+    "title": "Team-Tabelle",
+    "subtitle": "Überprüfen Sie...",
+    "column": {
+      "position": "Platz",
+      "team": "Team",
+      "matches": "Spiele",
+      "wins": "Siege",
+      "looses": "Niederlagen",
+      "draws": "Unentschieden",
+      "points": "Punkte",
+      "ppm": "Punkte/Spiel"
+    },
+    "select": {
+      "player": "Spieler",
+      "matches": "Spiele",
+      "points": "Punkte",
+      "ppm": "Punkte/Spiel"
+    },
+    "button": {
+      "clear": "Zurücksetzen",
+      "filter": "Filtern"
+    },
+    "filterDialog": {
+      "title": "Filter",
+      "close": "Schließen"
+    },
+    "rowsPerPage": "Zeilen pro Seite:",
+    "card": {
+      "matches": "Spiele",
+      "wins": "Siege",
+      "losses": "Niederlagen",
+      "draws": "Unentschieden",
+      "ppm": "Pkt/Spiel"
+    }
+  },
+
+  "ranking": {
+    "title": "Rangliste",
+    "subtitle": "Überprüfen Sie...",
+    "column": {
+      "position": "Platz",
+      "player": "Spieler",
+      "matches": "Spiele",
+      "wins": "Siege",
+      "looses": "Niederlagen",
+      "draws": "Unentschieden",
+      "points": "Punkte",
+      "ppm": "Punkte/Spiel"
+    },
+    "button": {
+      "clear": "Zurücksetzen",
+      "filter": "Filtern"
+    },
+    "select": {
+      "player": "Spieler",
+      "matches": "Spiele",
+      "points": "Punkte",
+      "ppm": "Punkte/Spiel",
+      "none": "Keine"
+    },
+    "filterDialog": {
+      "title": "Filter",
+      "close": "Schließen"
+    },
+    "rowsPerPage": "Zeilen pro Seite:",
+    "error": "Fehler:"
+  },
+
+  "card": {
+    "matches": "Spiele",
+    "wins": "Siege",
+    "losses": "Niederlagen",
+    "draws": "Unentschieden",
+    "ppm": "Punkte/Spiel"
+  },
+
+  "teams": {
+    "title": "Teams",
+    "subtitle": "Überprüfen Sie verschiedene...",
+    "filter": {
+      "allPlayers": "Alle Spieler"
+    },
+    "stats": {
+      "matches": "Spiele",
+      "points": "Punkte",
+      "pointsPerMatch": "Pkt/Spiel",
+      "winPercentage": "Siege"
+    },
+    "legend": {
+      "wins": "Siege",
+      "losses": "Niederlagen",
+      "draws": "Unentschieden",
+      "goalsFor": "Tore für",
+      "goalsAgainst": "Tore gegen"
+    },
+    "history": {
+      "lastMatches": "Letzte Spiele"
+    }
+  },
+
+  "matches": {
+    "title": "Spiele",
+    "subtitle": "Spielverlauf analysieren...",
+    "filters": {
+      "myMatches": "Meine Spiele",
+      "allMatches": "Alle Spiele",
+      "filter": "Filtern",
+      "team": "Team",
+      "result": "Ergebnis",
+      "none": "Keine",
+      "from": "Von",
+      "to": "Bis",
+      "clear": "Zurücksetzen"
+    },
+    "actions": {
+      "add": "Spiel hinzufügen",
+      "edit": "Bearbeiten",
+      "delete": "Löschen"
+    },
+    "card": {
+      "players": "Spieler",
+      "rival": "Gegner",
+      "score": "Ergebnis",
+      "date": "Datum"
+    },
+    "table": {
+      "team": "Team",
+      "rival": "Gegner",
+      "result": "Ergebnis",
+      "date": "Datum",
+      "actions": "Aktionen"
+    },
+    "outcome": {
+      "win": "Sieg",
+      "loss": "Niederlage",
+      "draw": "Unentschieden"
+    },
+    "pagination": {
+      "rowsPerPage": "Zeilen pro Seite:",
+      "all": "Alle"
+    },
+    "dialogs": {
+      "addMatch": "Spiel hinzufügen",
+      "editMatch": "Spiel bearbeiten",
+      "deleteMatch": "Spiel löschen",
+      "deleteConfirmPrefix": "Möchten Sie wirklich löschen"
+    },
+    "form": {
+      "player1": "Spieler 1",
+      "player2": "Spieler 2",
+      "rival1": "Gegner 1",
+      "rival2": "Gegner 2",
+      "date": "Datum",
+      "scoreHome": "Heimtore",
+      "scoreAway": "Auswärtstore"
+    },
+    "messages": {
+      "addSuccess": "Spiel hinzugefügt",
+      "updateSuccess": "Spiel aktualisiert",
+      "deleteSuccess": "Spiel entfernt",
+      "error": "Ein Fehler ist aufgetreten"
+    }
+  },
+
+  "stats": {
+    "title": "Statistiken",
+    "subtitle": "Überprüfen Sie Ihre...",
+    "tabs": {
+      "matches": "Spiele",
+      "wins": "Siege",
+      "losses": "Niederlagen",
+      "points": "Punkte",
+      "ppm": "Punkte/Spiel"
+    },
+    "charts": {
+      "matches": "Spiele",
+      "wins": "Siege",
+      "losses": "Niederlagen",
+      "points": "Punkte",
+      "ppm": "PPM"
+    },
+    "outcome": {
+      "win": "Sieg",
+      "loss": "Niederlage",
+      "draw": "Unentschieden"
+    },
+    "cards": {
+      "matches": {
+        "title": "Spielstatistiken",
+        "totalLabel": "Gesamtspiele",
+        "winsLabel": "Siege",
+        "drawsLabel": "Unentschieden",
+        "lossesLabel": "Niederlagen",
+        "winPercent": "Sieg %",
+        "totalPointsLabel": "Gesamtpunkte",
+        "ppmLabel": "PPM",
+        "stabilityLabel": "Aktuelle Stabilität"
+      },
+      "wins": {
+        "title": "Siegstatistiken",
+        "totalLabel": "Gesamtsiege",
+        "winPercentLabel": "Sieg %",
+        "recentLabel": "Letzte Siege",
+        "matchesLabel": "Spiele",
+        "drawsLabel": "Unentschieden",
+        "lossesLabel": "Niederlagen",
+        "totalPointsLabel": "Gesamtpunkte",
+        "ppmLabel": "PPM"
+      },
+      "losses": {
+        "title": "Niederlagenstatistiken",
+        "totalLabel": "Gesamtniederlagen",
+        "lossPercentLabel": "Niederlagen %",
+        "recentLabel": "Letzte Niederlagen",
+        "matchesLabel": "Spiele",
+        "winsLabel": "Siege",
+        "drawsLabel": "Unentschieden",
+        "totalPointsLabel": "Gesamtpunkte",
+        "ppmLabel": "PPM"
+      },
+      "points": {
+        "title": "Punktestatistiken",
+        "totalPointsLabel": "Gesamtpunkte",
+        "avgPPMLabel": "Ø PPM",
+        "matchesLabel": "Spiele",
+        "winsLabel": "Siege",
+        "drawsLabel": "Unentschieden",
+        "lossesLabel": "Niederlagen",
+        "winPercentLabel": "Sieg %",
+        "stabilityLabel": "Aktuelle Stabilität"
+      },
+      "ppm": {
+        "title": "PPM-Statistiken",
+        "avgPPMLabel": "Ø PPM",
+        "stabilityLabel": "Aktuelle Stabilität",
+        "matchesLabel": "Spiele",
+        "winPercentLabel": "Sieg %",
+        "totalPointsLabel": "Gesamtpunkte",
+        "winsLabel": "Siege",
+        "drawsLabel": "Unentschieden",
+        "lossesLabel": "Niederlagen"
+      }
+    }
+  },
+
+  "common": {
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "none": "Keine"
+  },
+
+  "footer": {
+    "copy": "© {{year}} eFutbol Liga · Alle Rechte vorbehalten."
+  }
+}

@@ -23,4 +23,15 @@ export const componentOverrides: Components = {
       },
     },
   },
+
+  MuiToolbar: {
+    styleOverrides: {
+      root: {
+        minHeight: "58px",
+        "@media (min-width:600px)": {
+          minHeight: "58px",
+        },
+      },
+    },
+  },
 };

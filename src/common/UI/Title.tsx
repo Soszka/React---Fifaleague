@@ -27,7 +27,13 @@ const Title: React.FC<TitleProps> = ({ title, subtitle }) => {
       : theme.palette.primary.main;
 
   return (
-    <Box sx={{ width: "100%", mb: { md: 1 } }}>
+    <Box
+      sx={{
+        width: "100%",
+        mt: { xs: "25px", md: "25px", lg: 0 },
+        mb: { md: 1 },
+      }}
+    >
       <MotionBox
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}

@@ -15,7 +15,9 @@
   },
   "language": {
     "pl": "Polish",
-    "en": "English"
+    "en": "English",
+    "es": "Spanish",
+    "de": "German"
   },
 
   "auth": {

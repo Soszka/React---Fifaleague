@@ -81,6 +81,8 @@ function AuthInner() {
   const languages = [
     { code: "en", label: "English" },
     { code: "pl", label: "Polski" },
+    { code: "es", label: "Español" },
+    { code: "de", label: "Deutsch" },
   ];
   const emailValue = watch("email");
   const passwordValue = watch("password");
