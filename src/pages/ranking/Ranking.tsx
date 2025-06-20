@@ -256,7 +256,7 @@ const RankingPage: React.FC = () => {
     </Button>
   );
   return (
-    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: 4 }}>
+    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: { xs: 1.875, md: 4 } }}>
       <Title title={t("ranking.title")} subtitle={t("ranking.subtitle")} />
       <Paper
         elevation={4}

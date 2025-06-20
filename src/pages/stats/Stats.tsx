@@ -28,6 +28,7 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import PercentIcon from "@mui/icons-material/Percent";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import { useAuth } from "../../common/context/AuthContext";
+import { formatDisplayName } from "../../common/utils/nameUtils";
 
 type Outcome = "win" | "draw" | "loss";
 
@@ -98,8 +99,7 @@ const StatsPage: React.FC = () => {
 
   const { user: authUser } = useAuth();
   const loggedName = authUser?.email?.split("@")[0] || "";
-  const loggedLabel =
-    loggedName.charAt(0).toUpperCase() + loggedName.slice(1).toLowerCase();
+  const loggedLabel = formatDisplayName(loggedName);
 
   const players = useMemo(() => {
     const s = new Set<string>();
@@ -410,7 +410,7 @@ const StatsPage: React.FC = () => {
   );
 
   return (
-    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: 4 }}>
+    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: { xs: 1.875, md: 4 } }}>
       <Title
         title={t("stats.title") as string}
         subtitle={t("stats.subtitle") as string}

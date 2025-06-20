@@ -31,13 +31,25 @@ import {
   useNotification,
 } from "../../common/context/NotificationContext";
 import { useAuth } from "../../common/context/AuthContext";
+import { stripDiacritics } from "../../common/utils/nameUtils";
 import styles from "./auth.module.scss";
 import Logo from "../../assets/Logo.png";
 import Title from "../../common/UI/Title";
 
 type FormValues = { email: string; password: string };
 
-const USERS = ["Damian", "Bartek", "Grzesiek", "Darek", "Marek", "Adrian"];
+const USERS = [
+  "Adam",
+  "Adrian",
+  "Bartek",
+  "Damian",
+  "Darek",
+  "Dominik",
+  "Grzesiek",
+  "Marek",
+  "Michał",
+  "Łukasz",
+];
 
 export default function Auth() {
   return (
@@ -91,8 +103,10 @@ function AuthInner() {
   const handleUserInsert = () => {
     if (!selectedUser) return;
     const name = selectedUser;
-    const email = `${name.toLowerCase()}@${name.toLowerCase()}.com`;
-    const password = `${name.charAt(0).toUpperCase()}${name
+    const ascii = stripDiacritics(name);
+    const lower = ascii.toLowerCase();
+    const email = `${lower}@${lower}.com`;
+    const password = `${ascii.charAt(0).toUpperCase()}${ascii
       .slice(1)
       .toLowerCase()}123`;
     setValue("email", email, { shouldDirty: true });
@@ -111,7 +125,11 @@ function AuthInner() {
               <LanguageIcon />
             </IconButton>
           </Tooltip>
-          <Menu anchorEl={langAnchor} open={!!langAnchor} onClose={() => setLangAnchor(null)}>
+          <Menu
+            anchorEl={langAnchor}
+            open={!!langAnchor}
+            onClose={() => setLangAnchor(null)}
+          >
             {languages.map(({ code, label }) => (
               <MenuItem
                 key={code}
@@ -160,7 +178,10 @@ function AuthInner() {
                 InputLabelProps={{ shrink: !!passwordValue }}
                 {...register("password", {
                   required: t("auth.errors.passwordRequired"),
-                  minLength: { value: 6, message: t("auth.errors.passwordMin") },
+                  minLength: {
+                    value: 6,
+                    message: t("auth.errors.passwordMin"),
+                  },
                 })}
                 error={!!errors.password}
                 helperText={errors.password?.message}
@@ -171,7 +192,9 @@ function AuthInner() {
                         onClick={() => setHidePassword(!hidePassword)}
                         edge="end"
                         aria-label={
-                          hidePassword ? t("auth.toggle.off") : t("auth.toggle.on")
+                          hidePassword
+                            ? t("auth.toggle.off")
+                            : t("auth.toggle.on")
                         }
                         className={styles.passwordToggle}
                       >
@@ -236,7 +259,12 @@ function AuthInner() {
         }}
         fullWidth
         maxWidth={i18n.language === "pl" ? "sm" : "xs"}
-        PaperProps={{ sx: { width: { xs: "95%", sm: i18n.language === "pl" ? 500 : 400 }, minHeight: 260 } }}
+        PaperProps={{
+          sx: {
+            width: { xs: "95%", sm: i18n.language === "pl" ? 500 : 400 },
+            minHeight: 260,
+          },
+        }}
       >
         <DialogTitle sx={{ bgcolor: theme.palette.grey[300], py: 1.5, px: 2 }}>
           {t("auth.selectUser")}
@@ -244,7 +272,9 @@ function AuthInner() {
         <DialogContent sx={{ pt: 1.5, px: 2 }}>
           <Typography sx={{ mt: 1.5 }}>{t("auth.selectUserDesc")}</Typography>
           <FormControl fullWidth sx={{ mt: 2 }}>
-            <InputLabel id="user-select-label">{t("auth.userLabel")}</InputLabel>
+            <InputLabel id="user-select-label">
+              {t("auth.userLabel")}
+            </InputLabel>
             <Select
               labelId="user-select-label"
               label={t("auth.userLabel")}
@@ -260,7 +290,9 @@ function AuthInner() {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>{t("common.cancel")}</Button>
+          <Button onClick={() => setDialogOpen(false)}>
+            {t("common.cancel")}
+          </Button>
           <Button
             variant="contained"
             disabled={!selectedUser}

@@ -15,6 +15,7 @@ import tableImg from "../../assets/cardsPhoto1.png";
 import teamsImg from "../../assets/cardsPhoto2.png";
 import rankingImg from "../../assets/auth_photo.jpg";
 import { useAuth } from "../../common/context/AuthContext";
+import { formatDisplayName } from "../../common/utils/nameUtils";
 
 interface CardItem {
   header: string;
@@ -78,8 +79,7 @@ const Home: React.FC = () => {
   const emailName = user?.email?.split("@")[0] || "Player";
 
   /** ładny nagłówek „Grzesiek” */
-  const userName =
-    emailName.charAt(0).toUpperCase() + emailName.slice(1).toLowerCase();
+  const userName = formatDisplayName(emailName);
 
   /** klucz do hooków/statystyk: zawsze małe litery */
   const playerKey = emailName.toLowerCase();

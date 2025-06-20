@@ -1,121 +1,859 @@
  (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a/src/pages/table/Table.tsx b/src/pages/table/Table.tsx
-index cdd19f5fe8dffb0c882a2611ec469941e8b49a93..ba161d1a3e45a3771d0044c12698f2c1c4e7ceac 100644
---- a/src/pages/table/Table.tsx
-+++ b/src/pages/table/Table.tsx
-@@ -6,50 +6,51 @@ import {
-   CardContent,
+diff --git a/src/common/utils/nameUtils.ts b/src/common/utils/nameUtils.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..61200c33c8823e02d8a99d129bdb602ef8417a95
+--- /dev/null
++++ b/src/common/utils/nameUtils.ts
+@@ -0,0 +1,13 @@
++export const stripDiacritics = (str: string): string =>
++  str.normalize('NFD').replace(/\p{Diacritic}/gu, '');
++
++const specialNames: Record<string, string> = {
++  lukasz: 'Łukasz',
++  michal: 'Michał',
++};
++
++export const formatDisplayName = (name: string): string => {
++  const key = stripDiacritics(name).toLowerCase();
++  if (specialNames[key]) return specialNames[key];
++  return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
++};
+diff --git a/src/pages/about/About.tsx b/src/pages/about/About.tsx
+index 315f7c8210df010721ec5c7aebe1f9fda0e12e19..64d4802951400c3804b1233cb2036cccb91514b2 100644
+--- a/src/pages/about/About.tsx
++++ b/src/pages/about/About.tsx
+@@ -65,51 +65,51 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
+     fontSize: "0.95rem",
+     lineHeight: 1.6,
+     color: theme.palette.text.secondary,
+   },
+ }));
+ 
+ const About: React.FC = () => {
+   const { t } = useTranslation();
+   const faqItems = t("about.faq.questions", {
+     returnObjects: true,
+   }) as { question: string; answer: string }[];
+ 
+   const [expanded, setExpanded] = useState<string | false>(false);
+ 
+   const handleChange =
+     (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
+       setExpanded(isExpanded ? panel : false);
+     };
+ 
+   return (
+     <Box
+       sx={{
+         mx: "auto",
+         maxWidth: 1800,
+         px: { xs: 2, sm: 4 },
+-        mt: 4,
++        mt: { xs: 1.875, md: 4 },
+       }}
+     >
+       <Title title={t("about.title")} subtitle={t("about.subtitle")} />
+ 
+       {faqItems.map((qa, index) => {
+         const panelId = `panel${index}`;
+         return (
+           <Accordion
+             key={index}
+             expanded={expanded === panelId}
+             onChange={handleChange(panelId)}
+             disableGutters
+             sx={index === 0 ? { mt: { xs: 2, md: 0 } } : undefined}
+           >
+             <AccordionSummary>
+               <Typography>{qa.question}</Typography>
+             </AccordionSummary>
+             <AccordionDetails>
+               <Typography>{qa.answer}</Typography>
+             </AccordionDetails>
+           </Accordion>
+         );
+       })}
+     </Box>
+   );
+diff --git a/src/pages/auth/Auth.tsx b/src/pages/auth/Auth.tsx
+index 4a8ff0b8540a60ef26a19773acc80cc6a93fab66..ac8b2563587db9bfbfd88e3e87a32d849ee75dd9 100644
+--- a/src/pages/auth/Auth.tsx
++++ b/src/pages/auth/Auth.tsx
+@@ -9,57 +9,69 @@ import {
+   InputAdornment,
    Dialog,
-   DialogActions,
-   DialogContent,
    DialogTitle,
+   DialogContent,
+   DialogActions,
    FormControl,
    InputLabel,
-   MenuItem,
-   Paper,
    Select,
-   Skeleton,
-   Table,
-   TableBody,
-   TableCell,
-   TableContainer,
-   TableHead,
-   TablePagination,
-   TableRow,
-   TableSortLabel,
+   Menu,
+   MenuItem,
    Typography,
-   useMediaQuery,
+   Tooltip,
    useTheme,
+   CircularProgress,
  } from "@mui/material";
- import { motion } from "framer-motion";
+ import { ThemeProvider } from "@mui/material/styles";
+ import { getTheme } from "../../theme";
  import { useTranslation } from "react-i18next";
-+import { useOutletContext } from "react-router-dom";
+ import { Visibility, VisibilityOff } from "@mui/icons-material";
+ import LanguageIcon from "@mui/icons-material/Language";
+ import {
+   NotificationProvider,
+   useNotification,
+ } from "../../common/context/NotificationContext";
+ import { useAuth } from "../../common/context/AuthContext";
++import { stripDiacritics } from "../../common/utils/nameUtils";
+ import styles from "./auth.module.scss";
+ import Logo from "../../assets/Logo.png";
  import Title from "../../common/UI/Title";
- import { useAllMatches, MatchUi } from "../../common/hooks/useAllMatches";
- import styles from "./table.module.scss";
  
- export interface Team {
-   position?: number;
-   players: string;
-   matches: number;
-   wins: number;
-   looses: number;
-   draws: number;
-   points: number;
-   pointsPerMatch: number;
+ type FormValues = { email: string; password: string };
+ 
+-const USERS = ["Damian", "Bartek", "Grzesiek", "Darek", "Marek", "Adrian"];
++const USERS = [
++  "Adam",
++  "Adrian",
++  "Bartek",
++  "Damian",
++  "Tarek",
++  "Dominik",
++  "Grzesiek",
++  "Marek",
++  "Michał",
++  "Łukasz",
++];
+ 
+ export default function Auth() {
+   return (
+     <NotificationProvider>
+       <ThemeProvider theme={getTheme("light")}>
+         <AuthInner />
+       </ThemeProvider>
+     </NotificationProvider>
+   );
  }
  
- type Order = "asc" | "desc";
+ function AuthInner() {
+   const theme = useTheme();
+   const { t, i18n } = useTranslation();
+   const navigate = useNavigate();
+   const { login, user, loading: authLoading } = useAuth();
+   const {
+     register,
+     handleSubmit,
+     setValue,
+     watch,
+     formState: { errors },
+   } = useForm<FormValues>();
+   const [hidePassword, setHidePassword] = useState(true);
+   const [dialogOpen, setDialogOpen] = useState(false);
+@@ -69,52 +81,54 @@ function AuthInner() {
+   const languages = [
+     { code: "en", label: "English" },
+     { code: "pl", label: "Polski" },
+   ];
+   const emailValue = watch("email");
+   const passwordValue = watch("password");
  
- const MATCH_OPTIONS = [
-   "0-10",
-   "10-20",
-   "20-30",
-   "30-40",
-   "40-50",
-   "50-60",
-   "60-70",
-diff --git a/src/pages/table/Table.tsx b/src/pages/table/Table.tsx
-index cdd19f5fe8dffb0c882a2611ec469941e8b49a93..ba161d1a3e45a3771d0044c12698f2c1c4e7ceac 100644
---- a/src/pages/table/Table.tsx
-+++ b/src/pages/table/Table.tsx
-@@ -137,51 +138,55 @@ const buildTeamsStats = (matches: MatchUi[]): Team[] => {
-     add(team2, res === "team2Win" ? "win" : res === "draw" ? "draw" : "loss");
-   });
-   const arr = Array.from(map.values());
-   arr.forEach((t) => (t.pointsPerMatch = t.points / t.matches));
-   return arr;
- };
+   useEffect(() => {
+     if (user) {
+       navigate("/app/home", { replace: true });
+     }
+   }, [user, navigate]);
  
- const columns: {
-   id: keyof Team | "position";
-   label: string;
-   numeric?: boolean;
- }[] = [
-   { id: "position", label: "table.column.position" },
-   { id: "players", label: "table.column.team" },
-   { id: "matches", label: "table.column.matches", numeric: true },
-   { id: "wins", label: "table.column.wins", numeric: true },
-   { id: "looses", label: "table.column.looses", numeric: true },
-   { id: "draws", label: "table.column.draws", numeric: true },
-   { id: "points", label: "table.column.points", numeric: true },
-   { id: "pointsPerMatch", label: "table.column.ppm", numeric: true },
+   const onSubmit = async ({ email, password }: FormValues) => {
+     try {
+       await login(email, password);
+       navigate("/app/home", { replace: true });
+     } catch {
+       notify(t("auth.loginError"), "error");
+     }
+   };
+ 
+   const handleUserInsert = () => {
+     if (!selectedUser) return;
+     const name = selectedUser;
+-    const email = `${name.toLowerCase()}@${name.toLowerCase()}.com`;
+-    const password = `${name.charAt(0).toUpperCase()}${name
++    const ascii = stripDiacritics(name);
++    const lower = ascii.toLowerCase();
++    const email = `${lower}@${lower}.com`;
++    const password = `${ascii.charAt(0).toUpperCase()}${ascii
+       .slice(1)
+       .toLowerCase()}123`;
+     setValue("email", email, { shouldDirty: true });
+     setValue("password", password, { shouldDirty: true });
+     setDialogOpen(false);
+     setSelectedUser("");
+     notify(t("auth.userInserted"), "success");
+   };
+ 
+   return (
+     <div className={styles.auth}>
+       <div className={styles.authContainer}>
+         <div className={styles.langSwitch}>
+           <Tooltip title="Language">
+             <IconButton onClick={(e) => setLangAnchor(e.currentTarget)}>
+               <LanguageIcon />
+             </IconButton>
+           </Tooltip>
+           <Menu anchorEl={langAnchor} open={!!langAnchor} onClose={() => setLangAnchor(null)}>
+             {languages.map(({ code, label }) => (
+               <MenuItem
+                 key={code}
+                 onClick={() => {
+                   i18n.changeLanguage(code);
+                   setLangAnchor(null);
+diff --git a/src/pages/home/Home.tsx b/src/pages/home/Home.tsx
+index f3e2278d4915d357aba59ff8ea2605e5742ec2e9..98201dfe9f19d13ac912c96df394c5745f3cb81b 100644
+--- a/src/pages/home/Home.tsx
++++ b/src/pages/home/Home.tsx
+@@ -1,42 +1,43 @@
+ // src/pages/home/Home.tsx
+ import React, { useCallback, useMemo, useState } from "react";
+ import { useTranslation } from "react-i18next";
+ import { Box, Typography, useTheme, keyframes } from "@mui/material";
+ import { motion } from "framer-motion";
+ import HomeScoreboard from "./home-scoreboard/HomeScoreboard";
+ import HomeCard from "./home-card/HomeCard";
+ import HomeStats from "./home-stats/HomeStats";
+ import Title from "../../common/UI/Title";
+ import styles from "./home.module.scss";
+ import aboutImg from "../../assets/cardsPhoto4.png";
+ import matchesImg from "../../assets/cardsPhoto3.png";
+ import statsImg from "../../assets/cardsPhoto5.png";
+ import tableImg from "../../assets/cardsPhoto1.png";
+ import teamsImg from "../../assets/cardsPhoto2.png";
+ import rankingImg from "../../assets/auth_photo.jpg";
+ import { useAuth } from "../../common/context/AuthContext";
++import { formatDisplayName } from "../../common/utils/nameUtils";
+ 
+ interface CardItem {
+   header: string;
+   content: string;
+   image: string;
+   link: string;
+ }
+ 
+ const cardsConfig = (t: ReturnType<typeof useTranslation>["t"]): CardItem[] => [
+   {
+     header: t("home.card.about.title"),
+     content: t("home.card.about.description"),
+     image: aboutImg,
+     link: "/app/about",
+   },
+   {
+     header: t("home.card.matches.title"),
+     content: t("home.card.matches.description"),
+     image: matchesImg,
+     link: "/app/matches",
+   },
+   {
+     header: t("home.card.table.title"),
+     content: t("home.card.table.description"),
+     image: tableImg,
+@@ -56,52 +57,51 @@ const cardsConfig = (t: ReturnType<typeof useTranslation>["t"]): CardItem[] => [
+   },
+   {
+     header: t("home.card.ranking.title"),
+     content: t("home.card.ranking.description"),
+     image: rankingImg,
+     link: "/app/ranking",
+   },
  ];
  
- const TablePage: React.FC = () => {
+ const shine = keyframes`
+   0% { background-position: -200% 0; }
+   100% { background-position: 200% 0; }
+ `;
+ const MotionTypography = motion(Typography);
+ 
+ const Home: React.FC = () => {
+   const { t } = useTranslation();
+   const cards = useMemo(() => cardsConfig(t), [t]);
+   const theme = useTheme();
+   const { user } = useAuth();
+ 
+   /** surowe „grzesiek” z maila */
+   const emailName = user?.email?.split("@")[0] || "Player";
+ 
+   /** ładny nagłówek „Grzesiek” */
+-  const userName =
+-    emailName.charAt(0).toUpperCase() + emailName.slice(1).toLowerCase();
++  const userName = formatDisplayName(emailName);
+ 
+   /** klucz do hooków/statystyk: zawsze małe litery */
+   const playerKey = emailName.toLowerCase();
+ 
+   // --- ładowanie sekcji ---
+   const [scoreboardLoaded, setScoreboardLoaded] = useState(false);
+   const [statsLoaded, setStatsLoaded] = useState(false);
+   const [imagesLoaded, setImagesLoaded] = useState(0);
+ 
+   const cardsLoaded = imagesLoaded === cards.length;
+   const allLoaded = scoreboardLoaded && statsLoaded && cardsLoaded;
+ 
+   const handleScoreboardLoaded = useCallback(
+     () => setScoreboardLoaded(true),
+     []
+   );
+   const handleStatsLoaded = useCallback(() => setStatsLoaded(true), []);
+   const handleCardLoaded = useCallback(
+     () => setImagesLoaded((prev) => prev + 1),
+     []
+   );
+ 
+   const animatedGradient = `linear-gradient(90deg,
+     ${theme.palette.primary.main},
+     ${theme.palette.secondary.main},
+diff --git a/src/pages/matches/Matches.tsx b/src/pages/matches/Matches.tsx
+index b5f4b6b053b139fc9f3b204dc7b5ec4034892a4e..96c4f67140ea55610a92765d512f8286d8fdf011 100644
+--- a/src/pages/matches/Matches.tsx
++++ b/src/pages/matches/Matches.tsx
+@@ -1,69 +1,69 @@
+ // src/pages/matches/Matches.tsx
+ import React, { useMemo, useState } from "react";
+ import { Box, Paper, useTheme, useMediaQuery } from "@mui/material";
+ import { useTranslation } from "react-i18next";
+ import dayjs, { Dayjs } from "dayjs";
+ import Title from "../../common/UI/Title";
+ import MatchesFilters from "./components/MatchesFilters";
+ import MatchTableDesktop from "./components/MatchesTableDesktop";
+ import MatchListMobile from "./components/MatchesMobile";
+ import { Order, FilterResultOption, ResultOption, RowData } from "./types";
+ import styles from "./matches.module.scss";
+ import AddMatchDialog from "./metches-dialogs/AddMetchDialog";
+ import EditMatchDialog from "./metches-dialogs/EditMetchDialog";
+ import RemoveMatchDialog from "./metches-dialogs/RemoveMatchDialog";
+ import {
+   MatchesProvider,
+   useMatches,
+   Match,
+ } from "../../common/context/MatchesContext";
+ import { NotificationProvider } from "../../common/context/NotificationContext";
+ import { useAuth } from "../../common/context/AuthContext";
++import { formatDisplayName } from "../../common/utils/nameUtils";
+ 
+ const normalizeTeam = (a: string, b: string) => [a, b].sort().join(" & ");
+ 
+ const getOutcome = (score: string): ResultOption => {
+   const [g1, g2] = score.split(" : ").map((n) => parseInt(n.trim(), 10));
+   if (g1 === g2) return "DRAW";
+   return g1 > g2 ? "WIN" : "LOSS";
+ };
+ 
+ const eq = (a = "", b = "") => a.toLowerCase() === b.toLowerCase();
+ 
+ const MatchesScreen: React.FC = () => {
+   const { matches, loading, error } = useMatches();
    const { t } = useTranslation();
    const theme = useTheme();
--  const isMobile = useMediaQuery("(max-width:800px)");
-+  const { isNavVisible = false } =
-+    useOutletContext<{ isNavVisible?: boolean }>() ?? {};
-+  const isMobile = useMediaQuery(
-+    isNavVisible ? "(max-width:1040px)" : "(max-width:800px)"
-+  );
-   const { matches, loading, error } = useAllMatches();
-   const teams = useMemo(() => buildTeamsStats(matches), [matches]);
+   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
  
-   const [playerFilter, setPlayerFilter] = useState<string | null>(null);
-   const [matchesFilter, setMatchesFilter] = useState<string | null>(null);
-   const [pointsFilter, setPointsFilter] = useState<string | null>(null);
-   const [ppmFilter, setPpmFilter] = useState<string | null>(null);
-   const [orderBy, setOrderBy] = useState<keyof Team>("pointsPerMatch");
+   // aktualnie zalogowany gracz
+   const { user } = useAuth();
+   const emailName = user?.email?.split("@")[0] || "";
+   const currentUserKey = emailName.toLowerCase(); // do porównań
+-  const currentUserLabel =
+-    emailName.charAt(0).toUpperCase() + emailName.slice(1).toLowerCase(); // do UI
++  const currentUserLabel = formatDisplayName(emailName); // do UI
+ 
+   const [showAll, setShowAll] = useState(false);
+   const [rivalFilter, setRivalFilter] = useState<string | null>(null);
+   const [resultFilter, setResultFilter] = useState<FilterResultOption>("");
+   const [dateFrom, setDateFrom] = useState<Dayjs | null>(null);
+   const [dateTo, setDateTo] = useState<Dayjs | null>(null);
+   const [orderBy, setOrderBy] = useState<keyof RowData>("date");
    const [order, setOrder] = useState<Order>("desc");
    const [page, setPage] = useState(0);
    const [rowsPerPage, setRowsPerPage] = useState(10);
-   const [filterDialogOpen, setFilterDialogOpen] = useState(false);
  
-   const medalColor = (pos?: number) => {
-     if (pos === 1) return "#D4AF37";
-     if (pos === 2) return "#C0C0C0";
-     if (pos === 3) return "#CD7F32";
-     return theme.palette.text.primary;
+   const [openAddDialog, setOpenAddDialog] = useState(false);
+   const [openEditDialog, setOpenEditDialog] = useState(false);
+   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+   const [matchToEdit, setMatchToEdit] = useState<Match | null>(null);
+   const [matchToDelete, setMatchToDelete] = useState<Match | null>(null);
+ 
+   const earliestDate = useMemo(
+     () =>
+       matches.length ? dayjs(Math.min(...matches.map((m) => m.date))) : null,
+     [matches]
+   );
+   const latestDate = useMemo(
+     () =>
+       matches.length ? dayjs(Math.max(...matches.map((m) => m.date))) : null,
+@@ -157,51 +157,51 @@ const MatchesScreen: React.FC = () => {
+     const isAsc = orderBy === col && order === "asc";
+     setOrder(isAsc ? "desc" : "asc");
+     setOrderBy(col);
    };
  
-   const uniquePlayers = useMemo(() => {
+   const clearFilters = () => {
+     setRivalFilter(null);
+     setResultFilter("");
+     setDateFrom(null);
+     setDateTo(null);
+   };
+ 
+   const handleEdit = (id: string) => {
+     const match = matches.find((m) => m.id === id) || null;
+     setMatchToEdit(match);
+     setOpenEditDialog(true);
+   };
+ 
+   const handleDelete = (id: string) => {
+     const match = matches.find((m) => m.id === id) || null;
+     setMatchToDelete(match);
+     setOpenDeleteDialog(true);
+   };
+ 
+   return (
+-    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: 4 }}>
++    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: { xs: 1.875, md: 4 } }}>
+       <Box
+         sx={{
+           display: "flex",
+           justifyContent: "space-between",
+           alignItems: "center",
+         }}
+       >
+         <Title
+           title={t("matches.title") as string}
+           subtitle={
+             t("matches.subtitle", { player: currentUserLabel }) as string
+           }
+         />
+       </Box>
+       <Paper
+         elevation={4}
+         className={styles.container}
+         sx={{ p: { xs: 2, md: 3 }, mt: 2 }}
+       >
+         <MatchesFilters
+           isMobile={isMobile}
+           showAll={showAll}
+           onToggleShowAll={() => setShowAll(!showAll)}
+           rivalFilter={rivalFilter}
+           onRivalFilterChange={setRivalFilter}
+diff --git a/src/pages/navigation/navigation-actions/NavigationActions.tsx b/src/pages/navigation/navigation-actions/NavigationActions.tsx
+index 8c2ae253925ba53b4e4324c5c0dc3d42c6b124e6..9c8191987ccce7c8a9499807fa90989c499afbfd 100644
+--- a/src/pages/navigation/navigation-actions/NavigationActions.tsx
++++ b/src/pages/navigation/navigation-actions/NavigationActions.tsx
+@@ -64,51 +64,51 @@ export default function NavigationActions({ toggleTheme }: Props) {
+               setAnchorLang(null);
+             }}
+             selected={i18n.language === code}
+             sx={{ px: 2 }}
+           >
+             {label}
+           </MenuItem>
+         ))}
+       </Menu>
+ 
+       {/* --- THEME --- */}
+       <Tooltip title={t("navigation.theme")}>
+         <IconButton color="inherit" onClick={toggleTheme}>
+           {theme.palette.mode === "dark" ? (
+             <Brightness7Icon />
+           ) : (
+             <Brightness4Icon />
+           )}
+         </IconButton>
+       </Tooltip>
+ 
+       {/* --- GITHUB --- */}
+       <Tooltip title="GitHub">
+         <IconButton
+           color="inherit"
+-          href="https://github.com/TwojeRepo"
++          href="https://github.com/Soszka/React---Fifaleague"
+           target="_blank"
+           rel="noopener"
+         >
+           <GitHubIcon />
+         </IconButton>
+       </Tooltip>
+ 
+       {/* --- UŻYTKOWNIK --- */}
+       <Tooltip title={t("navigation.account")}>
+         <IconButton
+           color="inherit"
+           onClick={(e) => setAnchorUser(e.currentTarget)}
+         >
+           <AccountCircleIcon sx={{ fontSize: 26 }} />
+         </IconButton>
+       </Tooltip>
+       <Menu
+         anchorEl={anchorUser}
+         open={!!anchorUser}
+         onClose={() => setAnchorUser(null)}
+       >
+         <MenuItem
+           onClick={handleLogout}
+           sx={{ display: "flex", alignItems: "center", gap: 1, px: 2 }}
+         >
+diff --git a/src/pages/ranking/Ranking.tsx b/src/pages/ranking/Ranking.tsx
+index 66ee5500684fcf19db050cda5ec6821ee939fa7c..98380bceb9fc45988f3efee42c7867d19251527b 100644
+--- a/src/pages/ranking/Ranking.tsx
++++ b/src/pages/ranking/Ranking.tsx
+@@ -234,51 +234,51 @@ const RankingPage: React.FC = () => {
+     return processed.slice(start, start + rowsPerPage);
+   }, [processed, page, rowsPerPage]);
+   const handleSort = (prop: keyof PlayerRow | "position") => {
+     const isAsc = orderBy === prop && order === "asc";
+     setOrder(isAsc ? "desc" : "asc");
+     setOrderBy(prop as keyof PlayerRow);
+   };
+   const ClearButton = (
+     <Button
+       variant="contained"
+       onClick={handleClearFilters}
+       sx={{
+         backgroundColor: theme.palette.mode === "light" ? "#000" : "#fff",
+         color: theme.palette.mode === "light" ? "#fff" : "#000",
+         "&:hover": {
+           backgroundColor: theme.palette.mode === "light" ? "#000" : "#fff",
+         },
+         width: { xs: "100%", md: "auto" },
+         px: 2,
+       }}
+     >
+       {t("ranking.button.clear")}
+     </Button>
+   );
+   return (
+-    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: 4 }}>
++    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: { xs: 1.875, md: 4 } }}>
+       <Title title={t("ranking.title")} subtitle={t("ranking.subtitle")} />
+       <Paper
+         elevation={4}
+         className={styles.container}
+         sx={{ p: { xs: 2, md: 3 }, mt: 2 }}
+       >
+         {!isMobile && (
+           <Box
+             sx={{
+               display: "flex",
+               flexDirection: { xs: "column", md: "row" },
+               flexWrap: "wrap",
+               gap: 2,
+               alignItems: "center",
+               mb: 3,
+             }}
+           >
+             <FilterSelect
+               value={playerFilter}
+               onChange={setPlayerFilter}
+               label={t("ranking.select.player")}
+               options={uniquePlayers}
+             />
+             <FilterSelect
+               value={matchesFilter}
+diff --git a/src/pages/stats/Stats.tsx b/src/pages/stats/Stats.tsx
+index a3723ce7884fab4d762b5e883e927c20f52f4a5c..f68ecd90b38f709fec5f48dd06f8d65fe0bf9ad6 100644
+--- a/src/pages/stats/Stats.tsx
++++ b/src/pages/stats/Stats.tsx
+@@ -6,50 +6,51 @@ import {
+   List,
+   ListItem,
+   ListItemIcon,
+   ListItemText,
+   MenuItem,
+   Select,
+   Skeleton,
+   Tab,
+   Tabs,
+   Typography,
+   useTheme,
+ } from "@mui/material";
+ import { SvgIconProps } from "@mui/material/SvgIcon";
+ import { useTranslation } from "react-i18next";
+ import Title from "../../common/UI/Title";
+ import { useAllMatches } from "../../common/hooks/useAllMatches";
+ import ReactApexChart from "react-apexcharts";
+ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+ import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
+ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+ import CancelIcon from "@mui/icons-material/Cancel";
+ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+ import PercentIcon from "@mui/icons-material/Percent";
+ import QueryStatsIcon from "@mui/icons-material/QueryStats";
+ import { useAuth } from "../../common/context/AuthContext";
++import { formatDisplayName } from "../../common/utils/nameUtils";
+ 
+ type Outcome = "win" | "draw" | "loss";
+ 
+ const TabPanel = ({
+   value,
+   index,
+   children,
+ }: {
+   value: number;
+   index: number;
+   children: React.ReactNode;
+ }) => (value === index ? <Box sx={{ mt: 2 }}>{children}</Box> : null);
+ 
+ const pointsForOutcome = (o: Outcome) =>
+   o === "win" ? 3 : o === "draw" ? 1 : 0;
+ 
+ const ChartSkeleton: React.FC = () => (
+   <Card sx={{ flex: 1, p: 2 }}>
+     <Skeleton variant="rectangular" width="100%" height={360} />
+   </Card>
+ );
+ 
+ const InfoSkeleton: React.FC = () => (
+   <Card sx={{ flex: 1 }}>
+     <CardContent>
+@@ -76,52 +77,51 @@ const StatsPage: React.FC = () => {
+   const { t } = useTranslation();
+   const theme = useTheme();
+   const { matches } = useAllMatches();
+   const loadingData = matches.length === 0;
+ 
+   const [canRenderCharts, setCanRenderCharts] = useState(false);
+ 
+   useEffect(() => {
+     if (!loadingData) {
+       const timer = setTimeout(() => {
+         setCanRenderCharts(true);
+       }, 100);
+       return () => clearTimeout(timer);
+     } else {
+       setCanRenderCharts(false);
+     }
+   }, [loadingData]);
+ 
+   const textColor =
+     theme.palette.mode === "dark"
+       ? theme.palette.grey[100]
+       : theme.palette.grey[900];
+ 
+   const { user: authUser } = useAuth();
+   const loggedName = authUser?.email?.split("@")[0] || "";
+-  const loggedLabel =
+-    loggedName.charAt(0).toUpperCase() + loggedName.slice(1).toLowerCase();
++  const loggedLabel = formatDisplayName(loggedName);
+ 
+   const players = useMemo(() => {
      const s = new Set<string>();
-     teams.forEach((t) =>
-       t.players
-         .split("&")
+     matches.forEach((m) => {
+       m.team1.split("&").forEach((p: string) => s.add(p.trim()));
+       m.team2.split("&").forEach((p: string) => s.add(p.trim()));
+     });
+     return Array.from(s).sort();
+   }, [matches]);
+ 
+   const [user, setUser] = useState("");
+   useEffect(() => {
+     if (!user && players.length) {
+       const defaultPlayer = players.includes(loggedLabel)
+         ? loggedLabel
+         : players[0];
+       setUser(defaultPlayer);
+     }
+   }, [players, user, loggedLabel]);
+ 
+   const [tab, setTab] = useState(0);
+ 
+   const normPlayers = (team: string) => team.split("&").map((p) => p.trim());
+ 
+   const getOutcomeForUser = (score: string, isUserTeam1: boolean): Outcome => {
+@@ -388,51 +388,51 @@ const StatsPage: React.FC = () => {
+     <Card sx={{ flex: 1 }}>
+       <CardContent>
+         <Typography variant="h4" fontWeight={700} gutterBottom>
+           {title}
+         </Typography>
+         <List sx={{ columnCount: { xs: 1, sm: 2 }, columnGap: 2 }}>
+           {children}
+         </List>
+       </CardContent>
+     </Card>
+   );
+ 
+   const layoutProps = {
+     display: "flex",
+     flexDirection: { xs: "column", lg: "row" },
+     gap: 2,
+   } as const;
+ 
+   const showSkeleton = loadingData;
+ 
+   const chartPlaceholder = (
+     <Skeleton variant="rectangular" width="100%" height={360} />
+   );
+ 
+   return (
+-    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: 4 }}>
++    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: { xs: 1.875, md: 4 } }}>
+       <Title
+         title={t("stats.title") as string}
+         subtitle={t("stats.subtitle") as string}
+       />
+ 
+       <Box sx={{ mt: 2 }}>
+         <Select
+           size="small"
+           sx={{ minWidth: 200 }}
+           value={user}
+           onChange={(e) => setUser(e.target.value)}
+         >
+           {players.map((p) => (
+             <MenuItem key={p} value={p}>
+               {p}
+             </MenuItem>
+           ))}
+         </Select>
+       </Box>
+ 
+       <Tabs
+         value={tab}
+         onChange={(_, v) => {
+           bulletIndexRef.current = 0;
+           setTab(v);
+diff --git a/src/pages/table/Table.tsx b/src/pages/table/Table.tsx
+index ba161d1a3e45a3771d0044c12698f2c1c4e7ceac..f7ad01fc1f039d16cd759cf34098b8f89c5f802d 100644
+--- a/src/pages/table/Table.tsx
++++ b/src/pages/table/Table.tsx
+@@ -253,51 +253,51 @@ const TablePage: React.FC = () => {
+     setMatchesFilter(null);
+     setPointsFilter(null);
+     setPpmFilter(null);
+     setPage(0);
+   };
+ 
+   const ClearButton = (
+     <Button
+       variant="contained"
+       onClick={handleClearFilters}
+       sx={{
+         backgroundColor: theme.palette.mode === "light" ? "#000" : "#fff",
+         color: theme.palette.mode === "light" ? "#fff" : "#000",
+         "&:hover": {
+           backgroundColor: theme.palette.mode === "light" ? "#000" : "#fff",
+         },
+         width: { xs: "100%", md: "auto" },
+         px: 2,
+       }}
+     >
+       {t("table.button.clear")}
+     </Button>
+   );
+ 
+   return (
+-    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: 4 }}>
++    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: { xs: 1.875, md: 4 } }}>
+       <Title title={t("table.title")} subtitle={t("table.subtitle")} />
+       <Paper
+         elevation={4}
+         className={styles.container}
+         sx={{ p: { xs: 2, md: 3 }, mt: 2 }}
+       >
+         {!isMobile && (
+           <Box
+             sx={{
+               display: "flex",
+               flexDirection: { xs: "column", md: "row" },
+               flexWrap: "wrap",
+               gap: 2,
+               alignItems: "center",
+               mb: 3,
+             }}
+           >
+             <FilterSelect
+               value={playerFilter}
+               onChange={setPlayerFilter}
+               label={t("table.select.player")}
+               options={uniquePlayers}
+             />
+             <FilterSelect
+               value={matchesFilter}
+diff --git a/src/pages/teams/Teams.tsx b/src/pages/teams/Teams.tsx
+index f97129899b0dbe753675172de932b789cf42c52d..77c2f21b224f68109a7dd597c775eaf51cfbfe5c 100644
+--- a/src/pages/teams/Teams.tsx
++++ b/src/pages/teams/Teams.tsx
+@@ -452,75 +452,75 @@ const TeamsPage: React.FC = () => {
+   }, [matches]);
+   const visibleTeams = useMemo(
+     () =>
+       playerFilter
+         ? teams.filter((t) =>
+             t.players
+               .split(" & ")
+               .some((p) => p.toLowerCase() === playerFilter.toLowerCase())
+           )
+         : teams,
+     [teams, playerFilter]
+   );
+   const nameBgLight = [
+     "#f8fafc",
+     "#e2e8f0",
+     "#dbeafe",
+     "#eff6ff",
+     "#f1f5f9",
+     "#cbd5e1",
+   ];
+   const nameBgDark = ["#424242", "#37474F", "#303030", "#263238", "#455A64"];
+   const rowBg = isDark ? theme.palette.grey[900] : theme.palette.action.hover;
+ 
+   if (loading)
+     return (
+-      <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: 4 }}>
++      <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: { xs: 1.875, md: 4 } }}>
+         <Title
+           title={t("teams.title") as string}
+           subtitle={t("teams.subtitle") as string}
+         />
+         {Array.from({ length: 8 }).map((_, i) => (
+           <Skeleton
+             key={i}
+             variant="rectangular"
+             height={isCompact ? 120 : 91}
+             sx={{ my: 1 }}
+           />
+         ))}
+       </Box>
+     );
+ 
+   if (error)
+     return (
+       <Typography color="error" align="center" sx={{ my: 4 }}>
+         {error.message}
+       </Typography>
+     );
+ 
+   return (
+-    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: 4 }}>
++    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: { xs: 1.875, md: 4 } }}>
+       <Title
+         title={t("teams.title") as string}
+         subtitle={t("teams.subtitle") as string}
+       />
+       <Box sx={{ my: 2, display: "flex", gap: 2 }}>
+         <Select
+           value={playerFilter}
+           onChange={(e) => setPlayerFilter(e.target.value)}
+           displayEmpty
+           size="small"
+           sx={{ minWidth: 200 }}
+         >
+           <MenuItem value="">{t("teams.filter.allPlayers")}</MenuItem>
+           {players.map((p) => (
+             <MenuItem key={p} value={p}>
+               {formatNames(p)}
+             </MenuItem>
+           ))}
+         </Select>
+       </Box>
+       <Box
+         sx={{
+           display: "flex",
+           flexDirection: "column",
+           gap: { xs: 3, md: 2, lg: 2 },
  
 EOF
 )

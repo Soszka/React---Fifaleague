@@ -19,6 +19,7 @@ import {
 } from "../../common/context/MatchesContext";
 import { NotificationProvider } from "../../common/context/NotificationContext";
 import { useAuth } from "../../common/context/AuthContext";
+import { formatDisplayName } from "../../common/utils/nameUtils";
 
 const normalizeTeam = (a: string, b: string) => [a, b].sort().join(" & ");
 
@@ -40,8 +41,7 @@ const MatchesScreen: React.FC = () => {
   const { user } = useAuth();
   const emailName = user?.email?.split("@")[0] || "";
   const currentUserKey = emailName.toLowerCase(); // do porównań
-  const currentUserLabel =
-    emailName.charAt(0).toUpperCase() + emailName.slice(1).toLowerCase(); // do UI
+  const currentUserLabel = formatDisplayName(emailName); // do UI
 
   const [showAll, setShowAll] = useState(false);
   const [rivalFilter, setRivalFilter] = useState<string | null>(null);
@@ -179,7 +179,7 @@ const MatchesScreen: React.FC = () => {
   };
 
   return (
-    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: 4 }}>
+    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: { xs: 1.875, md: 4 } }}>
       <Box
         sx={{
           display: "flex",

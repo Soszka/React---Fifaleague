@@ -474,7 +474,7 @@ const TeamsPage: React.FC = () => {
 
   if (loading)
     return (
-      <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: 4 }}>
+      <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: { xs: 1.875, md: 4 } }}>
         <Title
           title={t("teams.title") as string}
           subtitle={t("teams.subtitle") as string}
@@ -498,7 +498,7 @@ const TeamsPage: React.FC = () => {
     );
 
   return (
-    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: 4 }}>
+    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: { xs: 1.875, md: 4 } }}>
       <Title
         title={t("teams.title") as string}
         subtitle={t("teams.subtitle") as string}

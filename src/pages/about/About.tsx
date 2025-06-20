@@ -87,7 +87,7 @@ const About: React.FC = () => {
         mx: "auto",
         maxWidth: 1800,
         px: { xs: 2, sm: 4 },
-        mt: 4,
+        mt: { xs: 1.875, md: 4 },
       }}
     >
       <Title title={t("about.title")} subtitle={t("about.subtitle")} />

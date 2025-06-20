@@ -275,7 +275,7 @@ const TablePage: React.FC = () => {
   );
 
   return (
-    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: 4 }}>
+    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: { xs: 1.875, md: 4 } }}>
       <Title title={t("table.title")} subtitle={t("table.subtitle")} />
       <Paper
         elevation={4}

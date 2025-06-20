@@ -86,7 +86,7 @@ export default function NavigationActions({ toggleTheme }: Props) {
       <Tooltip title="GitHub">
         <IconButton
           color="inherit"
-          href="https://github.com/TwojeRepo"
+          href="https://github.com/Soszka/React---Fifaleague"
           target="_blank"
           rel="noopener"
         >
