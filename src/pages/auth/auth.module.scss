@@ -18,7 +18,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 550px;
+  width: 90%;
+  max-width: 550px;
   background: #fff;
   border-radius: 10px;
   display: flex;
@@ -67,8 +68,12 @@
   left: 5%;
 
   img {
-    width: 213px;
-    height: 223px;
+    width: 10rem;
+    height: 10rem;
+  }
+
+  @media (max-width: 1300px) {
+    display: none;
   }
 }
 

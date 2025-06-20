@@ -1,24 +1,27 @@
 {
   "auth": {
-    "login": "LOG IN",
-    "email": "Enter your email",
-    "password": "Enter your password",
-    "started": "Log in to get...",
-    "subtitle": "Started",
+    "title": "Zaloguj się",
+    "subtitle": "Zaloguj się do Efutbol League",
+    "login": "Zaloguj",
+    "email": "Email",
+    "password": "Hasło",
+    "testApplication": "Wypróbuj aplikację",
+    "selectUser": "Wybierz użytkownika",
     "selectUserDesc": "Proszę wybierz użytkownika, na którego chcesz się zalogować",
-    "userInserted": "Użytkownik wstawiony – kliknij Log in",
+    "userLabel": "Użytkownik",
+    "userInserted": "Dane użytkownika wstawione – kliknij Zaloguj",
     "errors": {
-      "emailRequired": "You must enter a value",
-      "emailInvalid": "Not a valid email",
-      "passwordRequired": "Password is required",
-      "passwordMin": "Min 6 characters"
+      "emailRequired": "Wpisz adres e-mail",
+      "emailInvalid": "Niepoprawny adres e-mail",
+      "passwordRequired": "Wpisz hasło",
+      "passwordMin": "Min 6 znaków"
     },
     "toggle": {
-      "off": "Show password",
-      "on": "Hide password"
+      "off": "Pokaż hasło",
+      "on": "Ukryj hasło"
     },
     "footer": {
-      "text": "All rights reserved. Created by",
+      "text": "Wszelkie prawa zastrzeżone. Autor:",
       "author": "Bartłomiej Socha"
     }
   },

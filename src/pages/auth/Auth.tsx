@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import {
@@ -53,7 +53,7 @@ function AuthInner() {
   const theme = useTheme();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const { login, loading: authLoading } = useAuth();
+  const { login, user, loading: authLoading } = useAuth();
   const {
     register,
     handleSubmit,
@@ -72,6 +72,12 @@ function AuthInner() {
   ];
   const emailValue = watch("email");
   const passwordValue = watch("password");
+
+  useEffect(() => {
+    if (user) {
+      navigate("/app/home", { replace: true });
+    }
+  }, [user, navigate]);
 
   const onSubmit = async ({ email, password }: FormValues) => {
     try {
@@ -121,7 +127,7 @@ function AuthInner() {
           </Menu>
         </div>
         <div className={styles.authContent}>
-          <Title title="Get started" subtitle="Log in to Efubol League" />
+          <Title title={t("auth.title")} subtitle={t("auth.subtitle")} />
 
           <Box
             component="form"
@@ -129,16 +135,16 @@ function AuthInner() {
             className={styles.authForm}
           >
             <TextField
-              label="Email"
+              label={t("auth.email")}
               type="email"
               fullWidth
               margin="normal"
               InputLabelProps={{ shrink: !!emailValue }}
               {...register("email", {
-                required: "Email is required",
+                required: t("auth.errors.emailRequired"),
                 pattern: {
                   value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "Invalid email address",
+                  message: t("auth.errors.emailInvalid"),
                 },
               })}
               error={!!errors.email}
@@ -147,14 +153,14 @@ function AuthInner() {
 
             <Box className={styles.passwordField}>
               <TextField
-                label="Password"
+                label={t("auth.password")}
                 type={hidePassword ? "password" : "text"}
                 fullWidth
                 margin="normal"
                 InputLabelProps={{ shrink: !!passwordValue }}
                 {...register("password", {
-                  required: "Password is required",
-                  minLength: { value: 6, message: "Min 6 characters" },
+                  required: t("auth.errors.passwordRequired"),
+                  minLength: { value: 6, message: t("auth.errors.passwordMin") },
                 })}
                 error={!!errors.password}
                 helperText={errors.password?.message}
@@ -165,7 +171,7 @@ function AuthInner() {
                         onClick={() => setHidePassword(!hidePassword)}
                         edge="end"
                         aria-label={
-                          hidePassword ? "Show password" : "Hide password"
+                          hidePassword ? t("auth.toggle.off") : t("auth.toggle.on")
                         }
                         className={styles.passwordToggle}
                       >
@@ -188,7 +194,7 @@ function AuthInner() {
               }}
               endIcon={authLoading ? <CircularProgress size={18} /> : null}
             >
-              Log in
+              {t("auth.login")}
             </Button>
           </Box>
         </div>
@@ -208,7 +214,7 @@ function AuthInner() {
           }}
           onClick={() => setDialogOpen(true)}
         >
-          Test application
+          {t("auth.testApplication")}
         </Button>
       </div>
 
@@ -218,7 +224,7 @@ function AuthInner() {
 
       <div className={styles.footer}>
         <p>
-          Created by <span>Bartlomiej Socha</span>
+          {t("auth.footer.text")} <span>{t("auth.footer.author")}</span>
         </p>
       </div>
 
@@ -232,15 +238,15 @@ function AuthInner() {
         PaperProps={{ sx: { minWidth: "350px", minHeight: 260 } }}
       >
         <DialogTitle sx={{ bgcolor: theme.palette.grey[300] }}>
-          Select user
+          {t("auth.selectUser")}
         </DialogTitle>
         <DialogContent sx={{ pt: 2 }}>
-          <Typography>{t("auth.selectUserDesc")}</Typography>
+          <Typography sx={{ mt: 1 }}>{t("auth.selectUserDesc")}</Typography>
           <FormControl fullWidth sx={{ mt: 3 }}>
-            <InputLabel id="user-select-label">User</InputLabel>
+            <InputLabel id="user-select-label">{t("auth.userLabel")}</InputLabel>
             <Select
               labelId="user-select-label"
-              label="User"
+              label={t("auth.userLabel")}
               value={selectedUser}
               onChange={(e) => setSelectedUser(e.target.value as string)}
             >

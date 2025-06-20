@@ -120,9 +120,21 @@ export default function Navigation({ toggleTheme }: Props) {
           <Box
             component={Link}
             to="/app/home"
-            sx={{ display: { xs: "none", sm: "block" }, mr: 2 }}
+            sx={{
+              display: { xs: "none", sm: "block" },
+              mr: 2,
+              "@media (max-width:1300px)": { display: "none" },
+            }}
           >
-            <Box component="img" src={logoSrc} alt="Logo" sx={{ height: 42 }} />
+            <Box
+              component="img"
+              src={logoSrc}
+              alt="Logo"
+              sx={{
+                height: "2.5rem",
+                width: "2.5rem",
+              }}
+            />
           </Box>
 
           <Typography

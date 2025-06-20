@@ -19,8 +19,30 @@
   },
 
   "auth": {
+    "title": "Get started",
+    "subtitle": "Log in to Efubol League",
+    "login": "Log in",
+    "email": "Email",
+    "password": "Password",
+    "testApplication": "Test application",
+    "selectUser": "Select user",
     "selectUserDesc": "Please select the user you want to log in as",
-    "userInserted": "User details filled – click Log in"
+    "userLabel": "User",
+    "userInserted": "User details filled – click Log in",
+    "errors": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email address",
+      "passwordRequired": "Password is required",
+      "passwordMin": "Min 6 characters"
+    },
+    "toggle": {
+      "off": "Show password",
+      "on": "Hide password"
+    },
+    "footer": {
+      "text": "Created by",
+      "author": "Bartlomiej Socha"
+    }
   },
 
   "home.title": "Home",
