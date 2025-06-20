@@ -235,10 +235,10 @@ function AuthInner() {
           setSelectedUser("");
         }}
         fullWidth
-        maxWidth="xs"
-        PaperProps={{ sx: { width: { xs: "95%", sm: 400 }, minHeight: 260 } }}
+        maxWidth={i18n.language === "pl" ? "sm" : "xs"}
+        PaperProps={{ sx: { width: { xs: "95%", sm: i18n.language === "pl" ? 500 : 400 }, minHeight: 260 } }}
       >
-        <DialogTitle sx={{ bgcolor: theme.palette.grey[300], py: 1.5 }}>
+        <DialogTitle sx={{ bgcolor: theme.palette.grey[300], py: 1.5, px: 2 }}>
           {t("auth.selectUser")}
         </DialogTitle>
         <DialogContent sx={{ pt: 1.5, px: 2 }}>

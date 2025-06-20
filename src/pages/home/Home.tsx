@@ -115,7 +115,7 @@ const Home: React.FC = () => {
       </Box>
 
       {/* --- NAGŁÓWEK --- */}
-      <Box sx={{ mt: 4, px: 3, maxWidth: 1800, mx: "auto" }}>
+      <Box sx={{ mt: { xs: 1.875, md: 4 }, px: 3, maxWidth: 1800, mx: "auto" }}>
         <MotionTypography
           variant="h3"
           initial={{ opacity: 0, y: 12 }}

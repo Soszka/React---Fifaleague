@@ -28,6 +28,7 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { useOutletContext } from "react-router-dom";
 import Title from "../../common/UI/Title";
 import { useAllMatches, MatchUi } from "../../common/hooks/useAllMatches";
 import styles from "./ranking.module.scss";
@@ -158,7 +159,11 @@ const columns: {
 const RankingPage: React.FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const { isNavVisible = false } =
+    useOutletContext<{ isNavVisible?: boolean }>() ?? {};
+  const isMobile = useMediaQuery(
+    isNavVisible ? "(max-width:1140px)" : theme.breakpoints.down("md")
+  );
   const { matches, loading, error } = useAllMatches();
   const players = useMemo(() => buildPlayersStats(matches), [matches]);
   const [playerFilter, setPlayerFilter] = useState<string | null>(null);

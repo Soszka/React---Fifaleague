@@ -439,7 +439,7 @@ const StatsPage: React.FC = () => {
         }}
         variant="scrollable"
         scrollButtons="auto"
-        sx={{ mt: 3 }}
+        sx={{ mt: 1.25 }}
       >
         <Tab label={t("stats.tabs.matches")} />
         <Tab label={t("stats.tabs.wins")} />

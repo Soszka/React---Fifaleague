@@ -100,6 +100,7 @@ const About: React.FC = () => {
             expanded={expanded === panelId}
             onChange={handleChange(panelId)}
             disableGutters
+            sx={index === 0 ? { mt: { xs: 2, md: 0 } } : undefined}
           >
             <AccordionSummary>
               <Typography>{qa.question}</Typography>

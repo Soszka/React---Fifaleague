@@ -28,6 +28,7 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { useOutletContext } from "react-router-dom";
 import Title from "../../common/UI/Title";
 import { useAllMatches, MatchUi } from "../../common/hooks/useAllMatches";
 import styles from "./table.module.scss";
@@ -159,7 +160,11 @@ const columns: {
 const TablePage: React.FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const isMobile = useMediaQuery("(max-width:800px)");
+  const { isNavVisible = false } =
+    useOutletContext<{ isNavVisible?: boolean }>() ?? {};
+  const isMobile = useMediaQuery(
+    isNavVisible ? "(max-width:1040px)" : "(max-width:800px)"
+  );
   const { matches, loading, error } = useAllMatches();
   const teams = useMemo(() => buildTeamsStats(matches), [matches]);
 
