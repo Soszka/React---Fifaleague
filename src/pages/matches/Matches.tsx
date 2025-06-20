@@ -1,4 +1,3 @@
-// src/pages/matches/Matches.tsx
 import React, { useMemo, useState } from "react";
 import { Box, Paper, useTheme, useMediaQuery } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -19,17 +18,19 @@ import {
 } from "../../common/context/MatchesContext";
 import { NotificationProvider } from "../../common/context/NotificationContext";
 import { useAuth } from "../../common/context/AuthContext";
-import { formatDisplayName } from "../../common/utils/nameUtils";
+import {
+  stripDiacritics,
+  restoreDiacritics,
+} from "../../common/utils/nameUtils";
 
 const normalizeTeam = (a: string, b: string) => [a, b].sort().join(" & ");
-
 const getOutcome = (score: string): ResultOption => {
   const [g1, g2] = score.split(" : ").map((n) => parseInt(n.trim(), 10));
   if (g1 === g2) return "DRAW";
   return g1 > g2 ? "WIN" : "LOSS";
 };
-
-const eq = (a = "", b = "") => a.toLowerCase() === b.toLowerCase();
+const normalize = (s: string) => stripDiacritics(s).toLowerCase();
+const eq = (a = "", b = "") => normalize(a) === normalize(b);
 
 const MatchesScreen: React.FC = () => {
   const { matches, loading, error } = useMatches();
@@ -37,11 +38,10 @@ const MatchesScreen: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  // aktualnie zalogowany gracz
   const { user } = useAuth();
   const emailName = user?.email?.split("@")[0] || "";
-  const currentUserKey = emailName.toLowerCase(); // do porównań
-  const currentUserLabel = formatDisplayName(emailName); // do UI
+  const currentUserDisplay = restoreDiacritics(emailName);
+  const currentUserKey = normalize(currentUserDisplay);
 
   const [showAll, setShowAll] = useState(false);
   const [rivalFilter, setRivalFilter] = useState<string | null>(null);
@@ -85,8 +85,8 @@ const MatchesScreen: React.FC = () => {
         const team1 = normalizeTeam(m.player1, m.player2);
         const team2 = normalizeTeam(m.rival1, m.rival2);
 
-        const userInTeam1 = team1.toLowerCase().includes(currentUserKey);
-        const userInTeam2 = team2.toLowerCase().includes(currentUserKey);
+        const userInTeam1 = normalize(team1).includes(currentUserKey);
+        const userInTeam2 = normalize(team2).includes(currentUserKey);
 
         let team = team1;
         let rival = team2;
@@ -109,10 +109,12 @@ const MatchesScreen: React.FC = () => {
         };
       })
       .filter((row) => {
+        const rowTeamNorm = normalize(row.team);
+        const rowRivalNorm = normalize(row.rival);
         if (
           (!showAll &&
-            !row.team.toLowerCase().includes(currentUserKey) &&
-            !row.rival.toLowerCase().includes(currentUserKey)) ||
+            !rowTeamNorm.includes(currentUserKey) &&
+            !rowRivalNorm.includes(currentUserKey)) ||
           (rivalFilter &&
             !eq(row.team, rivalFilter) &&
             !eq(row.rival, rivalFilter)) ||
@@ -179,7 +181,14 @@ const MatchesScreen: React.FC = () => {
   };
 
   return (
-    <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: { xs: 1.875, md: 4 } }}>
+    <Box
+      sx={{
+        mx: "auto",
+        maxWidth: 1800,
+        px: { xs: 2, md: 4 },
+        mt: { xs: 1.875, md: 4 },
+      }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -190,7 +199,7 @@ const MatchesScreen: React.FC = () => {
         <Title
           title={t("matches.title") as string}
           subtitle={
-            t("matches.subtitle", { player: currentUserLabel }) as string
+            t("matches.subtitle", { player: currentUserDisplay }) as string
           }
         />
       </Box>
@@ -217,7 +226,6 @@ const MatchesScreen: React.FC = () => {
           onClearFilters={clearFilters}
           onAddMatch={() => setOpenAddDialog(true)}
         />
-
         {isMobile ? (
           <MatchListMobile
             rows={paginatedRows}
@@ -251,7 +259,6 @@ const MatchesScreen: React.FC = () => {
           />
         )}
       </Paper>
-
       <AddMatchDialog
         open={openAddDialog}
         onClose={() => setOpenAddDialog(false)}

@@ -28,7 +28,6 @@ const Title: React.FC<TitleProps> = ({ title, subtitle }) => {
 
   return (
     <Box sx={{ width: "100%", mb: { md: 1 } }}>
-      {/* podtytuł */}
       <MotionBox
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -37,13 +36,17 @@ const Title: React.FC<TitleProps> = ({ title, subtitle }) => {
         <Typography
           variant="subtitle2"
           color="text.secondary"
-          sx={{ fontWeight: 600, letterSpacing: 1, mb: 0.5 }}
+          sx={{
+            fontWeight: 600,
+            fontSize: { xs: "1rem", md: "1.1rem" },
+            lineHeight: 1,
+            mb: 0,
+          }}
         >
           {subtitle}
         </Typography>
       </MotionBox>
 
-      {/* tytuł + belka */}
       <MotionBox
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -54,15 +57,15 @@ const Title: React.FC<TitleProps> = ({ title, subtitle }) => {
           variant="h3"
           sx={{
             fontWeight: 800,
-            lineHeight: 1.25, // <-- więcej miejsca na ogonki
-            pb: "0.15em", //   i lekki „oddech” pod linią bazową
+            lineHeight: 1.2,
+            pb: "0.15em",
             mr: 2,
-            fontSize: { xs: "2rem", md: "3rem" },
+            fontSize: { xs: "2.4rem", md: "3rem" },
             background: `linear-gradient(90deg, ${accent} 0%, ${theme.palette.secondary.main} 100%)`,
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             letterSpacing: -0.5,
-            display: "inline-block", // <-- zapobiega przycinaniu
+            display: "inline-block",
           }}
         >
           {title}
@@ -79,6 +82,9 @@ const Title: React.FC<TitleProps> = ({ title, subtitle }) => {
             animation: `${expand} 1.2s cubic-bezier(0.25,1,0.5,1) forwards`,
             position: "relative",
             overflow: "hidden",
+            "@media (max-width:500px)": {
+              display: "none",
+            },
           }}
         >
           <Box

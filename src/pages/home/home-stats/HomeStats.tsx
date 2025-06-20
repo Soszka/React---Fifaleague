@@ -1,4 +1,3 @@
-// src/pages/home/components/HomeStats.tsx
 import React, { useEffect } from "react";
 import { Box, Typography, Paper, Skeleton, useTheme } from "@mui/material";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
@@ -33,7 +32,6 @@ const HighlightItem: React.FC<HighlightItemProps> = ({
 }) => {
   const theme = useTheme();
   const textColor = theme.palette.mode === "dark" ? "#ffffff" : "#000000";
-
   return (
     <Paper
       className={styles.highlightCard}
@@ -61,7 +59,7 @@ const HighlightItem: React.FC<HighlightItemProps> = ({
         >
           <Typography
             variant="h3"
-            component="div" // ← changed from "p" to "div"
+            component="div"
             className={styles.valueText}
             sx={{ color: textColor }}
           >
@@ -112,9 +110,7 @@ const HomeStats: React.FC<HomeStatsProps> = ({
   const { stats, loading } = usePlayerStats(player, dbPath);
 
   useEffect(() => {
-    if (!loading) {
-      onLoaded();
-    }
+    if (!loading) onLoaded();
   }, [loading, onLoaded]);
 
   const lightGradients = [
@@ -144,7 +140,6 @@ const HomeStats: React.FC<HomeStatsProps> = ({
   }
 
   const iconSizes = { xs: "2.8rem", sm: "4rem", md: "5rem", lg: "6rem" };
-
   const lastOutcome = (stats.lastOutcome || "DRAW") as ResultOption;
 
   const resultColor = (r: ResultOption) => {

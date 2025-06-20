@@ -1,4 +1,3 @@
-// src/pages/home/Home.tsx
 import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Box, Typography, useTheme, keyframes } from "@mui/material";
@@ -15,6 +14,10 @@ import tableImg from "../../assets/cardsPhoto1.png";
 import teamsImg from "../../assets/cardsPhoto2.png";
 import rankingImg from "../../assets/auth_photo.jpg";
 import { useAuth } from "../../common/context/AuthContext";
+import {
+  stripDiacritics,
+  restoreDiacritics,
+} from "../../common/utils/nameUtils";
 
 interface CardItem {
   header: string;
@@ -74,17 +77,10 @@ const Home: React.FC = () => {
   const theme = useTheme();
   const { user } = useAuth();
 
-  /** surowe „grzesiek” z maila */
   const emailName = user?.email?.split("@")[0] || "Player";
+  const userDisplayName = restoreDiacritics(emailName);
+  const playerKey = stripDiacritics(userDisplayName).toLowerCase();
 
-  /** ładny nagłówek „Grzesiek” */
-  const userName =
-    emailName.charAt(0).toUpperCase() + emailName.slice(1).toLowerCase();
-
-  /** klucz do hooków/statystyk: zawsze małe litery */
-  const playerKey = emailName.toLowerCase();
-
-  // --- ładowanie sekcji ---
   const [scoreboardLoaded, setScoreboardLoaded] = useState(false);
   const [statsLoaded, setStatsLoaded] = useState(false);
   const [imagesLoaded, setImagesLoaded] = useState(0);
@@ -97,24 +93,15 @@ const Home: React.FC = () => {
     []
   );
   const handleStatsLoaded = useCallback(() => setStatsLoaded(true), []);
-  const handleCardLoaded = useCallback(
-    () => setImagesLoaded((prev) => prev + 1),
-    []
-  );
+  const handleCardLoaded = useCallback(() => setImagesLoaded((p) => p + 1), []);
 
-  const animatedGradient = `linear-gradient(90deg,
-    ${theme.palette.primary.main},
-    ${theme.palette.secondary.main},
-    ${theme.palette.primary.main})`;
+  const animatedGradient = `linear-gradient(90deg,${theme.palette.primary.main},${theme.palette.secondary.main},${theme.palette.primary.main})`;
 
   return (
     <Box className={styles.container} sx={{ width: "100%" }}>
-      {/* --- SCOREBOARD --- */}
       <Box sx={{ display: { xs: "none", lg: "block" } }}>
         <HomeScoreboard ready={allLoaded} onLoaded={handleScoreboardLoaded} />
       </Box>
-
-      {/* --- NAGŁÓWEK --- */}
       <Box sx={{ mt: 4, px: 3, maxWidth: 1800, mx: "auto" }}>
         <MotionTypography
           variant="h3"
@@ -123,11 +110,11 @@ const Home: React.FC = () => {
           transition={{ duration: 2.8, ease: [0.25, 1, 0.5, 1] }}
           sx={{
             fontWeight: 800,
-            lineHeight: 1.25, // więcej miejsca na ogonki
-            pb: "0.15em", // drobny oddech pod baseline
+            lineHeight: 1.25,
+            pb: "0.15em",
             letterSpacing: -0.5,
-            display: "inline-block", // brak przycinania przy animacji
-            overflow: "visible", // zamiast hidden
+            display: "inline-block",
+            overflow: "visible",
             background: animatedGradient,
             backgroundSize: "200% auto",
             WebkitBackgroundClip: "text",
@@ -139,26 +126,20 @@ const Home: React.FC = () => {
                 : "0 2px 4px rgba(0,0,0,0.1)",
           }}
         >
-          {t("home.greeting", { name: userName })}
+          {t("home.greeting", { name: userDisplayName })}
         </MotionTypography>
-
         <Typography variant="h6" sx={{ mt: 0 }}>
           {t("home.greeting.desc")}
         </Typography>
       </Box>
-
-      {/* --- STATYSTYKI --- */}
       <HomeStats
-        player={playerKey} // ← klucz w małych literach
+        player={userDisplayName}
         ready={allLoaded}
         onLoaded={handleStatsLoaded}
       />
-
-      {/* --- KARTY --- */}
       <Box sx={{ mt: 6, mb: 1, px: 3, maxWidth: 1800, mx: "auto" }}>
         <Title subtitle={t("home.subtitle")} title={t("home.title")} />
       </Box>
-
       <div className={styles.cards}>
         {cards.map((card) => (
           <HomeCard

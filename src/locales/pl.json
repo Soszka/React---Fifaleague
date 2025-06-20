@@ -1,6 +1,6 @@
 {
   "auth": {
-    "title": "Zaloguj się",
+    "title": "Zalogowania",
     "subtitle": "Zacznij od...",
     "login": "Zaloguj",
     "email": "Email",
@@ -48,7 +48,7 @@
     "en": "Angielski"
   },
 
-  "home.title": "Strona główna",
+  "home.title": "Stronie",
   "home.subtitle": "Co znajdziesz na ...",
   "home.greeting": "Witaj {{name}}",
   "home.greeting.desc": "Zapraszamy do kolejnej dawki pasjonujących meczów, statystyk i piłkarskich emocji, które już czekają na Twoje odkrycie!",
@@ -74,7 +74,7 @@
   },
 
   "about": {
-    "title": "EFUTBOL 2x2 League",
+    "title": "eFutbol League",
     "subtitle": "Witamy w...",
     "description": {
       "header": "Dlaczego warto dołączyć do \"EFUTBOL League\"?",
@@ -105,7 +105,7 @@
         },
         {
           "question": "Czy mogę zobaczyć szczegółowe statystyki drużyn, w których gram?",
-          "answer": "Tak, klikając na wybraną drużynę w zakładce \"Zespoły\", przejdziesz do karty zespołu. Zobaczysz tam wykres pokazujący liczbę zwycięstw, remisów i porażek oraz tekstowy komentarz dotyczący wyników, a najlepsze trzy drużyny są wyróżnione medalami."
+          "answer": "Tak, klikając na wybraną drużynę w zakładce \"Zespoły\", przejdziesz do karty zespołu. Zobaczysz tam wykres pokazujący liczbę zwycięstw, remisów i porażek oraz ostatnie mecze, a najlepsze trzy drużyny są wyróżnione medalami."
         },
         {
           "question": "Czy mogę zmienić ustawienia aplikacji?",
@@ -133,7 +133,7 @@
         },
         {
           "question": "Czy aplikacja dostępna jest w języku angielskim?",
-          "answer": "Tak, aplikacja jest w pełni dwujęzyczna (polski i angielski). Aby zmienić język, kliknij ikonę globusa w pasku menu i wybierz preferowany język."
+          "answer": "Tak, aplikacja jest w pełni wielojęzyczna. Aby zmienić język, kliknij ikonę globusa w pasku menu i wybierz preferowany język."
         },
         {
           "question": "Czy mogę zmienić motyw aplikacji na ciemny lub jasny?",
@@ -156,7 +156,7 @@
   },
 
   "table": {
-    "title": "Tabela drużyn",
+    "title": "Tabelę",
     "subtitle": "Sprawdź ...",
     "column": {
       "position": "Lp.",
@@ -194,7 +194,7 @@
 
   "ranking": {
     "title": "Ranking",
-    "subtitle": "Sprawdź ranking...",
+    "subtitle": "Sprawdź ...",
     "column": {
       "position": "Lp.",
       "player": "Gracz",
@@ -234,7 +234,7 @@
 
   "teams": {
     "title": "Drużyny",
-    "subtitle": "Zweryfikuj różne drużyny...",
+    "subtitle": "Zweryfikuj różne ...",
     "filter": {
       "allPlayers": "Wszyscy gracze"
     },
@@ -257,8 +257,8 @@
   },
 
   "matches": {
-    "title": "Mecze",
-    "subtitle": "Przeanalizuj historię meczów...",
+    "title": "Meczów",
+    "subtitle": "Przeanalizuj historię ...",
     "filters": {
       "myMatches": "Moje mecze",
       "allMatches": "Wszystkie mecze",
@@ -323,7 +323,7 @@
 
   "stats": {
     "title": "Statystyki",
-    "subtitle": "Zweryfikuj swoje statystyki...",
+    "subtitle": "Zweryfikuj swoje ...",
     "tabs": {
       "matches": "Mecze",
       "wins": "Zwycięstwa",
@@ -408,6 +408,6 @@
     "none": "Brak"
   },
   "footer": {
-    "copy": "© {{year}} Liga eFutbol · Wszelkie prawa zastrzeżone."
+    "copy": "© {{year}} eFutbol League · Wszelkie prawa zastrzeżone."
   }
 }
