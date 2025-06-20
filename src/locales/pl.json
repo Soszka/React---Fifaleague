@@ -292,6 +292,7 @@
       "addMatch": "Dodaj mecz",
       "editMatch": "Edytuj mecz",
       "deleteMatch": "Usuń mecz",
+      "deleteConfirmPrefix": "Czy na pewno chcesz usunąć",
       "deleteConfirm": "Usuń mecz {{team1}} vs {{team2}} ({{date}})?"
     },
     "form": {

@@ -1,10 +1,10 @@
 {
-  "nav.menu.home": "Strona główna",
-  "nav.menu.about": "EFUBOL League",
-  "nav.menu.matches": "Mecze",
-  "nav.menu.stats": "Statystyki",
-  "nav.menu.table": "Tabela",
-  "nav.menu.teams": "Zespoły",
+  "nav.menu.home": "Home",
+  "nav.menu.about": "About",
+  "nav.menu.matches": "Matches",
+  "nav.menu.stats": "Stats",
+  "nav.menu.table": "Table",
+  "nav.menu.teams": "Teams",
   "nav.menu.ranking": "Ranking",
   "navigation": {
     "language": "Language",
@@ -271,10 +271,24 @@
       "all": "All"
     },
     "dialogs": {
+      "addMatch": "Add Match",
       "editMatch": "Edit Match",
-      "deleteMatch": "Delete Match"
+      "deleteMatch": "Delete Match",
+      "deleteConfirmPrefix": "Are you sure you want to delete"
+    },
+    "form": {
+      "player1": "Player 1",
+      "player2": "Player 2",
+      "rival1": "Rival 1",
+      "rival2": "Rival 2",
+      "date": "Date",
+      "scoreHome": "Home score",
+      "scoreAway": "Away score"
     },
     "messages": {
+      "addSuccess": "Match added",
+      "updateSuccess": "Match updated",
+      "deleteSuccess": "Match removed",
       "error": "An error occurred"
     }
   },
@@ -358,5 +372,10 @@
         "lossesLabel": "Losses"
       }
     }
+  },
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "none": "None"
   }
 }

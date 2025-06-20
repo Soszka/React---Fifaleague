@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Outlet, NavLink, useLocation } from "react-router-dom";
+import { Outlet, NavLink, useLocation, Link } from "react-router-dom";
 import {
   Drawer,
   AppBar,
@@ -118,11 +118,12 @@ export default function Navigation({ toggleTheme }: Props) {
           </IconButton>
 
           <Box
-            component="img"
-            src={logoSrc}
-            alt="Logo"
-            sx={{ height: 42, mr: 2, display: { xs: "none", sm: "block" } }}
-          />
+            component={Link}
+            to="/app/home"
+            sx={{ display: { xs: "none", sm: "block" }, mr: 2 }}
+          >
+            <Box component="img" src={logoSrc} alt="Logo" sx={{ height: 42 }} />
+          </Box>
 
           <Typography
             sx={{
@@ -133,11 +134,14 @@ export default function Navigation({ toggleTheme }: Props) {
             }}
           >
             <Box
-              component="span"
+              component={Link}
+              to="/app/home"
               sx={{
                 fontWeight: 700,
                 fontSize: "1.6rem",
                 mr: 2,
+                color: "inherit",
+                textDecoration: "none",
                 "@media (max-width:500px)": { display: "none" },
               }}
             >

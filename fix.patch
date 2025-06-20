@@ -1,0 +1,394 @@
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/src/locales/en.json b/src/locales/en.json
+index 789432ca1d4dbd385366f96dfb1f7f99734f27f6..81161a135a24f252e66f14c40ef82287164c46ae 100644
+--- a/src/locales/en.json
++++ b/src/locales/en.json
+@@ -1,26 +1,38 @@
+ {
++  "auth": {
++    "dialog": {
++      "description": "Please select the user you want to log in as",
++      "save": "Save",
++      "cancel": "Cancel",
++      "label": "User"
++    },
++    "messages": {
++      "loginError": "Invalid login data",
++      "userInserted": "User filled in – click Log in"
++    }
++  },
+   "nav.menu.home": "Strona główna",
+   "nav.menu.about": "EFUBOL League",
+   "nav.menu.matches": "Mecze",
+   "nav.menu.stats": "Statystyki",
+   "nav.menu.table": "Tabela",
+   "nav.menu.teams": "Zespoły",
+   "nav.menu.ranking": "Ranking",
+   "navigation": {
+     "language": "Language",
+     "theme": "Toggle theme",
+     "account": "Account",
+     "profile": "Profile",
+     "logout": "Log out"
+   },
+   "language": {
+     "pl": "Polish",
+     "en": "English"
+   },
+ 
+   "home.title": "Home",
+   "home.subtitle": "What you’ll find on ...",
+   "home.greeting": "Welcome {{name}}",
+   "home.greeting.desc": "Join us for another dose of thrilling matches, stats and football excitement waiting to be discovered!",
+   "home.last.matches": "LAST MATCHES",
+   "home.card.about.title": "EFUBOL LEAGUE",
+diff --git a/src/locales/pl.json b/src/locales/pl.json
+index a8f3ce740e35074ef0bff8aea4c205c1b4d3077f..f1aba0123dc88f8a65b98b05871d29d512788148 100644
+--- a/src/locales/pl.json
++++ b/src/locales/pl.json
+@@ -1,42 +1,52 @@
+ {
+   "auth": {
+     "login": "LOG IN",
+     "email": "Enter your email",
+     "password": "Enter your password",
+     "started": "Log in to get...",
+     "subtitle": "Started",
+     "errors": {
+       "emailRequired": "You must enter a value",
+       "emailInvalid": "Not a valid email",
+       "passwordRequired": "Password is required",
+       "passwordMin": "Min 6 characters"
+     },
+     "toggle": {
+       "off": "Show password",
+       "on": "Hide password"
+     },
++    "dialog": {
++      "description": "Proszę wybierz użytkownika, na którego chcesz się zalogować",
++      "save": "Zapisz",
++      "cancel": "Anuluj",
++      "label": "Użytkownik"
++    },
++    "messages": {
++      "loginError": "Błędne dane logowania",
++      "userInserted": "Użytkownik wstawiony – kliknij Log in"
++    },
+     "footer": {
+       "text": "All rights reserved. Created by",
+       "author": "Bartłomiej Socha"
+     }
+   },
+ 
+   "nav.menu.home": "Strona główna",
+   "nav.menu.about": "O aplikacji",
+   "nav.menu.matches": "Mecze",
+   "nav.menu.stats": "Statystyki",
+   "nav.menu.table": "Tabela",
+   "nav.menu.teams": "Zespoły",
+   "nav.menu.ranking": "Ranking",
+   "navigation": {
+     "language": "Język",
+     "theme": "Przełącz motyw",
+     "account": "Konto",
+     "profile": "Profil",
+     "logout": "Wyloguj się"
+   },
+   "language": {
+     "pl": "Polski",
+     "en": "Angielski"
+   },
+ 
+diff --git a/src/pages/auth/Auth.tsx b/src/pages/auth/Auth.tsx
+index 1208e8156b89f86821565a26e22ee3fb3169f1cb..fa8c435b6c7f74d7218bcb4c0e2223e0fff6405b 100644
+--- a/src/pages/auth/Auth.tsx
++++ b/src/pages/auth/Auth.tsx
+@@ -1,106 +1,152 @@
+ import { useState } from "react";
+ import { useForm } from "react-hook-form";
+ import { useNavigate } from "react-router-dom";
+ import {
+   Box,
+   TextField,
+   IconButton,
+   Button,
+   InputAdornment,
+   Dialog,
+   DialogTitle,
+   DialogContent,
++  DialogActions,
+   FormControl,
+   InputLabel,
+   Select,
++  Menu,
+   MenuItem,
++  Tooltip,
+   useTheme,
+   CircularProgress,
++  ThemeProvider,
+ } from "@mui/material";
+-import { Visibility, VisibilityOff } from "@mui/icons-material";
++import { Visibility, VisibilityOff, Language as LanguageIcon } from "@mui/icons-material";
+ import {
+   NotificationProvider,
+   useNotification,
+ } from "../../common/context/NotificationContext";
+ import { useAuth } from "../../common/context/AuthContext";
+ import styles from "./auth.module.scss";
+ import Logo from "../../assets/Logo.png";
+ import Title from "../../common/UI/Title";
++import { useTranslation } from "react-i18next";
++import { getTheme } from "../../theme";
+ 
+ type FormValues = { email: string; password: string };
+ 
+ const USERS = ["Damian", "Bartek", "Grzesiek", "Darek", "Marek", "Adrian"];
+ 
+ export default function Auth() {
+   return (
+-    <NotificationProvider>
+-      <AuthInner />
+-    </NotificationProvider>
++    <ThemeProvider theme={getTheme("light")}> 
++      <NotificationProvider>
++        <AuthInner />
++      </NotificationProvider>
++    </ThemeProvider>
+   );
+ }
+ 
+ function AuthInner() {
+   const theme = useTheme();
+   const navigate = useNavigate();
++  const { t, i18n } = useTranslation();
+   const { login, loading: authLoading } = useAuth();
+   const {
+     register,
+     handleSubmit,
+     setValue,
+     watch,
+     formState: { errors },
+   } = useForm<FormValues>();
+   const [hidePassword, setHidePassword] = useState(true);
+   const [dialogOpen, setDialogOpen] = useState(false);
++  const [selectedUser, setSelectedUser] = useState<string>("");
++  const [anchorLang, setAnchorLang] = useState<null | HTMLElement>(null);
+   const { notify } = useNotification();
+   const emailValue = watch("email");
+   const passwordValue = watch("password");
+ 
+   const onSubmit = async ({ email, password }: FormValues) => {
+     try {
+       await login(email, password);
+       navigate("/app/home", { replace: true });
+     } catch {
+-      notify("Błędne dane logowania", "error");
++      notify(t("auth.messages.loginError"), "error");
+     }
+   };
+ 
+   const handleUserSelect = (name: string) => {
+-    const email = `${name.toLowerCase()}@${name.toLowerCase()}.com`;
+-    const password = `${name.charAt(0).toUpperCase()}${name
++    setSelectedUser(name);
++  };
++
++  const applyUser = () => {
++    if (!selectedUser) return;
++    const email = `${selectedUser.toLowerCase()}@${selectedUser.toLowerCase()}.com`;
++    const password = `${selectedUser.charAt(0).toUpperCase()}${selectedUser
+       .slice(1)
+       .toLowerCase()}123`;
+     setValue("email", email, { shouldDirty: true });
+     setValue("password", password, { shouldDirty: true });
+     setDialogOpen(false);
+-    notify("Użytkownik wstawiony – kliknij Log in", "success");
++    notify(t("auth.messages.userInserted"), "success");
++  };
++
++  const handleCancel = () => {
++    setDialogOpen(false);
++    setSelectedUser("");
+   };
+ 
+   return (
+     <div className={styles.auth}>
+       <div className={styles.authContainer}>
++        <div className={styles.langSwitch}>
++          <Tooltip title={t("navigation.language")}> 
++            <IconButton onClick={(e) => setAnchorLang(e.currentTarget)}>
++              <LanguageIcon />
++            </IconButton>
++          </Tooltip>
++          <Menu
++            anchorEl={anchorLang}
++            open={!!anchorLang}
++            onClose={() => setAnchorLang(null)}
++          >
++            {["pl", "en"].map((code) => (
++              <MenuItem
++                key={code}
++                onClick={() => {
++                  i18n.changeLanguage(code);
++                  setAnchorLang(null);
++                }}
++                selected={i18n.language === code}
++              >
++                {t(`language.${code}`)}
++              </MenuItem>
++            ))}
++          </Menu>
++        </div>
+         <div className={styles.authContent}>
+           <Title title="Get started" subtitle="Log in to Efubol League" />
+ 
+           <Box
+             component="form"
+             onSubmit={handleSubmit(onSubmit)}
+             className={styles.authForm}
+           >
+             <TextField
+               label="Email"
+               type="email"
+               fullWidth
+               margin="normal"
+               InputLabelProps={{ shrink: !!emailValue }}
+               {...register("email", {
+                 required: "Email is required",
+                 pattern: {
+                   value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                   message: "Invalid email address",
+                 },
+               })}
+               error={!!errors.email}
+               helperText={errors.email?.message}
+             />
+ 
+@@ -161,52 +207,60 @@ function AuthInner() {
+             fontSize: "0.875rem",
+             backgroundColor: (t) => t.palette.common.black,
+             color: (t) => t.palette.common.white,
+             py: 1,
+             borderRadius: "0 0 10px 10px",
+             "&:hover": { backgroundColor: (t) => t.palette.grey[800] },
+           }}
+           onClick={() => setDialogOpen(true)}
+         >
+           Test application
+         </Button>
+       </div>
+ 
+       <div className={styles.authLogo}>
+         <img src={Logo} alt="Logo" />
+       </div>
+ 
+       <div className={styles.footer}>
+         <p>
+           Created by <span>Bartlomiej Socha</span>
+         </p>
+       </div>
+ 
+       <Dialog
+         open={dialogOpen}
+-        onClose={() => setDialogOpen(false)}
++        onClose={handleCancel}
+         maxWidth="sm"
+         PaperProps={{ sx: { minWidth: "350px", minHeight: 220 } }}
+       >
+         <DialogTitle sx={{ bgcolor: theme.palette.grey[300] }}>
+           Select user
+         </DialogTitle>
+         <DialogContent sx={{ pt: 2 }}>
++          <Box>{t("auth.dialog.description")}</Box>
+           <FormControl fullWidth sx={{ mt: 3 }}>
+-            <InputLabel id="user-select-label">User</InputLabel>
++            <InputLabel id="user-select-label">{t("auth.dialog.label")}</InputLabel>
+             <Select
+               labelId="user-select-label"
+-              label="User"
++              label={t("auth.dialog.label")}
++              value={selectedUser}
+               onChange={(e) => handleUserSelect(e.target.value as string)}
+             >
+               {USERS.map((u) => (
+                 <MenuItem key={u} value={u}>
+                   {u}
+                 </MenuItem>
+               ))}
+             </Select>
+           </FormControl>
+         </DialogContent>
++        <DialogActions>
++          <Button onClick={handleCancel}>{t("auth.dialog.cancel")}</Button>
++          <Button variant="contained" onClick={applyUser} disabled={!selectedUser}>
++            {t("auth.dialog.save")}
++          </Button>
++        </DialogActions>
+       </Dialog>
+     </div>
+   );
+ }
+diff --git a/src/pages/auth/auth.module.scss b/src/pages/auth/auth.module.scss
+index 04c89edc0bb9ae16a13c61fe91d57595374457d9..230b827287481c09ce8a39a8d4be6c83265e2343 100644
+--- a/src/pages/auth/auth.module.scss
++++ b/src/pages/auth/auth.module.scss
+@@ -33,50 +33,56 @@
+ }
+ 
+ .authForm {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   margin-top: 0px;
+ }
+ 
+ .passwordField {
+   position: relative;
+   width: 100%;
+ }
+ 
+ .loginButton {
+   width: 140px;
+   height: 45px;
+   font-size: 20px;
+   color: #fff;
+ }
+ 
+ .adminBar {
+   width: 100%;
+ }
+ 
++.langSwitch {
++  position: absolute;
++  top: 10px;
++  right: 10px;
++}
++
+ .authLogo {
+   position: absolute;
+   top: 5%;
+   left: 5%;
+ 
+   img {
+     width: 213px;
+     height: 223px;
+   }
+ }
+ 
+ .footer {
+   color: #fff;
+   position: absolute;
+   bottom: 0;
+   left: 50%;
+   transform: translate(-50%, -50%);
+ 
+   p {
+     font-size: 18px;
+ 
+     span {
+       font-weight: 700;
+       letter-spacing: 1px;
+     }
+ 
+EOF
+)
