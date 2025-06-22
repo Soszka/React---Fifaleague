@@ -76,6 +76,7 @@ function AuthInner() {
   const [hidePassword, setHidePassword] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
   const [langAnchor, setLangAnchor] = useState<null | HTMLElement>(null);
   const { notify } = useNotification();
   const languages = [
@@ -94,11 +95,13 @@ function AuthInner() {
   }, [user, navigate]);
 
   const onSubmit = async ({ email, password }: FormValues) => {
+    setLoginLoading(true);
     try {
       await login(email, password);
       navigate("/app/home", { replace: true });
     } catch {
       notify(t("auth.loginError"), "error");
+      setLoginLoading(false);
     }
   };
 
@@ -212,12 +215,16 @@ function AuthInner() {
               type="submit"
               variant="contained"
               className={styles.loginButton}
-              disabled={authLoading}
+              disabled={authLoading || loginLoading}
               sx={{
                 mt: 3,
                 "&:hover": { backgroundColor: (t) => t.palette.grey[800] },
               }}
-              endIcon={authLoading ? <CircularProgress size={18} /> : null}
+              endIcon={
+                authLoading || loginLoading ? (
+                  <CircularProgress size={18} />
+                ) : null
+              }
             >
               {t("auth.login")}
             </Button>
