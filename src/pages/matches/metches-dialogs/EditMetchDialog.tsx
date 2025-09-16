@@ -71,7 +71,7 @@ const EditMetchDialog: React.FC<EditMatchDialogProps> = ({
   const options = (exclude: string[], value: string) =>
     players.filter((p) => p === value || !exclude.includes(p));
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (
       !match ||
       !player1 ||
@@ -95,7 +95,7 @@ const EditMetchDialog: React.FC<EditMatchDialogProps> = ({
       date: date.valueOf(),
     };
     try {
-      updateMatch(updatedMatch);
+      await updateMatch(updatedMatch);
       notify(t("matches.messages.updateSuccess"), "success");
       onClose();
     } catch {

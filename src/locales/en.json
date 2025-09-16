@@ -2,10 +2,29 @@
   "nav.menu.home": "Home",
   "nav.menu.about": "About",
   "nav.menu.matches": "Matches",
+  "nav.menu.news": "Updates",
   "nav.menu.stats": "Stats",
   "nav.menu.table": "Table",
   "nav.menu.teams": "Teams",
   "nav.menu.ranking": "Ranking",
+
+  "news": {
+    "title": "Updates",
+    "subtitle": "Stay up to date with every match change",
+    "empty": "No updates to show yet",
+    "emptyHint": "Add, edit or remove a match to see the activity feed here.",
+    "error": "We couldn’t load the latest updates.",
+    "unknownUser": "Unknown user",
+    "actions": {
+      "create": "{{user}} added a new match",
+      "update": "{{user}} updated a match",
+      "delete": "{{user}} removed a match"
+    },
+    "eventTime": "Event: {{date}}",
+    "matchSummary": "{{teamA}} vs {{teamB}} • Score: {{score}}",
+    "matchDate": "Match date: {{date}}"
+  },
+
   "navigation": {
     "language": "Language",
     "theme": "Toggle theme",

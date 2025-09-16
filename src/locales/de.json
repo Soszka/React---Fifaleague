@@ -2,10 +2,29 @@
   "nav.menu.home": "Startseite",
   "nav.menu.about": "Über",
   "nav.menu.matches": "Spiele",
+  "nav.menu.news": "Aktuelles",
   "nav.menu.stats": "Statistiken",
   "nav.menu.table": "Tabelle",
   "nav.menu.teams": "Teams",
   "nav.menu.ranking": "Rangliste",
+
+  "news": {
+    "title": "Aktuelles",
+    "subtitle": "Alle Änderungen an den Spielen im Überblick",
+    "empty": "Keine Aktivitäten vorhanden",
+    "emptyHint": "Füge ein Spiel hinzu oder bearbeite es, um hier Neuigkeiten zu sehen.",
+    "error": "Aktuelle Meldungen konnten nicht geladen werden.",
+    "unknownUser": "Unbekannter Benutzer",
+    "actions": {
+      "create": "{{user}} hat ein neues Spiel hinzugefügt",
+      "update": "{{user}} hat ein Spiel aktualisiert",
+      "delete": "{{user}} hat ein Spiel gelöscht"
+    },
+    "eventTime": "Ereignis: {{date}}",
+    "matchSummary": "{{teamA}} vs {{teamB}} • Ergebnis: {{score}}",
+    "matchDate": "Spieldatum: {{date}}"
+  },
+
   "navigation": {
     "language": "Sprache",
     "theme": "Thema wechseln",

@@ -23,15 +23,18 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import TableChartIcon from "@mui/icons-material/TableChart";
 import GroupIcon from "@mui/icons-material/Group";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import DynamicFeedIcon from "@mui/icons-material/DynamicFeed";
 import NavigationActions from "./navigation-actions/NavigationActions";
 import { useTranslation } from "react-i18next";
 import LogoDefault from "../../assets/Logo.png";
 import LogoLight from "../../assets/LogoDark.png";
+import { MatchActivityProvider } from "../../common/context/MatchActivityContext";
 
 const navItems = [
   { key: "nav.menu.home", icon: <HomeIcon />, path: "home" },
   { key: "nav.menu.about", icon: <InfoIcon />, path: "about" },
   { key: "nav.menu.matches", icon: <SportsSoccerIcon />, path: "matches" },
+  { key: "nav.menu.news", icon: <DynamicFeedIcon />, path: "news" },
   { key: "nav.menu.stats", icon: <BarChartIcon />, path: "stats" },
   { key: "nav.menu.table", icon: <TableChartIcon />, path: "table" },
   { key: "nav.menu.teams", icon: <GroupIcon />, path: "teams" },
@@ -235,7 +238,9 @@ export default function Navigation({ toggleTheme }: Props) {
             }),
         }}
       >
-        <Outlet context={{ isNavVisible: drawerOpen && isDesktop }} />
+        <MatchActivityProvider>
+          <Outlet context={{ isNavVisible: drawerOpen && isDesktop }} />
+        </MatchActivityProvider>
       </Box>
     </Box>
   );

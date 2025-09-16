@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  ref,
-  query,
-  orderByChild,
-  limitToLast,
-  onValue,
-} from "firebase/database";
+import { DataSnapshot, onValue, ref } from "firebase/database";
 import { rtdb } from "../services/firebase";
 
 interface RawMatch {
@@ -14,7 +8,7 @@ interface RawMatch {
   rival1: string;
   rival2: string;
   result: string;
-  date: string;
+  date: string | number;
 }
 
 export interface MatchUi {
@@ -23,30 +17,91 @@ export interface MatchUi {
   team2: string;
 }
 
+const MATCHES_COLLECTION_KEY = "matches";
+const ACTIVITY_LOG_KEY = "activityLogs";
+
+const isMatchRecord = (value: unknown): value is RawMatch => {
+  if (!value || typeof value !== "object") return false;
+  const record = value as Record<string, unknown>;
+  return (
+    typeof record.player1 === "string" &&
+    typeof record.player2 === "string" &&
+    typeof record.rival1 === "string" &&
+    typeof record.rival2 === "string" &&
+    typeof record.result === "string" &&
+    (typeof record.date === "number" || typeof record.date === "string")
+  );
+};
+
+const normalizeDate = (value: string | number) =>
+  typeof value === "number" ? value : new Date(value).getTime();
+
+const formatScore = (value: string) =>
+  value.includes(":") ? value : value.replace("-", " : ");
+
+const mapChildToMatch = (
+  child: DataSnapshot
+): { key: string; match: MatchUi & { date: number } } | null => {
+  const raw = child.val();
+  if (!isMatchRecord(raw)) return null;
+  const key = child.key ?? `${raw.player1}-${raw.player2}-${raw.date}`;
+  return {
+    key,
+    match: {
+      team1: `${raw.player1} & ${raw.player2}`,
+      team2: `${raw.rival1} & ${raw.rival2}`,
+      score: formatScore(raw.result),
+      date: normalizeDate(raw.date),
+    },
+  };
+};
+
+const collectMatches = (snapshot: DataSnapshot): (MatchUi & { date: number })[] => {
+  const matches = new Map<string, MatchUi & { date: number }>();
+  const nested = snapshot.child(MATCHES_COLLECTION_KEY);
+
+  if (nested.exists()) {
+    nested.forEach((child) => {
+      const mapped = mapChildToMatch(child);
+      if (mapped) {
+        matches.set(mapped.key, mapped.match);
+      }
+      return false;
+    });
+  }
+
+  snapshot.forEach((child) => {
+    if (child.key === ACTIVITY_LOG_KEY || child.key === MATCHES_COLLECTION_KEY) {
+      return false;
+    }
+    const mapped = mapChildToMatch(child);
+    if (mapped) {
+      matches.set(mapped.key, mapped.match);
+    }
+    return false;
+  });
+
+  return Array.from(matches.values()).sort((a, b) => b.date - a.date);
+};
+
 export const useLastMatches = (howMany = 10) => {
   const [matches, setMatches] = useState<MatchUi[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    console.log("[HOOK] Pobieram dane z Firebase...");
     setLoading(true);
-    const q = query(ref(rtdb, "/"), orderByChild("date"), limitToLast(howMany));
-    const unsub = onValue(q, (snap) => {
+    const unsub = onValue(ref(rtdb), (snap) => {
       if (!snap.exists()) {
         setMatches([]);
         setLoading(false);
         return;
       }
-      const list: MatchUi[] = [];
-      snap.forEach((child) => {
-        const m = child.val() as RawMatch;
-        list.push({
-          team1: `${m.player1} & ${m.player2}`,
-          score: m.result.replace("-", " : "),
-          team2: `${m.rival1} & ${m.rival2}`,
-        });
-      });
-      setMatches(list.reverse());
+      const all = collectMatches(snap).slice(0, howMany);
+      setMatches(
+        all.map(({ date: _date, ...rest }) => ({
+          ...rest,
+        }))
+      );
       setLoading(false);
     });
     return () => unsub();

@@ -9,6 +9,7 @@ import TeamsPage from "./pages/teams/Teams";
 import Matches from "./pages/matches/Matches";
 import StatsPage from "./pages/stats/Stats";
 import AboutPage from "./pages/about/About";
+import NewsPage from "./pages/news/News";
 import RequireAuth from "./common/routing/RequireAuth";
 
 interface Props {
@@ -30,6 +31,7 @@ export function AppRoutes({ toggleTheme }: Props) {
           <Route path="ranking" element={<RankingPage />} />
           <Route path="teams" element={<TeamsPage />} />
           <Route path="matches" element={<Matches />} />
+          <Route path="news" element={<NewsPage />} />
           <Route path="stats" element={<StatsPage />} />
           <Route path="about" element={<AboutPage />} />
         </Route>

@@ -2,10 +2,29 @@
   "nav.menu.home": "Inicio",
   "nav.menu.about": "Acerca de",
   "nav.menu.matches": "Partidos",
+  "nav.menu.news": "Actualizaciones",
   "nav.menu.stats": "Estadísticas",
   "nav.menu.table": "Tabla",
   "nav.menu.teams": "Equipos",
   "nav.menu.ranking": "Clasificación",
+
+  "news": {
+    "title": "Actualizaciones",
+    "subtitle": "Mantente al día con los cambios en los partidos",
+    "empty": "No hay actualizaciones disponibles",
+    "emptyHint": "Añade, edita o elimina un partido para ver la actividad aquí.",
+    "error": "No se pudieron cargar las actualizaciones.",
+    "unknownUser": "Usuario desconocido",
+    "actions": {
+      "create": "{{user}} añadió un nuevo partido",
+      "update": "{{user}} actualizó un partido",
+      "delete": "{{user}} eliminó un partido"
+    },
+    "eventTime": "Evento: {{date}}",
+    "matchSummary": "{{teamA}} vs {{teamB}} • Marcador: {{score}}",
+    "matchDate": "Fecha del partido: {{date}}"
+  },
+
   "navigation": {
     "language": "Idioma",
     "theme": "Alternar tema",

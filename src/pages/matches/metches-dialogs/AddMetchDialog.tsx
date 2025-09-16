@@ -53,7 +53,7 @@ const AddMetchDialog: React.FC<AddMatchDialogProps> = ({ open, onClose }) => {
   const options = (exclude: string[], value: string) =>
     players.filter((p) => p === value || !exclude.includes(p));
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (
       !player1 ||
       !player2 ||
@@ -67,7 +67,7 @@ const AddMetchDialog: React.FC<AddMatchDialogProps> = ({ open, onClose }) => {
     }
     const resultString = `${parseInt(score1, 10)}-${parseInt(score2, 10)}`;
     try {
-      addMatch({
+      await addMatch({
         player1,
         player2,
         rival1,

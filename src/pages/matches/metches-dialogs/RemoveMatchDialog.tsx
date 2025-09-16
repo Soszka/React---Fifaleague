@@ -27,11 +27,19 @@ const RemoveMatchDialog: React.FC<RemoveMatchDialogProps> = ({
   const { removeMatch } = useMatches();
   const { notify } = useNotification();
 
-  const handleConfirm = () => {
-    if (match) {
-      removeMatch(match.id);
-      notify(t("matches.messages.deleteSuccess"), "success");
+  const handleConfirm = async () => {
+    if (!match) {
+      onClose();
+      return;
     }
+
+    try {
+      await removeMatch(match.id);
+      notify(t("matches.messages.deleteSuccess"), "success");
+    } catch {
+      notify(t("matches.messages.error"), "error");
+    }
+
     onClose();
   };
 

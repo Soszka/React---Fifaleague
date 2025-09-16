@@ -30,10 +30,28 @@
   "nav.menu.home": "Strona główna",
   "nav.menu.about": "O aplikacji",
   "nav.menu.matches": "Mecze",
+  "nav.menu.news": "Aktualności",
   "nav.menu.stats": "Statystyki",
   "nav.menu.table": "Tabela",
   "nav.menu.teams": "Zespoły",
   "nav.menu.ranking": "Ranking",
+
+  "news": {
+    "title": "Aktualności",
+    "subtitle": "Bądź na bieżąco ze zmianami w meczach ligi",
+    "empty": "Brak wydarzeń do wyświetlenia",
+    "emptyHint": "Dodaj, edytuj lub usuń mecz, aby pojawiły się tutaj nowe informacje.",
+    "error": "Nie udało się wczytać aktualności.",
+    "unknownUser": "Nieznany użytkownik",
+    "actions": {
+      "create": "{{user}} dodał nowy mecz",
+      "update": "{{user}} zaktualizował mecz",
+      "delete": "{{user}} usunął mecz"
+    },
+    "eventTime": "Wydarzenie: {{date}}",
+    "matchSummary": "{{teamA}} vs {{teamB}} • Wynik: {{score}}",
+    "matchDate": "Data meczu: {{date}}"
+  },
 
   "navigation": {
     "language": "Język",
