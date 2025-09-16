@@ -10,7 +10,7 @@
 
   "news": {
     "title": "Actualizaciones",
-    "subtitle": "Mantente al día con los cambios en los partidos",
+    "subtitle": "Novedades liga...",
     "empty": "No hay actualizaciones disponibles",
     "emptyHint": "Añade, edita o elimina un partido para ver la actividad aquí.",
     "error": "No se pudieron cargar las actualizaciones.",
@@ -20,9 +20,18 @@
       "update": "{{user}} actualizó un partido",
       "delete": "{{user}} eliminó un partido"
     },
+    "labels": {
+      "create": "Nuevo partido",
+      "update": "Actualización",
+      "delete": "Eliminación"
+    },
     "eventTime": "Evento: {{date}}",
     "matchSummary": "{{teamA}} vs {{teamB}} • Marcador: {{score}}",
-    "matchDate": "Fecha del partido: {{date}}"
+    "matchDate": "Fecha del partido: {{date}}",
+    "pagination": {
+      "label": "Actualizaciones por página",
+      "option": "{{count}} actualizaciones"
+    }
   },
 
   "navigation": {

@@ -38,7 +38,7 @@
 
   "news": {
     "title": "Aktualności",
-    "subtitle": "Bądź na bieżąco ze zmianami w meczach ligi",
+    "subtitle": "Wieści ligi...",
     "empty": "Brak wydarzeń do wyświetlenia",
     "emptyHint": "Dodaj, edytuj lub usuń mecz, aby pojawiły się tutaj nowe informacje.",
     "error": "Nie udało się wczytać aktualności.",
@@ -48,9 +48,18 @@
       "update": "{{user}} zaktualizował mecz",
       "delete": "{{user}} usunął mecz"
     },
+    "labels": {
+      "create": "Nowy mecz",
+      "update": "Aktualizacja",
+      "delete": "Usunięcie"
+    },
     "eventTime": "Wydarzenie: {{date}}",
     "matchSummary": "{{teamA}} vs {{teamB}} • Wynik: {{score}}",
-    "matchDate": "Data meczu: {{date}}"
+    "matchDate": "Data meczu: {{date}}",
+    "pagination": {
+      "label": "Wpisów na stronie",
+      "option": "{{count}} wpisów"
+    }
   },
 
   "navigation": {

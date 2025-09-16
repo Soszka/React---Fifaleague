@@ -10,7 +10,7 @@
 
   "news": {
     "title": "Updates",
-    "subtitle": "Stay up to date with every match change",
+    "subtitle": "League updates...",
     "empty": "No updates to show yet",
     "emptyHint": "Add, edit or remove a match to see the activity feed here.",
     "error": "We couldn’t load the latest updates.",
@@ -20,9 +20,18 @@
       "update": "{{user}} updated a match",
       "delete": "{{user}} removed a match"
     },
+    "labels": {
+      "create": "New match",
+      "update": "Update",
+      "delete": "Removal"
+    },
     "eventTime": "Event: {{date}}",
     "matchSummary": "{{teamA}} vs {{teamB}} • Score: {{score}}",
-    "matchDate": "Match date: {{date}}"
+    "matchDate": "Match date: {{date}}",
+    "pagination": {
+      "label": "Updates per page",
+      "option": "{{count}} updates"
+    }
   },
 
   "navigation": {

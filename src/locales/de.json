@@ -10,7 +10,7 @@
 
   "news": {
     "title": "Aktuelles",
-    "subtitle": "Alle Änderungen an den Spielen im Überblick",
+    "subtitle": "Liga-Updates...",
     "empty": "Keine Aktivitäten vorhanden",
     "emptyHint": "Füge ein Spiel hinzu oder bearbeite es, um hier Neuigkeiten zu sehen.",
     "error": "Aktuelle Meldungen konnten nicht geladen werden.",
@@ -20,9 +20,18 @@
       "update": "{{user}} hat ein Spiel aktualisiert",
       "delete": "{{user}} hat ein Spiel gelöscht"
     },
+    "labels": {
+      "create": "Neues Spiel",
+      "update": "Aktualisierung",
+      "delete": "Löschung"
+    },
     "eventTime": "Ereignis: {{date}}",
     "matchSummary": "{{teamA}} vs {{teamB}} • Ergebnis: {{score}}",
-    "matchDate": "Spieldatum: {{date}}"
+    "matchDate": "Spieldatum: {{date}}",
+    "pagination": {
+      "label": "Einträge pro Seite",
+      "option": "{{count}} Meldungen"
+    }
   },
 
   "navigation": {
