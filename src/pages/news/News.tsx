@@ -15,11 +15,12 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { alpha, useTheme } from "@mui/material/styles";
 import type { SelectChangeEvent } from "@mui/material/Select";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import EditIcon from "@mui/icons-material/Edit";
-import CancelIcon from "@mui/icons-material/Cancel";
+import RemoveCircleRoundedIcon from "@mui/icons-material/RemoveCircleRounded";
 import dayjs from "dayjs";
 import { Trans, useTranslation } from "react-i18next";
 import Title from "../../common/UI/Title";
@@ -32,6 +33,7 @@ const formatScore = (score: string) =>
 const NewsPage: React.FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const { activities, loading, error } = useMatchActivity();
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(6);
@@ -80,7 +82,7 @@ const NewsPage: React.FC = () => {
         color: theme.palette.warning.main,
       },
       delete: {
-        icon: CancelIcon,
+        icon: RemoveCircleRoundedIcon,
         color: theme.palette.error.main,
       },
     }),
@@ -129,8 +131,18 @@ const NewsPage: React.FC = () => {
     const eventDate = dayjs(activity.timestamp).format("DD.MM.YYYY HH:mm");
     const matchDate = dayjs(activity.matchSnapshot.date).format("DD.MM.YYYY");
 
-    const teamA = `${activity.matchSnapshot.player1} & ${activity.matchSnapshot.player2}`;
-    const teamB = `${activity.matchSnapshot.rival1} & ${activity.matchSnapshot.rival2}`;
+    const teamAPlayers = [
+      activity.matchSnapshot.player1 || t("news.unknownUser"),
+      activity.matchSnapshot.player2 || t("news.unknownUser"),
+    ];
+    const teamBPlayers = [
+      activity.matchSnapshot.rival1 || t("news.unknownUser"),
+      activity.matchSnapshot.rival2 || t("news.unknownUser"),
+    ];
+    const teamADesktopLabel = teamAPlayers.join(" & ");
+    const teamBDesktopLabel = teamBPlayers.join(" & ");
+    const teamAMobileLabel = teamAPlayers.join("\n&\n");
+    const teamBMobileLabel = teamBPlayers.join("\n&\n");
     const score = formatScore(activity.matchSnapshot.result);
     return (
       <Card
@@ -193,7 +205,6 @@ const NewsPage: React.FC = () => {
           },
           "&:hover .news-card-icon": {
             transform: "scale(1.08) rotate(4deg)",
-            boxShadow: `0 22px 40px ${alpha(config.color, 0.32)}`,
           },
           "&:hover .news-card-icon svg": {
             transform: "scale(1.08)",
@@ -276,8 +287,7 @@ const NewsPage: React.FC = () => {
                   config.color,
                   theme.palette.mode === "dark" ? 0.45 : 0.28
                 )}`,
-                boxShadow: `0 18px 32px ${alpha(config.color, 0.28)}`,
-                transition: "transform 0.45s ease, box-shadow 0.45s ease",
+                transition: "transform 0.45s ease",
                 alignSelf: { xs: "start", sm: "center" },
               }}
             >
@@ -300,28 +310,28 @@ const NewsPage: React.FC = () => {
                   : alpha(config.color, 0.07),
               display: "grid",
               gridTemplateColumns: {
-                xs: "minmax(0, 1fr)",
+                xs: "minmax(0, 1fr) auto minmax(0, 1fr)",
                 sm: "minmax(0, 1fr) minmax(110px, 140px) minmax(0, 1fr)",
               },
               gap: { xs: 1.5, sm: 2.75 },
               alignItems: "center",
-              justifyItems: { xs: "start", sm: "stretch" },
+              justifyItems: { xs: "stretch", sm: "stretch" },
             }}
           >
             <Typography
               variant="subtitle1"
               fontWeight={600}
-              title={teamA}
+              title={teamADesktopLabel}
               sx={{
                 minWidth: 0,
                 textAlign: { xs: "left", sm: "right" },
-                whiteSpace: "nowrap",
-                textOverflow: "ellipsis",
-                overflow: "hidden",
-                justifySelf: { sm: "end" },
+                whiteSpace: { xs: "pre-line", sm: "nowrap" },
+                textOverflow: { xs: "clip", sm: "ellipsis" },
+                overflow: { xs: "visible", sm: "hidden" },
+                justifySelf: { xs: "start", sm: "end" },
               }}
             >
-              {teamA}
+              {teamAMobileLabel}
             </Typography>
             <Stack
               spacing={0.5}
@@ -340,23 +350,25 @@ const NewsPage: React.FC = () => {
                 {score}
               </Typography>
               <Typography variant="caption" color="text.secondary">
-                {t("news.matchDate", { date: matchDate })}
+                {isSmallScreen
+                  ? matchDate
+                  : t("news.matchDate", { date: matchDate })}
               </Typography>
             </Stack>
             <Typography
               variant="subtitle1"
               fontWeight={600}
-              title={teamB}
+              title={teamBDesktopLabel}
               sx={{
                 minWidth: 0,
-                textAlign: { xs: "left", sm: "left" },
-                whiteSpace: "nowrap",
-                textOverflow: "ellipsis",
-                overflow: "hidden",
-                justifySelf: { sm: "start" },
+                textAlign: { xs: "right", sm: "left" },
+                whiteSpace: { xs: "pre-line", sm: "nowrap" },
+                textOverflow: { xs: "clip", sm: "ellipsis" },
+                overflow: { xs: "visible", sm: "hidden" },
+                justifySelf: { xs: "end", sm: "start" },
               }}
             >
-              {teamB}
+              {teamBMobileLabel}
             </Typography>
           </Box>
         </CardContent>

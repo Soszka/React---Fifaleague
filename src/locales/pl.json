@@ -38,7 +38,7 @@
 
   "news": {
     "title": "Aktualności",
-    "subtitle": "Wieści ligi...",
+    "subtitle": "Sprawdź...",
     "empty": "Brak wydarzeń do wyświetlenia",
     "emptyHint": "Dodaj, edytuj lub usuń mecz, aby pojawiły się tutaj nowe informacje.",
     "error": "Nie udało się wczytać aktualności.",
