@@ -16,9 +16,9 @@
     "error": "Aktuelle Meldungen konnten nicht geladen werden.",
     "unknownUser": "Unbekannter Benutzer",
     "actions": {
-      "create": "{{user}} hat ein neues Spiel hinzugefügt",
-      "update": "{{user}} hat ein Spiel aktualisiert",
-      "delete": "{{user}} hat ein Spiel gelöscht"
+      "create": "<user>{{user}}</user> hat ein Spiel hinzugefügt",
+      "update": "<user>{{user}}</user> hat ein Spiel aktualisiert",
+      "delete": "<user>{{user}}</user> hat ein Spiel gelöscht"
     },
     "labels": {
       "create": "Neues Spiel",

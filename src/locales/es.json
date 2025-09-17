@@ -16,9 +16,9 @@
     "error": "No se pudieron cargar las actualizaciones.",
     "unknownUser": "Usuario desconocido",
     "actions": {
-      "create": "{{user}} añadió un nuevo partido",
-      "update": "{{user}} actualizó un partido",
-      "delete": "{{user}} eliminó un partido"
+      "create": "<user>{{user}}</user> añadió un partido",
+      "update": "<user>{{user}}</user> actualizó un partido",
+      "delete": "<user>{{user}}</user> eliminó un partido"
     },
     "labels": {
       "create": "Nuevo partido",

@@ -16,9 +16,9 @@
     "error": "We couldn’t load the latest updates.",
     "unknownUser": "Unknown user",
     "actions": {
-      "create": "{{user}} added a new match",
-      "update": "{{user}} updated a match",
-      "delete": "{{user}} removed a match"
+      "create": "<user>{{user}}</user> added a match",
+      "update": "<user>{{user}}</user> updated a match",
+      "delete": "<user>{{user}}</user> removed a match"
     },
     "labels": {
       "create": "New match",

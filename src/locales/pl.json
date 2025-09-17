@@ -44,9 +44,9 @@
     "error": "Nie udało się wczytać aktualności.",
     "unknownUser": "Nieznany użytkownik",
     "actions": {
-      "create": "{{user}} dodał nowy mecz",
-      "update": "{{user}} zaktualizował mecz",
-      "delete": "{{user}} usunął mecz"
+      "create": "<user>{{user}}</user> dodał mecz",
+      "update": "<user>{{user}}</user> zaktualizował mecz",
+      "delete": "<user>{{user}}</user> usunął mecz"
     },
     "labels": {
       "create": "Nowy mecz",

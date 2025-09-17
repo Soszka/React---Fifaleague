@@ -5,7 +5,6 @@ import {
   Box,
   Card,
   CardContent,
-  Chip,
   FormControl,
   InputLabel,
   MenuItem,
@@ -22,7 +21,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import CancelIcon from "@mui/icons-material/Cancel";
 import dayjs from "dayjs";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import Title from "../../common/UI/Title";
 import { useMatchActivity } from "../../common/context/MatchActivityContext";
 import { MatchActivityLog } from "../../common/types/matchActivity";
@@ -75,17 +74,14 @@ const NewsPage: React.FC = () => {
       create: {
         icon: AddCircleIcon,
         color: theme.palette.success.main,
-        background: alpha(theme.palette.success.main, 0.12),
       },
       update: {
         icon: EditIcon,
         color: theme.palette.warning.main,
-        background: alpha(theme.palette.warning.main, 0.16),
       },
       delete: {
         icon: CancelIcon,
         color: theme.palette.error.main,
-        background: alpha(theme.palette.error.main, 0.16),
       },
     }),
     [theme]
@@ -136,8 +132,6 @@ const NewsPage: React.FC = () => {
     const teamA = `${activity.matchSnapshot.player1} & ${activity.matchSnapshot.player2}`;
     const teamB = `${activity.matchSnapshot.rival1} & ${activity.matchSnapshot.rival2}`;
     const score = formatScore(activity.matchSnapshot.result);
-    const typeLabel = t(`news.labels.${activity.type}`);
-
     return (
       <Card
         key={activity.id}
@@ -149,128 +143,169 @@ const NewsPage: React.FC = () => {
           border: "1px solid",
           borderColor: alpha(
             config.color,
-            theme.palette.mode === "dark" ? 0.45 : 0.18
+            theme.palette.mode === "dark" ? 0.5 : 0.2
           ),
-          background:
+          backgroundColor:
             theme.palette.mode === "dark"
-              ? `linear-gradient(140deg, ${alpha(
-                  config.color,
-                  0.18
-                )} 0%, ${alpha(theme.palette.background.paper, 0.92)} 40%, ${alpha(
-                  theme.palette.background.default,
-                  0.95
-                )} 100%)`
-              : `linear-gradient(140deg, ${alpha(
-                  config.color,
-                  0.12
-                )} 0%, ${theme.palette.background.paper} 45%, ${alpha(
-                  theme.palette.background.default,
-                  0.85
-                )} 100%)`,
-          transition: "transform 0.35s ease, box-shadow 0.35s ease",
+              ? alpha(theme.palette.background.paper, 0.92)
+              : theme.palette.common.white,
+          transition: "transform 0.45s ease, box-shadow 0.45s ease",
+          boxShadow:
+            theme.palette.mode === "dark"
+              ? `0 12px 26px ${alpha(theme.palette.common.black, 0.45)}`
+              : `0 12px 32px ${alpha(theme.palette.grey[900], 0.08)}`,
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            borderRadius: "inherit",
+            background: `linear-gradient(120deg, transparent 0%, ${alpha(
+              config.color,
+              theme.palette.mode === "dark" ? 0.22 : 0.18
+            )} 50%, transparent 90%)`,
+            transform: "translateX(-120%) skewX(-18deg)",
+            transition: "transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)",
+            pointerEvents: "none",
+            opacity: 0.9,
+          },
           "&::after": {
             content: '""',
             position: "absolute",
             inset: 0,
-            background: `linear-gradient(120deg, transparent 0%, ${alpha(
+            borderRadius: "inherit",
+            background: `radial-gradient(circle at 20% 20%, ${alpha(
               config.color,
-              0.2
-            )} 45%, transparent 90%)`,
+              theme.palette.mode === "dark" ? 0.28 : 0.18
+            )} 0%, transparent 60%)`,
             opacity: 0,
-            transition: "opacity 0.35s ease",
+            transition: "opacity 0.5s ease",
             pointerEvents: "none",
           },
           "&:hover": {
             transform: "translateY(-6px)",
-            boxShadow: `0 24px 48px ${alpha(config.color, 0.28)}`,
+            boxShadow: `0 24px 46px ${alpha(config.color, 0.28)}`,
+          },
+          "&:hover::before": {
+            transform: "translateX(130%) skewX(-18deg)",
           },
           "&:hover::after": {
             opacity: 1,
+          },
+          "&:hover .news-card-icon": {
+            transform: "scale(1.08) rotate(4deg)",
+            boxShadow: `0 22px 40px ${alpha(config.color, 0.32)}`,
+          },
+          "&:hover .news-card-icon svg": {
+            transform: "scale(1.08)",
           },
         }}
       >
         <CardContent
           sx={{
-            p: { xs: 2.5, md: 3 },
+            p: { xs: 2.25, md: 3 },
             position: "relative",
             zIndex: 1,
             display: "flex",
             flexDirection: "column",
-            gap: 2,
+            gap: { xs: 2, sm: 2.5 },
           }}
         >
-          <Stack direction="row" spacing={2} alignItems="center">
-            <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr auto", sm: "1fr auto" },
+              columnGap: { xs: 1.5, sm: 2 },
+              rowGap: { xs: 0.75, sm: 0.5 },
+              alignItems: { xs: "start", sm: "center" },
+            }}
+          >
+            <Stack
+              spacing={{ xs: 0.75, sm: 1 }}
+              sx={{
+                minWidth: 0,
+                gridColumn: "1 / 2",
+              }}
+            >
               <Typography
                 variant="h6"
+                component="div"
                 sx={{
                   fontWeight: 700,
                   letterSpacing: -0.2,
                   lineHeight: 1.2,
                 }}
               >
-                {t(`news.actions.${activity.type}`, { user: actorName })}
-              </Typography>
-              <Stack
-                direction="row"
-                spacing={1.5}
-                alignItems="center"
-                flexWrap="wrap"
-                sx={{ mt: 0.75 }}
-              >
-                <Chip
-                  size="small"
-                  label={typeLabel}
-                  sx={{
-                    bgcolor: alpha(
-                      config.color,
-                      theme.palette.mode === "dark" ? 0.24 : 0.12
+                <Trans
+                  i18nKey={`news.actions.${activity.type}`}
+                  values={{ user: actorName }}
+                  components={{
+                    user: (
+                      <Box
+                        component="span"
+                        sx={{
+                          color: config.color,
+                          fontWeight: 800,
+                          display: { xs: "block", sm: "inline" },
+                          mb: { xs: 0.5, sm: 0 },
+                          mr: { xs: 0, sm: 1.25 },
+                        }}
+                      />
                     ),
-                    color: config.color,
-                    fontWeight: 700,
-                    letterSpacing: 0.6,
-                    textTransform: "uppercase",
                   }}
                 />
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  sx={{ fontWeight: 500 }}
-                >
-                  {t("news.eventTime", { date: eventDate })}
-                </Typography>
-              </Stack>
-            </Box>
+              </Typography>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ fontWeight: 500 }}
+              >
+                {t("news.eventTime", { date: eventDate })}
+              </Typography>
+            </Stack>
             <Avatar
+              className="news-card-icon"
               sx={{
-                bgcolor: config.background,
+                bgcolor: alpha(
+                  config.color,
+                  theme.palette.mode === "dark" ? 0.22 : 0.12
+                ),
                 color: config.color,
-                width: 56,
-                height: 56,
-                boxShadow: `0 16px 32px ${alpha(config.color, 0.3)}`,
+                width: { xs: 48, sm: 56 },
+                height: { xs: 48, sm: 56 },
+                border: `2px solid ${alpha(
+                  config.color,
+                  theme.palette.mode === "dark" ? 0.45 : 0.28
+                )}`,
+                boxShadow: `0 18px 32px ${alpha(config.color, 0.28)}`,
+                transition: "transform 0.45s ease, box-shadow 0.45s ease",
+                alignSelf: { xs: "start", sm: "center" },
               }}
             >
-              <Icon fontSize="large" />
+              <Icon fontSize="large" sx={{ transition: "transform 0.45s ease" }} />
             </Avatar>
-          </Stack>
+          </Box>
 
           <Box
             sx={{
-              px: { xs: 1.5, sm: 2 },
-              py: { xs: 1.25, sm: 1.75 },
+              px: { xs: 1.5, sm: 2.5 },
+              py: { xs: 1.5, sm: 1.9 },
               borderRadius: 2,
               border: `1px solid ${alpha(
                 config.color,
                 theme.palette.mode === "dark" ? 0.35 : 0.18
               )}`,
-              background:
+              backgroundColor:
                 theme.palette.mode === "dark"
-                  ? alpha(config.color, 0.18)
-                  : alpha(config.color, 0.08),
+                  ? alpha(config.color, 0.16)
+                  : alpha(config.color, 0.07),
               display: "grid",
-              gridTemplateColumns: { xs: "1fr", sm: "1fr auto 1fr" },
-              gap: { xs: 1.25, sm: 2.5 },
+              gridTemplateColumns: {
+                xs: "minmax(0, 1fr)",
+                sm: "minmax(0, 1fr) minmax(110px, 140px) minmax(0, 1fr)",
+              },
+              gap: { xs: 1.5, sm: 2.75 },
               alignItems: "center",
+              justifyItems: { xs: "start", sm: "stretch" },
             }}
           >
             <Typography
@@ -283,11 +318,16 @@ const NewsPage: React.FC = () => {
                 whiteSpace: "nowrap",
                 textOverflow: "ellipsis",
                 overflow: "hidden",
+                justifySelf: { sm: "end" },
               }}
             >
               {teamA}
             </Typography>
-            <Stack spacing={0.5} alignItems="center">
+            <Stack
+              spacing={0.5}
+              alignItems="center"
+              sx={{ justifySelf: "center", textAlign: "center" }}
+            >
               <Typography
                 variant="h4"
                 fontWeight={800}
@@ -313,6 +353,7 @@ const NewsPage: React.FC = () => {
                 whiteSpace: "nowrap",
                 textOverflow: "ellipsis",
                 overflow: "hidden",
+                justifySelf: { sm: "start" },
               }}
             >
               {teamB}
