@@ -24,8 +24,35 @@ import {
 } from "../../common/utils/nameUtils";
 
 const normalizeTeam = (a: string, b: string) => [a, b].sort().join(" & ");
+const splitScore = (score: string): [string, string] => {
+  const [first = "", second = ""] = score
+    .split(/[:\-]/)
+    .map((part) => part.trim());
+
+  return [first, second];
+};
+
+const formatScore = (score: string, invert = false) => {
+  const [first, second] = splitScore(score);
+
+  if (!first || !second) {
+    return score;
+  }
+
+  const [left, right] = invert ? [second, first] : [first, second];
+
+  return `${left} : ${right}`;
+};
+
 const getOutcome = (score: string): ResultOption => {
-  const [g1, g2] = score.split(" : ").map((n) => parseInt(n.trim(), 10));
+  const [g1Raw, g2Raw] = splitScore(score);
+  const g1 = parseInt(g1Raw, 10);
+  const g2 = parseInt(g2Raw, 10);
+
+  if (Number.isNaN(g1) || Number.isNaN(g2)) {
+    return "DRAW";
+  }
+
   if (g1 === g2) return "DRAW";
   return g1 > g2 ? "WIN" : "LOSS";
 };
@@ -90,14 +117,14 @@ const MatchesScreen: React.FC = () => {
 
         let team = team1;
         let rival = team2;
-        let score = m.result.replace("-", " : ");
+        const shouldInvert = !showAll && userInTeam2 && !userInTeam1;
 
-        if (!showAll && userInTeam2 && !userInTeam1) {
+        if (shouldInvert) {
           team = team2;
           rival = team1;
-          const [g1, g2] = m.result.split("-");
-          score = `${g2.trim()} : ${g1.trim()}`;
         }
+
+        const score = formatScore(m.result, shouldInvert);
 
         return {
           id: m.id,
