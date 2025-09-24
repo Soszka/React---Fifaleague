@@ -86,6 +86,8 @@ const MatchesScreen: React.FC = () => {
   const [matchToEdit, setMatchToEdit] = useState<Match | null>(null);
   const [matchToDelete, setMatchToDelete] = useState<Match | null>(null);
 
+  const deletionLocked = matches.length <= 3;
+
   const earliestDate = useMemo(
     () =>
       matches.length ? dayjs(Math.min(...matches.map((m) => m.date))) : null,
@@ -202,6 +204,9 @@ const MatchesScreen: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
+    if (deletionLocked) {
+      return;
+    }
     const match = matches.find((m) => m.id === id) || null;
     setMatchToDelete(match);
     setOpenDeleteDialog(true);
@@ -262,13 +267,14 @@ const MatchesScreen: React.FC = () => {
             onPageChange={setPage}
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={setRowsPerPage}
-            totalRows={sortedRows.length}
-            showAll={showAll}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        ) : (
-          <MatchTableDesktop
+          totalRows={sortedRows.length}
+          showAll={showAll}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          disableDelete={deletionLocked}
+        />
+      ) : (
+        <MatchTableDesktop
             rows={paginatedRows}
             loading={loading}
             error={error}
@@ -279,12 +285,13 @@ const MatchesScreen: React.FC = () => {
             onPageChange={setPage}
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={setRowsPerPage}
-            totalRows={sortedRows.length}
-            showAll={showAll}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        )}
+          totalRows={sortedRows.length}
+          showAll={showAll}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          disableDelete={deletionLocked}
+        />
+      )}
       </Paper>
       <AddMatchDialog
         open={openAddDialog}
@@ -299,6 +306,7 @@ const MatchesScreen: React.FC = () => {
         open={openDeleteDialog}
         onClose={() => setOpenDeleteDialog(false)}
         match={matchToDelete}
+        disableDelete={deletionLocked}
       />
     </Box>
   );

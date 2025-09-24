@@ -16,6 +16,7 @@ import {
 import { rtdb } from "../services/firebase";
 import { useAuth } from "./AuthContext";
 import { restoreDiacritics } from "../utils/nameUtils";
+import { normalizeDateValue } from "../utils/dateUtils";
 import {
   MatchActivityPayload,
   MatchActivityType,
@@ -54,7 +55,9 @@ const MATCHES_COLLECTION_KEY = "matches";
 const ACTIVITY_LOG_KEY = "activityLogs";
 const ACTIVITY_LOG_PATH = `/${ACTIVITY_LOG_KEY}`;
 
-const isMatchRecord = (value: unknown): value is Omit<Match, "id"> => {
+type StoredMatch = Omit<Match, "id"> & { date: number | string };
+
+const isMatchRecord = (value: unknown): value is StoredMatch => {
   if (!value || typeof value !== "object") return false;
   const record = value as Record<string, unknown>;
   return (
@@ -67,18 +70,22 @@ const isMatchRecord = (value: unknown): value is Omit<Match, "id"> => {
   );
 };
 
-const normalizeDate = (value: number | string) =>
-  typeof value === "number" ? value : new Date(value).getTime();
+const toMatch = (id: string, value: StoredMatch): Match | null => {
+  const normalizedDate = normalizeDateValue(value.date);
+  if (!Number.isFinite(normalizedDate)) {
+    return null;
+  }
 
-const toMatch = (id: string, value: Omit<Match, "id">): Match => ({
-  id,
-  player1: value.player1,
-  player2: value.player2,
-  rival1: value.rival1,
-  rival2: value.rival2,
-  result: value.result,
-  date: normalizeDate(value.date),
-});
+  return {
+    id,
+    player1: value.player1,
+    player2: value.player2,
+    rival1: value.rival1,
+    rival2: value.rival2,
+    result: value.result,
+    date: normalizedDate,
+  };
+};
 
 const ensureError = (err: unknown, fallbackMessage: string) =>
   err instanceof Error ? err : new Error(fallbackMessage);
@@ -91,7 +98,10 @@ const extractMatches = (snapshot: DataSnapshot): Match[] => {
     const val = child.val();
     if (isMatchRecord(val)) {
       const id = child.key ?? "";
-      matches.set(id, toMatch(id, val));
+      const match = toMatch(id, val);
+      if (match) {
+        matches.set(id, match);
+      }
     }
   };
 
@@ -221,10 +231,17 @@ export const MatchesProvider: React.FC<{ children: ReactNode }> = ({
       throw error;
     }
 
+    const normalizedDate = normalizeDateValue(matchData.date);
+    if (!Number.isFinite(normalizedDate)) {
+      const error = new Error("Invalid match date");
+      dispatch({ type: "SET_ERROR", payload: error });
+      throw error;
+    }
+
     const newMatch: Match = {
       id: newId,
       ...matchData,
-      date: normalizeDate(matchData.date),
+      date: normalizedDate,
     };
 
     dispatch({ type: "ADD_MATCH", payload: newMatch });

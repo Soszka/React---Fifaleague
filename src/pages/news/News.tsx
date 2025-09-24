@@ -256,9 +256,8 @@ const NewsPage: React.FC = () => {
                         sx={{
                           color: config.color,
                           fontWeight: 800,
-                          display: { xs: "block", sm: "inline" },
-                          mb: { xs: 0.5, sm: 0 },
-                          mr: { xs: 0, sm: 1.25 },
+                          display: "inline",
+                          mr: { xs: 0.5, sm: 0.3 },
                         }}
                       />
                     ),
@@ -291,7 +290,10 @@ const NewsPage: React.FC = () => {
                 alignSelf: { xs: "start", sm: "center" },
               }}
             >
-              <Icon fontSize="large" sx={{ transition: "transform 0.45s ease" }} />
+              <Icon
+                fontSize="large"
+                sx={{ transition: "transform 0.45s ease" }}
+              />
             </Avatar>
           </Box>
 
@@ -414,10 +416,7 @@ const NewsPage: React.FC = () => {
           justifyContent="space-between"
           sx={{ pt: 0.5 }}
         >
-          <FormControl
-            size="small"
-            sx={{ width: { xs: "100%", sm: 220 } }}
-          >
+          <FormControl size="small" sx={{ width: { xs: "100%", sm: 220 } }}>
             <InputLabel id="news-pagination-select">
               {t("news.pagination.label")}
             </InputLabel>
@@ -435,7 +434,12 @@ const NewsPage: React.FC = () => {
             </Select>
           </FormControl>
 
-          <Box sx={{ display: "flex", justifyContent: { xs: "center", sm: "flex-end" } }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: { xs: "center", sm: "flex-end" },
+            }}
+          >
             <Pagination
               count={totalPages}
               page={page}

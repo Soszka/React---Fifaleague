@@ -8,6 +8,7 @@ import {
 } from "firebase/database";
 import { rtdb } from "../services/firebase";
 import { ResultOption } from "../../pages/matches/types";
+import { normalizeDateValue } from "../utils/dateUtils";
 
 interface RawMatch {
   player1: string;
@@ -15,7 +16,7 @@ interface RawMatch {
   rival1: string;
   rival2: string;
   result: string; // np. "5-3"
-  date: string; // ISO‑string albo timestamp zapisany jako string
+  date: number | string; // ISO‑string albo timestamp zapisany jako string
 }
 
 export interface PlayerStats {
@@ -27,8 +28,29 @@ export interface PlayerStats {
 }
 
 const parseScore = (score: string) => {
-  const [home, away] = score.split("-").map((n) => parseInt(n.trim(), 10));
+  const [homeRaw = "", awayRaw = ""] = score
+    .split(/[:\-]/)
+    .map((n) => n.trim());
+  const home = Number(homeRaw);
+  const away = Number(awayRaw);
+
+  if (Number.isNaN(home) || Number.isNaN(away)) {
+    return null;
+  }
+
   return { home, away };
+};
+
+const formatScore = (score: string) => {
+  const [home = "", away = ""] = score
+    .split(/[:\-]/)
+    .map((n) => n.trim());
+
+  if (!home || !away) {
+    return score;
+  }
+
+  return `${home} : ${away}`;
 };
 
 const sameCalendarWeek = (d: Date) => {
@@ -91,46 +113,102 @@ export const usePlayerStats = (player: string, dbPath: string = "/") => {
         return;
       }
 
-      myMatches.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      const matchesWithDates = [...myMatches]
+        .map((match) => ({
+          match,
+          dateValue: normalizeDateValue(match.date),
+        }))
+        .sort((a, b) => {
+          const aVal = Number.isFinite(a.dateValue) ? a.dateValue : -Infinity;
+          const bVal = Number.isFinite(b.dateValue) ? b.dateValue : -Infinity;
+          return bVal - aVal;
+        });
+
+      const lastMatchEntry = matchesWithDates.find((entry) =>
+        Number.isFinite(entry.dateValue)
       );
 
-      const lastMatch = myMatches[0];
-      const lastResult = lastMatch.result.replace("-", " : ");
+      if (!lastMatchEntry) {
+        setStats({
+          lastResult: "-",
+          lastOutcome: "DRAW",
+          weekMatches: 0,
+          winPercent: 0,
+          avgGoals: 0,
+        });
+        setLoading(false);
+        return;
+      }
 
-      const weekMatchesArr = myMatches.filter((m) =>
-        sameCalendarWeek(new Date(m.date))
-      );
+      const { match: lastMatch } = lastMatchEntry;
+      const parsedLastScore = parseScore(lastMatch.result);
+
+      if (!parsedLastScore) {
+        setStats({
+          lastResult: "-",
+          lastOutcome: "DRAW",
+          weekMatches: 0,
+          winPercent: 0,
+          avgGoals: 0,
+        });
+        setLoading(false);
+        return;
+      }
+
+      const weekMatchesCount = matchesWithDates.filter((entry) => {
+        if (!Number.isFinite(entry.dateValue)) {
+          return false;
+        }
+        return sameCalendarWeek(new Date(entry.dateValue));
+      }).length;
 
       let wins = 0;
       let goals = 0;
+      let countedMatches = 0;
 
       myMatches.forEach((m) => {
-        const { home, away } = parseScore(m.result);
+        const parsed = parseScore(m.result);
+        if (!parsed) {
+          return;
+        }
+        countedMatches += 1;
         const isHome = [m.player1, m.player2].some((n) => eq(n, player));
-        const myGoals = isHome ? home : away;
-        const rivalGoals = isHome ? away : home;
+        const myGoals = isHome ? parsed.home : parsed.away;
+        const rivalGoals = isHome ? parsed.away : parsed.home;
         goals += myGoals;
         if (myGoals > rivalGoals) wins += 1;
       });
 
-      const { home: lastHome, away: lastAway } = parseScore(lastMatch.result);
+      if (!countedMatches) {
+        setStats({
+          lastResult: "-",
+          lastOutcome: "DRAW",
+          weekMatches: 0,
+          winPercent: 0,
+          avgGoals: 0,
+        });
+        setLoading(false);
+        return;
+      }
+
       const isLastHome = [lastMatch.player1, lastMatch.player2].some((n) =>
         eq(n, player)
       );
-      const myLastGoals = isLastHome ? lastHome : lastAway;
-      const rivalLastGoals = isLastHome ? lastAway : lastHome;
+      const myLastGoals = isLastHome ? parsedLastScore.home : parsedLastScore.away;
+      const rivalLastGoals = isLastHome
+        ? parsedLastScore.away
+        : parsedLastScore.home;
 
       let lastOutcome: ResultOption = "DRAW";
       if (myLastGoals > rivalLastGoals) lastOutcome = "WIN";
       else if (myLastGoals < rivalLastGoals) lastOutcome = "LOSS";
 
       setStats({
-        lastResult,
+        lastResult: formatScore(lastMatch.result),
         lastOutcome,
-        weekMatches: weekMatchesArr.length,
-        winPercent: Math.round((wins / myMatches.length) * 100),
-        avgGoals: parseFloat((goals / myMatches.length).toFixed(1)),
+        weekMatches: weekMatchesCount,
+        winPercent: Math.round((wins / countedMatches) * 100),
+        avgGoals: parseFloat((goals / countedMatches).toFixed(1)),
       });
       setLoading(false);
     };

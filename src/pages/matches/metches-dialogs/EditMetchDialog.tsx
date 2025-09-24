@@ -61,7 +61,7 @@ const EditMetchDialog: React.FC<EditMatchDialogProps> = ({
       setPlayer2(match.player2);
       setRival1(match.rival1);
       setRival2(match.rival2);
-      const [g1, g2] = match.result.split("-");
+      const [g1, g2] = match.result.split(/[:\-]/);
       setScore1(g1 ?? "");
       setScore2(g2 ?? "");
       setDate(dayjs(match.date));

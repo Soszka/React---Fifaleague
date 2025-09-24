@@ -11,24 +11,27 @@ import {
 import { useTranslation } from "react-i18next";
 import { useMatches, Match } from "../../../common/context/MatchesContext";
 import { useNotification } from "../../../common/context/NotificationContext";
+import { formatDateValue } from "../../../common/utils/dateUtils";
 
 interface RemoveMatchDialogProps {
   open: boolean;
   onClose: () => void;
   match: Match | null;
+  disableDelete: boolean;
 }
 
 const RemoveMatchDialog: React.FC<RemoveMatchDialogProps> = ({
   open,
   onClose,
   match,
+  disableDelete,
 }) => {
   const { t } = useTranslation();
   const { removeMatch } = useMatches();
   const { notify } = useNotification();
 
   const handleConfirm = async () => {
-    if (!match) {
+    if (!match || disableDelete) {
       onClose();
       return;
     }
@@ -45,7 +48,7 @@ const RemoveMatchDialog: React.FC<RemoveMatchDialogProps> = ({
 
   const teamA = match ? `${match.player1} & ${match.player2}` : "";
   const teamB = match ? `${match.rival1} & ${match.rival2}` : "";
-  const dateStr = match ? new Date(match.date).toLocaleDateString() : "";
+  const dateStr = match ? formatDateValue(match.date) : "";
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
@@ -95,6 +98,7 @@ const RemoveMatchDialog: React.FC<RemoveMatchDialogProps> = ({
         <Button
           variant="contained"
           onClick={handleConfirm}
+          disabled={disableDelete}
           sx={(theme) => {
             const bgColor =
               theme.palette.mode === "light"

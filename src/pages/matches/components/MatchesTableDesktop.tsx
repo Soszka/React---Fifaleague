@@ -41,6 +41,7 @@ interface Props {
   showAll: boolean;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
+  disableDelete: boolean;
 }
 
 const MatchTableDesktop: React.FC<Props> = ({
@@ -58,6 +59,7 @@ const MatchTableDesktop: React.FC<Props> = ({
   showAll,
   onEdit,
   onDelete,
+  disableDelete,
 }) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -202,18 +204,21 @@ const MatchTableDesktop: React.FC<Props> = ({
                         </IconButton>
                       </Tooltip>
                       <Tooltip title={t("matches.actions.delete") as string}>
-                        <IconButton
-                          size="small"
-                          onClick={() => onDelete(row.id)}
-                          sx={{
-                            color: resultColor("LOSS"),
-                            "&:hover": {
-                              backgroundColor: theme.palette.action.hover,
-                            },
-                          }}
-                        >
-                          <DeleteIcon fontSize="medium" />
-                        </IconButton>
+                        <span style={{ display: "inline-flex" }}>
+                          <IconButton
+                            size="small"
+                            onClick={() => onDelete(row.id)}
+                            disabled={disableDelete}
+                            sx={{
+                              color: resultColor("LOSS"),
+                              "&:hover": {
+                                backgroundColor: theme.palette.action.hover,
+                              },
+                            }}
+                          >
+                            <DeleteIcon fontSize="medium" />
+                          </IconButton>
+                        </span>
                       </Tooltip>
                     </Box>
                   </TableCell>
