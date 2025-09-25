@@ -347,7 +347,8 @@
       "addSuccess": "Spiel hinzugefügt",
       "updateSuccess": "Spiel aktualisiert",
       "deleteSuccess": "Spiel entfernt",
-      "error": "Ein Fehler ist aufgetreten"
+      "error": "Ein Fehler ist aufgetreten",
+      "empty": "Keine Spiele"
     }
   },
 

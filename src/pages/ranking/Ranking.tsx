@@ -31,6 +31,7 @@ import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
 import Title from "../../common/UI/Title";
 import { useAllMatches, MatchUi } from "../../common/hooks/useAllMatches";
+import { PLAYER_LABELS } from "../../common/constants/players";
 import styles from "./ranking.module.scss";
 
 export interface PlayerRow {
@@ -188,10 +189,7 @@ const RankingPage: React.FC = () => {
     if (pos === 3) return "#CD7F32";
     return theme.palette.text.primary;
   };
-  const uniquePlayers = useMemo(
-    () => players.map((p) => p.player).sort(),
-    [players]
-  );
+  const uniquePlayers = useMemo(() => [...PLAYER_LABELS], []);
   const rangeFilter = (data: PlayerRow[], r: string, key: keyof PlayerRow) => {
     if (r === "100<") return data.filter((d) => (d[key] as number) > 100);
     const [min, max] = r.split("-").map(Number);

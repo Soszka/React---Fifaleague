@@ -32,7 +32,6 @@ interface Props {
   showAll: boolean;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
-  disableDelete: boolean;
 }
 
 const MatchListMobile: React.FC<Props> = ({
@@ -47,7 +46,6 @@ const MatchListMobile: React.FC<Props> = ({
   showAll,
   onEdit,
   onDelete,
-  disableDelete,
 }) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -87,6 +85,10 @@ const MatchListMobile: React.FC<Props> = ({
       ) : error ? (
         <Typography color="error" align="center" sx={{ my: 4 }}>
           {t("matches.messages.error")}: {error.message}
+        </Typography>
+      ) : rows.length === 0 ? (
+        <Typography align="center" sx={{ my: 4 }}>
+          {t("matches.messages.empty")}
         </Typography>
       ) : (
         rows.map((row) => (
@@ -160,21 +162,18 @@ const MatchListMobile: React.FC<Props> = ({
                   </IconButton>
                 </Tooltip>
                 <Tooltip title={t("matches.actions.delete") as string}>
-                  <span style={{ display: "inline-flex" }}>
-                    <IconButton
-                      size="small"
-                      onClick={() => onDelete(row.id)}
-                      disabled={disableDelete}
-                      sx={{
-                        color: resultColor("LOSS"),
-                        "&:hover": {
-                          backgroundColor: theme.palette.action.hover,
-                        },
-                      }}
-                    >
-                      <DeleteIcon fontSize="medium" />
-                    </IconButton>
-                  </span>
+                  <IconButton
+                    size="small"
+                    onClick={() => onDelete(row.id)}
+                    sx={{
+                      color: resultColor("LOSS"),
+                      "&:hover": {
+                        backgroundColor: theme.palette.action.hover,
+                      },
+                    }}
+                  >
+                    <DeleteIcon fontSize="medium" />
+                  </IconButton>
                 </Tooltip>
               </CardActions>
             </Card>

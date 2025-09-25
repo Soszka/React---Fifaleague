@@ -349,7 +349,8 @@
       "addSuccess": "Partido añadido",
       "updateSuccess": "Partido actualizado",
       "deleteSuccess": "Partido eliminado",
-      "error": "Ocurrió un error"
+      "error": "Ocurrió un error",
+      "empty": "No hay partidos"
     }
   },
 

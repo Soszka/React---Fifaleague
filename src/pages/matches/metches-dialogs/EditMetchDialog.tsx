@@ -20,6 +20,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { useTranslation } from "react-i18next";
 import { useMatches, Match } from "../../../common/context/MatchesContext";
 import { useNotification } from "../../../common/context/NotificationContext";
+import { PLAYER_LABELS } from "../../../common/constants/players";
 
 interface EditMatchDialogProps {
   open: boolean;
@@ -33,19 +34,10 @@ const EditMetchDialog: React.FC<EditMatchDialogProps> = ({
   match,
 }) => {
   const { t } = useTranslation();
-  const { updateMatch, matches } = useMatches();
+  const { updateMatch } = useMatches();
   const { notify } = useNotification();
 
-  const players = useMemo(() => {
-    const set = new Set<string>();
-    matches.forEach((m) => {
-      set.add(m.player1);
-      set.add(m.player2);
-      set.add(m.rival1);
-      set.add(m.rival2);
-    });
-    return Array.from(set).sort();
-  }, [matches]);
+  const players = useMemo(() => [...PLAYER_LABELS], []);
 
   const [player1, setPlayer1] = useState("");
   const [player2, setPlayer2] = useState("");

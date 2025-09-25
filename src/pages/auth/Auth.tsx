@@ -31,6 +31,7 @@ import {
   useNotification,
 } from "../../common/context/NotificationContext";
 import { useAuth } from "../../common/context/AuthContext";
+import { PLAYER_LABELS, getPlayerInfoByLabel } from "../../common/constants/players";
 import { stripDiacritics } from "../../common/utils/nameUtils";
 import styles from "./auth.module.scss";
 import Logo from "../../assets/Logo.png";
@@ -38,18 +39,7 @@ import Title from "../../common/UI/Title";
 
 type FormValues = { email: string; password: string };
 
-const USERS = [
-  "Adam",
-  "Adrian",
-  "Bartek",
-  "Damian",
-  "Darek",
-  "Dominik",
-  "Grzesiek",
-  "Marek",
-  "Michał",
-  "Łukasz",
-];
+const USERS = PLAYER_LABELS;
 
 export default function Auth() {
   return (
@@ -108,12 +98,11 @@ function AuthInner() {
   const handleUserInsert = () => {
     if (!selectedUser) return;
     const name = selectedUser;
-    const ascii = stripDiacritics(name);
-    const lower = ascii.toLowerCase();
-    const email = `${lower}@${lower}.com`;
-    const password = `${ascii.charAt(0).toUpperCase()}${ascii
-      .slice(1)
-      .toLowerCase()}123`;
+    const ascii = stripDiacritics(name).replace(/[^a-zA-Z0-9]/g, "");
+    const info = getPlayerInfoByLabel(name);
+    const baseId = info?.id ?? ascii.toLowerCase();
+    const email = `${baseId}@${baseId}.com`;
+    const password = `${baseId.charAt(0).toUpperCase()}${baseId.slice(1)}123`;
     setValue("email", email, { shouldDirty: true });
     setValue("password", password, { shouldDirty: true });
     setDialogOpen(false);

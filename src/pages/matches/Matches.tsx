@@ -86,8 +86,6 @@ const MatchesScreen: React.FC = () => {
   const [matchToEdit, setMatchToEdit] = useState<Match | null>(null);
   const [matchToDelete, setMatchToDelete] = useState<Match | null>(null);
 
-  const deletionLocked = matches.length <= 3;
-
   const earliestDate = useMemo(
     () =>
       matches.length ? dayjs(Math.min(...matches.map((m) => m.date))) : null,
@@ -204,9 +202,6 @@ const MatchesScreen: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
-    if (deletionLocked) {
-      return;
-    }
     const match = matches.find((m) => m.id === id) || null;
     setMatchToDelete(match);
     setOpenDeleteDialog(true);
@@ -271,7 +266,6 @@ const MatchesScreen: React.FC = () => {
           showAll={showAll}
           onEdit={handleEdit}
           onDelete={handleDelete}
-          disableDelete={deletionLocked}
         />
       ) : (
         <MatchTableDesktop
@@ -289,7 +283,6 @@ const MatchesScreen: React.FC = () => {
           showAll={showAll}
           onEdit={handleEdit}
           onDelete={handleDelete}
-          disableDelete={deletionLocked}
         />
       )}
       </Paper>
@@ -306,7 +299,6 @@ const MatchesScreen: React.FC = () => {
         open={openDeleteDialog}
         onClose={() => setOpenDeleteDialog(false)}
         match={matchToDelete}
-        disableDelete={deletionLocked}
       />
     </Box>
   );

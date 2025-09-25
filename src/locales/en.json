@@ -348,7 +348,8 @@
       "addSuccess": "Match added",
       "updateSuccess": "Match updated",
       "deleteSuccess": "Match removed",
-      "error": "An error occurred"
+      "error": "An error occurred",
+      "empty": "No matches"
     }
   },
 

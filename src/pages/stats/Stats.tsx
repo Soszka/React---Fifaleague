@@ -29,6 +29,7 @@ import PercentIcon from "@mui/icons-material/Percent";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import { useAuth } from "../../common/context/AuthContext";
 import { formatDisplayName } from "../../common/utils/nameUtils";
+import { PLAYER_LABELS } from "../../common/constants/players";
 
 type Outcome = "win" | "draw" | "loss";
 
@@ -101,14 +102,7 @@ const StatsPage: React.FC = () => {
   const loggedName = authUser?.email?.split("@")[0] || "";
   const loggedLabel = formatDisplayName(loggedName);
 
-  const players = useMemo(() => {
-    const s = new Set<string>();
-    matches.forEach((m) => {
-      m.team1.split("&").forEach((p: string) => s.add(p.trim()));
-      m.team2.split("&").forEach((p: string) => s.add(p.trim()));
-    });
-    return Array.from(s).sort();
-  }, [matches]);
+  const players = useMemo(() => [...PLAYER_LABELS], []);
 
   const [user, setUser] = useState("");
   useEffect(() => {

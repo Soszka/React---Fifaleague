@@ -41,7 +41,6 @@ interface Props {
   showAll: boolean;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
-  disableDelete: boolean;
 }
 
 const MatchTableDesktop: React.FC<Props> = ({
@@ -59,7 +58,6 @@ const MatchTableDesktop: React.FC<Props> = ({
   showAll,
   onEdit,
   onDelete,
-  disableDelete,
 }) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -113,7 +111,17 @@ const MatchTableDesktop: React.FC<Props> = ({
               ))}
             </TableBody>
           </Table>
-        ) : !error ? (
+        ) : error ? (
+          <Typography color="error" align="center" sx={{ my: 4 }}>
+            {t("matches.messages.error")}: {error.message}
+          </Typography>
+        ) : rows.length === 0 ? (
+          <Box sx={{ py: 6, textAlign: "center" }}>
+            <Typography variant="subtitle1" fontWeight={600}>
+              {t("matches.messages.empty")}
+            </Typography>
+          </Box>
+        ) : (
           <Table size="small">
             <TableHead>
               <TableRow>
@@ -204,21 +212,18 @@ const MatchTableDesktop: React.FC<Props> = ({
                         </IconButton>
                       </Tooltip>
                       <Tooltip title={t("matches.actions.delete") as string}>
-                        <span style={{ display: "inline-flex" }}>
-                          <IconButton
-                            size="small"
-                            onClick={() => onDelete(row.id)}
-                            disabled={disableDelete}
-                            sx={{
-                              color: resultColor("LOSS"),
-                              "&:hover": {
-                                backgroundColor: theme.palette.action.hover,
-                              },
-                            }}
-                          >
-                            <DeleteIcon fontSize="medium" />
-                          </IconButton>
-                        </span>
+                        <IconButton
+                          size="small"
+                          onClick={() => onDelete(row.id)}
+                          sx={{
+                            color: resultColor("LOSS"),
+                            "&:hover": {
+                              backgroundColor: theme.palette.action.hover,
+                            },
+                          }}
+                        >
+                          <DeleteIcon fontSize="medium" />
+                        </IconButton>
                       </Tooltip>
                     </Box>
                   </TableCell>
@@ -226,10 +231,6 @@ const MatchTableDesktop: React.FC<Props> = ({
               ))}
             </TableBody>
           </Table>
-        ) : (
-          <Typography color="error" align="center" sx={{ my: 4 }}>
-            {t("matches.messages.error")}: {error.message}
-          </Typography>
         )}
       </TableContainer>
 

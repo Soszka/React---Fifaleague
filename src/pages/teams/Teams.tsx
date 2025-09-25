@@ -22,6 +22,7 @@ import ReactApexChart from "react-apexcharts";
 import Title from "../../common/UI/Title";
 import { useAllMatches, MatchUi } from "../../common/hooks/useAllMatches";
 import { formatDisplayName } from "../../common/utils/nameUtils";
+import { PLAYER_LABELS } from "../../common/constants/players";
 import { useOutletContext } from "react-router-dom";
 
 interface TeamData {
@@ -440,16 +441,7 @@ const TeamsPage: React.FC = () => {
       setExpanded(isExp ? team : false),
     []
   );
-  const players = useMemo(() => {
-    const set = new Set<string>();
-    matches.forEach((m) =>
-      m.team1
-        .split("&")
-        .concat(m.team2.split("&"))
-        .forEach((p) => set.add(p.trim()))
-    );
-    return Array.from(set).sort();
-  }, [matches]);
+  const players = useMemo(() => [...PLAYER_LABELS], []);
   const visibleTeams = useMemo(
     () =>
       playerFilter

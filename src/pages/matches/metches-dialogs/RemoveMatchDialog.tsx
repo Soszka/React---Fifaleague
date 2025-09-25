@@ -17,21 +17,19 @@ interface RemoveMatchDialogProps {
   open: boolean;
   onClose: () => void;
   match: Match | null;
-  disableDelete: boolean;
 }
 
 const RemoveMatchDialog: React.FC<RemoveMatchDialogProps> = ({
   open,
   onClose,
   match,
-  disableDelete,
 }) => {
   const { t } = useTranslation();
   const { removeMatch } = useMatches();
   const { notify } = useNotification();
 
   const handleConfirm = async () => {
-    if (!match || disableDelete) {
+    if (!match) {
       onClose();
       return;
     }
@@ -98,7 +96,6 @@ const RemoveMatchDialog: React.FC<RemoveMatchDialogProps> = ({
         <Button
           variant="contained"
           onClick={handleConfirm}
-          disabled={disableDelete}
           sx={(theme) => {
             const bgColor =
               theme.palette.mode === "light"

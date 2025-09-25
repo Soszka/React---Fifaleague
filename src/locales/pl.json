@@ -346,7 +346,8 @@
       "addSuccess": "Dodano mecz",
       "updateSuccess": "Pomyślnie zaktualizowano mecz",
       "deleteSuccess": "Usunięto mecz",
-      "error": "Wystąpił błąd"
+      "error": "Wystąpił błąd",
+      "empty": "Brak meczów"
     }
   },
 
