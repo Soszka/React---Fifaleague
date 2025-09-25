@@ -116,7 +116,7 @@
       "questions": [
         {
           "question": "Wie kann ich ein neues Spiel in der App hinzufügen?",
-          "answer": "Um ein neues Spiel hinzuzufügen, gehen Sie zum Abschnitt „Spiele“ und klicken Sie auf „Spiel hinzufügen“. Wählen Sie dann Ihren Mitspieler, die Gegner und geben Sie das Ergebnis ein."
+          "answer": "Der Frontend-Meister Bartek kann derzeit als Administrator allein neue Spiele zur App hinzufügen, bearbeiten oder löschen."
         },
         {
           "question": "Welche Statistiken kann ich in der App verfolgen?",
@@ -305,6 +305,11 @@
       "add": "Spiel hinzufügen",
       "edit": "Bearbeiten",
       "delete": "Löschen"
+    },
+    "tooltips": {
+      "add": "Nur der Frontend-Meister Bartek kann ein Spiel hinzufügen.",
+      "edit": "Nur der Frontend-Meister Bartek kann ein Spiel bearbeiten.",
+      "delete": "Nur der Frontend-Meister Bartek kann ein Spiel löschen."
     },
     "card": {
       "players": "Spieler",

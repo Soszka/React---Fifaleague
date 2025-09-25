@@ -11,6 +11,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  Tooltip,
   useTheme,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -39,6 +40,7 @@ interface Props {
   uniqueTeams: string[];
   onClearFilters: () => void;
   onAddMatch: () => void;
+  canManageMatches: boolean;
 }
 
 const FILTER_WIDTH = 220;
@@ -60,12 +62,52 @@ const MatchesFilters: React.FC<Props> = ({
   uniqueTeams,
   onClearFilters,
   onAddMatch,
+  canManageMatches,
 }) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const controlWidth = isMobile ? "100%" : FILTER_WIDTH;
   const buttonWidth = isMobile ? "100%" : "auto";
+
+  const tooltipAddTitle = canManageMatches
+    ? (t("matches.actions.add") as string)
+    : (t("matches.tooltips.add") as string);
+
+  const addButton = (
+    <Tooltip
+      title={tooltipAddTitle}
+      disableHoverListener={canManageMatches}
+      disableFocusListener={canManageMatches}
+      disableTouchListener={canManageMatches}
+    >
+      <span
+        style={{
+          display: "inline-block",
+          width: buttonWidth === "100%" ? "100%" : undefined,
+        }}
+      >
+        <Button
+          onClick={onAddMatch}
+          variant="contained"
+          size="small"
+          disabled={!canManageMatches}
+          sx={{
+            minWidth: "auto",
+            px: 2,
+            width: buttonWidth,
+            backgroundColor: theme.palette.grey[500],
+            color: theme.palette.getContrastText(theme.palette.grey[500]),
+            "&:hover": {
+              backgroundColor: theme.palette.grey[600],
+            },
+          }}
+        >
+          {t("matches.actions.add")}
+        </Button>
+      </span>
+    </Tooltip>
+  );
 
   const controls = (
     <>
@@ -165,25 +207,7 @@ const MatchesFilters: React.FC<Props> = ({
         {t("matches.filters.clear")}
       </Button>
 
-      {!isMobile && (
-        <Button
-          onClick={onAddMatch}
-          variant="contained"
-          size="small"
-          sx={{
-            minWidth: "auto",
-            px: 2,
-            width: buttonWidth,
-            backgroundColor: theme.palette.grey[500],
-            color: theme.palette.getContrastText(theme.palette.grey[500]),
-            "&:hover": {
-              backgroundColor: theme.palette.grey[600],
-            },
-          }}
-        >
-          {t("matches.actions.add")}
-        </Button>
-      )}
+      {!isMobile && addButton}
     </>
   );
 
@@ -207,22 +231,7 @@ const MatchesFilters: React.FC<Props> = ({
           >
             {t("matches.filters.filter")}
           </Button>
-          <Button
-            variant="contained"
-            size="small"
-            sx={{
-              width: "100%",
-              px: 2,
-              backgroundColor: theme.palette.grey[500],
-              color: theme.palette.getContrastText(theme.palette.grey[500]),
-              "&:hover": {
-                backgroundColor: theme.palette.grey[600],
-              },
-            }}
-            onClick={onAddMatch}
-          >
-            {t("matches.actions.add")}
-          </Button>
+          {addButton}
         </Box>
         <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
           <DialogTitle>{t("matches.filters.filter")}</DialogTitle>

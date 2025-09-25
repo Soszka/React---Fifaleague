@@ -118,7 +118,7 @@
       "questions": [
         {
           "question": "¿Cómo puedo añadir un nuevo partido a la app?",
-          "answer": "Para añadir un nuevo partido, ve a la sección \"Partidos\" y haz clic en el botón \"Añadir Partido\". Luego selecciona a tu compañero, elige los rivales e introduce el marcador del partido."
+          "answer": "Actualmente, solo el maestro del frontend Bartek puede añadir, editar o eliminar un partido en la aplicación, porque es el administrador."
         },
         {
           "question": "¿Qué estadísticas puedo consultar en la app?",
@@ -307,6 +307,11 @@
       "add": "Añadir Partido",
       "edit": "Editar",
       "delete": "Eliminar"
+    },
+    "tooltips": {
+      "add": "Solo el maestro del frontend Bartek puede añadir un partido.",
+      "edit": "Solo el maestro del frontend Bartek puede editar un partido.",
+      "delete": "Solo el maestro del frontend Bartek puede eliminar un partido."
     },
     "card": {
       "players": "Jugadores",

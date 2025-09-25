@@ -118,7 +118,7 @@
       "questions": [
         {
           "question": "How can I add a new match to the app?",
-          "answer": "To add a new match, go to the \"Matches\" section and click the \"Add Match\" button. Then select your teammate, choose the opponents, and enter the match score."
+          "answer": "Currently, only the frontend master Bartek can add, edit, or delete a match in the app because he is the admin."
         },
         {
           "question": "What statistics can I track in the app?",
@@ -306,6 +306,11 @@
       "add": "Add Match",
       "edit": "Edit",
       "delete": "Delete"
+    },
+    "tooltips": {
+      "add": "Only the frontend master Bartek can add a match.",
+      "edit": "Only the frontend master Bartek can edit a match.",
+      "delete": "Only the frontend master Bartek can delete a match."
     },
     "card": {
       "players": "Players",

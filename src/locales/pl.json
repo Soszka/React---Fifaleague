@@ -118,7 +118,7 @@
       "questions": [
         {
           "question": "Jak mogę dodać nowy mecz do aplikacji?",
-          "answer": "Aby dodać nowy mecz, przejdź do zakładki \"Mecze\" i kliknij przycisk \"Dodaj mecz\". Następnie wybierz obu zawodników swojego zespołu, wskaż przeciwników i wprowadź wynik meczu."
+          "answer": "Obecnie tylko mistrz frontendu Bartek ma możliwość dodania, edycji lub usunięcia nowego meczu z aplikacji, ponieważ jest adminem."
         },
         {
           "question": "Jakie statystyki mogę śledzić w aplikacji?",
@@ -303,6 +303,11 @@
       "add": "Dodaj mecz",
       "edit": "Edytuj",
       "delete": "Usuń"
+    },
+    "tooltips": {
+      "add": "Tylko mistrz frontendu Bartek może dodać mecz.",
+      "edit": "Tylko mistrz frontendu Bartek może edytować mecz.",
+      "delete": "Tylko mistrz frontendu Bartek może usunąć mecz."
     },
     "card": {
       "players": "Gracze",

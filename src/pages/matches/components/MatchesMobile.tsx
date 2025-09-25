@@ -32,6 +32,7 @@ interface Props {
   showAll: boolean;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
+  canManageMatches: boolean;
 }
 
 const MatchListMobile: React.FC<Props> = ({
@@ -46,6 +47,7 @@ const MatchListMobile: React.FC<Props> = ({
   showAll,
   onEdit,
   onDelete,
+  canManageMatches,
 }) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -147,33 +149,57 @@ const MatchListMobile: React.FC<Props> = ({
                 </Typography>
               </CardContent>
               <CardActions sx={{ justifyContent: "flex-end", pt: 0, pb: 0.5 }}>
-                <Tooltip title={t("matches.actions.edit") as string}>
-                  <IconButton
-                    size="small"
-                    onClick={() => onEdit(row.id)}
-                    sx={{
-                      color: theme.palette.primary.main,
-                      "&:hover": {
-                        backgroundColor: theme.palette.action.hover,
-                      },
-                    }}
-                  >
-                    <EditIcon fontSize="medium" />
-                  </IconButton>
+                <Tooltip
+                  title={
+                    (canManageMatches
+                      ? t("matches.actions.edit")
+                      : t("matches.tooltips.edit")) as string
+                  }
+                  disableHoverListener={canManageMatches}
+                  disableFocusListener={canManageMatches}
+                  disableTouchListener={canManageMatches}
+                >
+                  <span style={{ display: "inline-flex" }}>
+                    <IconButton
+                      size="small"
+                      onClick={() => onEdit(row.id)}
+                      disabled={!canManageMatches}
+                      sx={{
+                        color: theme.palette.primary.main,
+                        "&:hover": {
+                          backgroundColor: theme.palette.action.hover,
+                        },
+                      }}
+                    >
+                      <EditIcon fontSize="medium" />
+                    </IconButton>
+                  </span>
                 </Tooltip>
-                <Tooltip title={t("matches.actions.delete") as string}>
-                  <IconButton
-                    size="small"
-                    onClick={() => onDelete(row.id)}
-                    sx={{
-                      color: resultColor("LOSS"),
-                      "&:hover": {
-                        backgroundColor: theme.palette.action.hover,
-                      },
-                    }}
-                  >
-                    <DeleteIcon fontSize="medium" />
-                  </IconButton>
+                <Tooltip
+                  title={
+                    (canManageMatches
+                      ? t("matches.actions.delete")
+                      : t("matches.tooltips.delete")) as string
+                  }
+                  disableHoverListener={canManageMatches}
+                  disableFocusListener={canManageMatches}
+                  disableTouchListener={canManageMatches}
+                >
+                  <span style={{ display: "inline-flex" }}>
+                    <IconButton
+                      size="small"
+                      onClick={() => onDelete(row.id)}
+                      disabled={!canManageMatches}
+                      sx={{
+                        color: resultColor("LOSS"),
+                        "&:hover": {
+                          backgroundColor: theme.palette.action.hover,
+                        },
+                      }}
+                    >
+                      <DeleteIcon fontSize="medium" />
+                    </IconButton>
+                  </span>
                 </Tooltip>
               </CardActions>
             </Card>

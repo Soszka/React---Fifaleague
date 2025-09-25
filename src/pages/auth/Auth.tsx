@@ -39,7 +39,7 @@ import Title from "../../common/UI/Title";
 
 type FormValues = { email: string; password: string };
 
-const USERS = PLAYER_LABELS;
+const USERS = PLAYER_LABELS.filter((player) => player !== "Bartek");
 
 export default function Auth() {
   return (

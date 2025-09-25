@@ -70,6 +70,9 @@ const MatchesScreen: React.FC = () => {
   const currentUserDisplay = restoreDiacritics(emailName);
   const currentUserKey = normalize(currentUserDisplay);
 
+  const adminKey = normalize("Bartek");
+  const canManageMatches = currentUserKey === adminKey;
+
   const [showAll, setShowAll] = useState(false);
   const [rivalFilter, setRivalFilter] = useState<string | null>(null);
   const [resultFilter, setResultFilter] = useState<FilterResultOption>("");
@@ -195,13 +198,20 @@ const MatchesScreen: React.FC = () => {
     setDateTo(null);
   };
 
+  const handleAddMatch = () => {
+    if (!canManageMatches) return;
+    setOpenAddDialog(true);
+  };
+
   const handleEdit = (id: string) => {
+    if (!canManageMatches) return;
     const match = matches.find((m) => m.id === id) || null;
     setMatchToEdit(match);
     setOpenEditDialog(true);
   };
 
   const handleDelete = (id: string) => {
+    if (!canManageMatches) return;
     const match = matches.find((m) => m.id === id) || null;
     setMatchToDelete(match);
     setOpenDeleteDialog(true);
@@ -251,7 +261,8 @@ const MatchesScreen: React.FC = () => {
           latestDate={latestDate}
           uniqueTeams={uniqueTeams}
           onClearFilters={clearFilters}
-          onAddMatch={() => setOpenAddDialog(true)}
+          onAddMatch={handleAddMatch}
+          canManageMatches={canManageMatches}
         />
         {isMobile ? (
           <MatchListMobile
@@ -262,13 +273,14 @@ const MatchesScreen: React.FC = () => {
             onPageChange={setPage}
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={setRowsPerPage}
-          totalRows={sortedRows.length}
-          showAll={showAll}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-      ) : (
-        <MatchTableDesktop
+            totalRows={sortedRows.length}
+            showAll={showAll}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            canManageMatches={canManageMatches}
+          />
+        ) : (
+          <MatchTableDesktop
             rows={paginatedRows}
             loading={loading}
             error={error}
@@ -279,12 +291,13 @@ const MatchesScreen: React.FC = () => {
             onPageChange={setPage}
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={setRowsPerPage}
-          totalRows={sortedRows.length}
-          showAll={showAll}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-      )}
+            totalRows={sortedRows.length}
+            showAll={showAll}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            canManageMatches={canManageMatches}
+          />
+        )}
       </Paper>
       <AddMatchDialog
         open={openAddDialog}
