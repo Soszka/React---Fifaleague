@@ -10,6 +10,7 @@ import Matches from "./pages/matches/Matches";
 import StatsPage from "./pages/stats/Stats";
 import AboutPage from "./pages/about/About";
 import NewsPage from "./pages/news/News";
+import PendingPage from "./pages/pending/Pending";
 import RequireAuth from "./common/routing/RequireAuth";
 
 interface Props {
@@ -31,6 +32,7 @@ export function AppRoutes({ toggleTheme }: Props) {
           <Route path="ranking" element={<RankingPage />} />
           <Route path="teams" element={<TeamsPage />} />
           <Route path="matches" element={<Matches />} />
+          <Route path="pending" element={<PendingPage />} />
           <Route path="news" element={<NewsPage />} />
           <Route path="stats" element={<StatsPage />} />
           <Route path="about" element={<AboutPage />} />

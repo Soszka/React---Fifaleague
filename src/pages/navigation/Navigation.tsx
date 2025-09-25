@@ -29,11 +29,15 @@ import { useTranslation } from "react-i18next";
 import LogoDefault from "../../assets/Logo.png";
 import LogoLight from "../../assets/LogoDark.png";
 import { MatchActivityProvider } from "../../common/context/MatchActivityContext";
+import PendingActionsIcon from "@mui/icons-material/PendingActions";
+import { MatchesProvider } from "../../common/context/MatchesContext";
+import { PendingMatchesProvider } from "../../common/context/PendingMatchesContext";
 
 const navItems = [
   { key: "nav.menu.home", icon: <HomeIcon />, path: "home" },
   { key: "nav.menu.about", icon: <InfoIcon />, path: "about" },
   { key: "nav.menu.matches", icon: <SportsSoccerIcon />, path: "matches" },
+  { key: "nav.menu.pending", icon: <PendingActionsIcon />, path: "pending" },
   { key: "nav.menu.news", icon: <DynamicFeedIcon />, path: "news" },
   { key: "nav.menu.stats", icon: <BarChartIcon />, path: "stats" },
   { key: "nav.menu.table", icon: <TableChartIcon />, path: "table" },
@@ -238,9 +242,13 @@ export default function Navigation({ toggleTheme }: Props) {
             }),
         }}
       >
-        <MatchActivityProvider>
-          <Outlet context={{ isNavVisible: drawerOpen && isDesktop }} />
-        </MatchActivityProvider>
+        <MatchesProvider>
+          <PendingMatchesProvider>
+            <MatchActivityProvider>
+              <Outlet context={{ isNavVisible: drawerOpen && isDesktop }} />
+            </MatchActivityProvider>
+          </PendingMatchesProvider>
+        </MatchesProvider>
       </Box>
     </Box>
   );

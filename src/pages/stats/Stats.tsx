@@ -16,6 +16,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { SvgIconProps } from "@mui/material/SvgIcon";
+import type { SelectChangeEvent } from "@mui/material/Select";
 import { useTranslation } from "react-i18next";
 import Title from "../../common/UI/Title";
 import { useAllMatches } from "../../common/hooks/useAllMatches";
@@ -30,6 +31,7 @@ import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import { useAuth } from "../../common/context/AuthContext";
 import { formatDisplayName } from "../../common/utils/nameUtils";
 import { PLAYER_LABELS } from "../../common/constants/players";
+import type { PlayerLabel } from "../../common/constants/players";
 
 type Outcome = "win" | "draw" | "loss";
 
@@ -102,14 +104,13 @@ const StatsPage: React.FC = () => {
   const loggedName = authUser?.email?.split("@")[0] || "";
   const loggedLabel = formatDisplayName(loggedName);
 
-  const players = useMemo(() => [...PLAYER_LABELS], []);
+  const players = useMemo<PlayerLabel[]>(() => [...PLAYER_LABELS], []);
 
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState<PlayerLabel | "">("");
   useEffect(() => {
     if (!user && players.length) {
-      const defaultPlayer = players.includes(loggedLabel)
-        ? loggedLabel
-        : players[0];
+      const normalizedLogged = players.find((label) => label === loggedLabel);
+      const defaultPlayer = normalizedLogged ?? players[0];
       setUser(defaultPlayer);
     }
   }, [players, user, loggedLabel]);
@@ -415,7 +416,9 @@ const StatsPage: React.FC = () => {
           size="small"
           sx={{ minWidth: 200 }}
           value={user}
-          onChange={(e) => setUser(e.target.value)}
+          onChange={(e: SelectChangeEvent<PlayerLabel>) =>
+            setUser(e.target.value as PlayerLabel)
+          }
         >
           {players.map((p) => (
             <MenuItem key={p} value={p}>

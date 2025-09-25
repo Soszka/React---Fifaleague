@@ -2,6 +2,7 @@
   "nav.menu.home": "Home",
   "nav.menu.about": "About",
   "nav.menu.matches": "Matches",
+  "nav.menu.pending": "Pending",
   "nav.menu.news": "Updates",
   "nav.menu.stats": "Stats",
   "nav.menu.table": "Table",
@@ -308,9 +309,9 @@
       "delete": "Delete"
     },
     "tooltips": {
-      "add": "Only the frontend master Bartek can add a match.",
-      "edit": "Only the frontend master Bartek can edit a match.",
-      "delete": "Only the frontend master Bartek can delete a match."
+      "queueAdd": "Your proposal will be sent to Bartek for approval.",
+      "queueEdit": "This update will be sent to Bartek for approval.",
+      "queueDelete": "The removal request will be sent to Bartek for approval."
     },
     "card": {
       "players": "Players",
@@ -353,8 +354,52 @@
       "addSuccess": "Match added",
       "updateSuccess": "Match updated",
       "deleteSuccess": "Match removed",
+      "queueSuccess": "Match proposal sent for administrator approval.",
+      "queueUpdate": "Update sent for administrator approval.",
+      "queueDelete": "Removal request sent for administrator approval.",
       "error": "An error occurred",
       "empty": "No matches"
+    }
+  },
+
+  "pending": {
+    "title": "Pending",
+    "subtitle": "All match changes awaiting administrator review.",
+    "unknownUser": "Unknown user",
+    "empty": "No pending changes.",
+    "actions": {
+      "approve": "Approve",
+      "reject": "Reject"
+    },
+    "messages": {
+      "approveSuccess": "Change approved.",
+      "rejectSuccess": "Change rejected.",
+      "error": "Unable to process the request."
+    },
+    "tooltips": {
+      "adminOnly": "Only Bartek can approve or reject changes."
+    },
+    "card": {
+      "type": {
+        "create": "{{actor}} proposed adding a match",
+        "update": "{{actor}} proposed updating a match",
+        "delete": "{{actor}} proposed deleting a match"
+      },
+      "typeLabel": {
+        "create": "Creation",
+        "update": "Update",
+        "delete": "Removal"
+      },
+      "submitted": "Submitted {{date}}",
+      "details": "Match details",
+      "previous": "Current state",
+      "proposed": "Proposed change",
+      "teams": "Teams",
+      "score": "Score",
+      "matchDate": "Match date",
+      "matchDateFormat": "DD.MM.YYYY",
+      "dateFormat": "DD.MM.YYYY HH:mm",
+      "vs": "vs"
     }
   },
 

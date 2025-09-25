@@ -72,7 +72,7 @@ const MatchesFilters: React.FC<Props> = ({
 
   const tooltipAddTitle = canManageMatches
     ? (t("matches.actions.add") as string)
-    : (t("matches.tooltips.add") as string);
+    : (t("matches.tooltips.queueAdd") as string);
 
   const addButton = (
     <Tooltip
@@ -91,7 +91,6 @@ const MatchesFilters: React.FC<Props> = ({
           onClick={onAddMatch}
           variant="contained"
           size="small"
-          disabled={!canManageMatches}
           sx={{
             minWidth: "auto",
             px: 2,

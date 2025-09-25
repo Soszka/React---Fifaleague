@@ -21,6 +21,11 @@ import {
   MatchActivityPayload,
   MatchActivityType,
 } from "../types/matchActivity";
+import { normalizePlayerId } from "../constants/players";
+import {
+  PendingMatchData,
+  PendingMatchRequestPayload,
+} from "../types/pendingMatchRequest";
 
 export interface Match {
   id: string;
@@ -54,6 +59,8 @@ const initialState: State = {
 const MATCHES_COLLECTION_KEY = "matches";
 const ACTIVITY_LOG_KEY = "activityLogs";
 const ACTIVITY_LOG_PATH = `/${ACTIVITY_LOG_KEY}`;
+const PENDING_MATCHES_KEY = "pendingMatchRequests";
+const PENDING_MATCHES_PATH = `/${PENDING_MATCHES_KEY}`;
 
 type StoredMatch = Omit<Match, "id"> & { date: number | string };
 
@@ -132,13 +139,16 @@ const matchToPayload = (match: Match): Omit<Match, "id"> => ({
   date: match.date,
 });
 
+export type MatchActionResult = "completed" | "queued";
+
 const MatchesContext = createContext<{
   matches: Match[];
   loading: boolean;
   error: Error | null;
-  addMatch: (data: Omit<Match, "id">) => Promise<void>;
-  updateMatch: (match: Match) => Promise<void>;
-  removeMatch: (id: string) => Promise<void>;
+  canManageMatches: boolean;
+  addMatch: (data: Omit<Match, "id">) => Promise<MatchActionResult>;
+  updateMatch: (match: Match) => Promise<MatchActionResult>;
+  removeMatch: (id: string) => Promise<MatchActionResult>;
 } | null>(null);
 
 const matchesReducer = (state: State, action: Action): State => {
@@ -179,6 +189,8 @@ export const MatchesProvider: React.FC<{ children: ReactNode }> = ({
     ? restoreDiacritics(actorEmailName)
     : "Unknown";
   const actorId = user?.uid ?? (actorEmailName || "unknown");
+  const adminId = normalizePlayerId("Bartek");
+  const isAdmin = normalizePlayerId(actorDisplayName) === adminId;
 
   useEffect(() => {
     const unsubscribe = onValue(
@@ -221,7 +233,38 @@ export const MatchesProvider: React.FC<{ children: ReactNode }> = ({
     await set(logRef, payload);
   };
 
-  const addMatch = async (matchData: Omit<Match, "id">): Promise<void> => {
+  const toPendingData = (match: Match | Omit<Match, "id">): PendingMatchData => ({
+    player1: match.player1,
+    player2: match.player2,
+    rival1: match.rival1,
+    rival2: match.rival2,
+    result: match.result,
+    date: normalizeDateValue(match.date),
+  });
+
+  const queuePendingRequest = async (
+    payload: PendingMatchRequestPayload
+  ): Promise<void> => {
+    const record = {
+      actor: {
+        id: actorId,
+        displayName: actorDisplayName,
+      },
+      timestamp: Date.now(),
+      payload,
+    };
+
+    try {
+      const pendingRef = push(ref(rtdb, PENDING_MATCHES_PATH));
+      await set(pendingRef, record);
+    } catch (err) {
+      throw ensureError(err, "Failed to queue match request");
+    }
+  };
+
+  const addMatch = async (
+    matchData: Omit<Match, "id">
+  ): Promise<MatchActionResult> => {
     const newRef = push(ref(rtdb, "/"));
     const newId = newRef.key;
 
@@ -236,6 +279,20 @@ export const MatchesProvider: React.FC<{ children: ReactNode }> = ({
       const error = new Error("Invalid match date");
       dispatch({ type: "SET_ERROR", payload: error });
       throw error;
+    }
+
+    if (!isAdmin) {
+      try {
+        await queuePendingRequest({
+          type: "create",
+          match: toPendingData({ ...matchData, date: normalizedDate }),
+        });
+        return "queued";
+      } catch (err) {
+        const error = ensureError(err, "Failed to queue match request");
+        dispatch({ type: "SET_ERROR", payload: error });
+        throw error;
+      }
     }
 
     const newMatch: Match = {
@@ -264,16 +321,45 @@ export const MatchesProvider: React.FC<{ children: ReactNode }> = ({
       dispatch({ type: "SET_ERROR", payload: error });
       throw error;
     }
+
+    return "completed";
   };
 
-  const updateMatch = async (updatedMatch: Match): Promise<void> => {
+  const updateMatch = async (
+    updatedMatch: Match
+  ): Promise<MatchActionResult> => {
     const current = state.matches.find((m) => m.id === updatedMatch.id);
     const matchRef = ref(rtdb, `/${updatedMatch.id}`);
+    const normalizedDate = normalizeDateValue(updatedMatch.date);
 
-    dispatch({ type: "UPDATE_MATCH", payload: updatedMatch });
+    if (!Number.isFinite(normalizedDate)) {
+      const error = new Error("Invalid match date");
+      dispatch({ type: "SET_ERROR", payload: error });
+      throw error;
+    }
+
+    const normalizedMatch: Match = { ...updatedMatch, date: normalizedDate };
+
+    if (!isAdmin) {
+      try {
+        await queuePendingRequest({
+          type: "update",
+          matchId: normalizedMatch.id,
+          match: toPendingData(normalizedMatch),
+          previousMatch: current ? toPendingData(current) : undefined,
+        });
+        return "queued";
+      } catch (err) {
+        const error = ensureError(err, "Failed to queue match request");
+        dispatch({ type: "SET_ERROR", payload: error });
+        throw error;
+      }
+    }
+
+    dispatch({ type: "UPDATE_MATCH", payload: normalizedMatch });
 
     try {
-      await set(matchRef, matchToPayload(updatedMatch));
+      await set(matchRef, matchToPayload(normalizedMatch));
     } catch (err) {
       const error = ensureError(err, "Failed to update match");
       if (current) {
@@ -284,7 +370,7 @@ export const MatchesProvider: React.FC<{ children: ReactNode }> = ({
     }
 
     try {
-      await logActivity("update", updatedMatch);
+      await logActivity("update", normalizedMatch);
     } catch (err) {
       const error = ensureError(err, "Failed to log match update");
       if (current) {
@@ -294,13 +380,30 @@ export const MatchesProvider: React.FC<{ children: ReactNode }> = ({
       dispatch({ type: "SET_ERROR", payload: error });
       throw error;
     }
+
+    return "completed";
   };
 
-  const removeMatch = async (id: string): Promise<void> => {
+  const removeMatch = async (id: string): Promise<MatchActionResult> => {
     const existing = state.matches.find((m) => m.id === id);
-    if (!existing) return;
+    if (!existing) return "completed";
 
     const matchRef = ref(rtdb, `/${id}`);
+
+    if (!isAdmin) {
+      try {
+        await queuePendingRequest({
+          type: "delete",
+          matchId: id,
+          match: toPendingData(existing),
+        });
+        return "queued";
+      } catch (err) {
+        const error = ensureError(err, "Failed to queue match request");
+        dispatch({ type: "SET_ERROR", payload: error });
+        throw error;
+      }
+    }
 
     dispatch({ type: "REMOVE_MATCH", payload: id });
 
@@ -322,6 +425,8 @@ export const MatchesProvider: React.FC<{ children: ReactNode }> = ({
       dispatch({ type: "SET_ERROR", payload: error });
       throw error;
     }
+
+    return "completed";
   };
 
   return (
@@ -330,6 +435,7 @@ export const MatchesProvider: React.FC<{ children: ReactNode }> = ({
         matches: state.matches,
         loading: state.loading,
         error: state.error,
+        canManageMatches: isAdmin,
         addMatch,
         updateMatch,
         removeMatch,

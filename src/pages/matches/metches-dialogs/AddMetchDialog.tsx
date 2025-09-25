@@ -59,7 +59,7 @@ const AddMetchDialog: React.FC<AddMatchDialogProps> = ({ open, onClose }) => {
     }
     const resultString = `${parseInt(score1, 10)}-${parseInt(score2, 10)}`;
     try {
-      await addMatch({
+      const result = await addMatch({
         player1,
         player2,
         rival1,
@@ -67,7 +67,11 @@ const AddMetchDialog: React.FC<AddMatchDialogProps> = ({ open, onClose }) => {
         result: resultString,
         date: date.valueOf(),
       });
-      notify(t("matches.messages.addSuccess"), "success");
+      if (result === "queued") {
+        notify(t("matches.messages.queueSuccess"), "info");
+      } else {
+        notify(t("matches.messages.addSuccess"), "success");
+      }
       onClose();
       setPlayer1("");
       setPlayer2("");

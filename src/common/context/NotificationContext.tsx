@@ -2,8 +2,9 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Snackbar, Alert } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
-type Severity = "success" | "error";
+type Severity = "success" | "error" | "info";
 
 interface NotificationCtx {
   notify: (msg: string, severity?: Severity) => void;
@@ -44,6 +45,8 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
           icon={
             severity === "success" ? (
               <CheckCircleIcon fontSize="inherit" />
+            ) : severity === "info" ? (
+              <InfoOutlinedIcon fontSize="inherit" />
             ) : (
               <ErrorIcon fontSize="inherit" />
             )
@@ -55,6 +58,10 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
                 ? theme.palette.mode === "light"
                   ? theme.palette.success.main
                   : theme.palette.success.dark
+                : severity === "info"
+                ? theme.palette.mode === "light"
+                  ? theme.palette.info.main
+                  : theme.palette.info.dark
                 : theme.palette.mode === "light"
                 ? theme.palette.error.main
                 : theme.palette.error.dark,

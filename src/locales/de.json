@@ -2,6 +2,7 @@
   "nav.menu.home": "Startseite",
   "nav.menu.about": "Über",
   "nav.menu.matches": "Spiele",
+  "nav.menu.pending": "Ausstehend",
   "nav.menu.news": "Aktuelles",
   "nav.menu.stats": "Statistiken",
   "nav.menu.table": "Tabelle",
@@ -307,9 +308,9 @@
       "delete": "Löschen"
     },
     "tooltips": {
-      "add": "Nur der Frontend-Meister Bartek kann ein Spiel hinzufügen.",
-      "edit": "Nur der Frontend-Meister Bartek kann ein Spiel bearbeiten.",
-      "delete": "Nur der Frontend-Meister Bartek kann ein Spiel löschen."
+      "queueAdd": "Dein Vorschlag wird zur Freigabe an Bartek gesendet.",
+      "queueEdit": "Diese Änderung wird zur Freigabe an Bartek gesendet.",
+      "queueDelete": "Die Löschanfrage wird zur Freigabe an Bartek gesendet."
     },
     "card": {
       "players": "Spieler",
@@ -352,8 +353,52 @@
       "addSuccess": "Spiel hinzugefügt",
       "updateSuccess": "Spiel aktualisiert",
       "deleteSuccess": "Spiel entfernt",
+      "queueSuccess": "Der Vorschlag wurde zur Freigabe an den Administrator gesendet.",
+      "queueUpdate": "Die Aktualisierung wurde zur Freigabe an den Administrator gesendet.",
+      "queueDelete": "Die Löschanfrage wurde zur Freigabe an den Administrator gesendet.",
       "error": "Ein Fehler ist aufgetreten",
       "empty": "Keine Spiele"
+    }
+  },
+
+  "pending": {
+    "title": "Ausstehend",
+    "subtitle": "Alle Spieländerungen, die auf die Prüfung des Administrators warten.",
+    "unknownUser": "Unbekannter Benutzer",
+    "empty": "Keine ausstehenden Änderungen.",
+    "actions": {
+      "approve": "Genehmigen",
+      "reject": "Ablehnen"
+    },
+    "messages": {
+      "approveSuccess": "Änderung wurde genehmigt.",
+      "rejectSuccess": "Änderung wurde abgelehnt.",
+      "error": "Anfrage konnte nicht verarbeitet werden."
+    },
+    "tooltips": {
+      "adminOnly": "Nur Bartek kann Änderungen genehmigen oder ablehnen."
+    },
+    "card": {
+      "type": {
+        "create": "{{actor}} hat vorgeschlagen, ein Spiel hinzuzufügen",
+        "update": "{{actor}} hat vorgeschlagen, ein Spiel zu aktualisieren",
+        "delete": "{{actor}} hat vorgeschlagen, ein Spiel zu löschen"
+      },
+      "typeLabel": {
+        "create": "Erstellung",
+        "update": "Aktualisierung",
+        "delete": "Löschung"
+      },
+      "submitted": "Eingereicht am {{date}}",
+      "details": "Spieldetails",
+      "previous": "Aktueller Stand",
+      "proposed": "Vorgeschlagene Änderung",
+      "teams": "Teams",
+      "score": "Ergebnis",
+      "matchDate": "Spieldatum",
+      "matchDateFormat": "DD.MM.YYYY",
+      "dateFormat": "DD.MM.YYYY HH:mm",
+      "vs": "gegen"
     }
   },
 

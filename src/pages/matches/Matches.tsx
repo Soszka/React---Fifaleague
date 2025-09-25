@@ -11,11 +11,7 @@ import styles from "./matches.module.scss";
 import AddMatchDialog from "./metches-dialogs/AddMetchDialog";
 import EditMatchDialog from "./metches-dialogs/EditMetchDialog";
 import RemoveMatchDialog from "./metches-dialogs/RemoveMatchDialog";
-import {
-  MatchesProvider,
-  useMatches,
-  Match,
-} from "../../common/context/MatchesContext";
+import { useMatches, Match } from "../../common/context/MatchesContext";
 import { NotificationProvider } from "../../common/context/NotificationContext";
 import { useAuth } from "../../common/context/AuthContext";
 import {
@@ -60,7 +56,7 @@ const normalize = (s: string) => stripDiacritics(s).toLowerCase();
 const eq = (a = "", b = "") => normalize(a) === normalize(b);
 
 const MatchesScreen: React.FC = () => {
-  const { matches, loading, error } = useMatches();
+  const { matches, loading, error, canManageMatches } = useMatches();
   const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -69,9 +65,6 @@ const MatchesScreen: React.FC = () => {
   const emailName = user?.email?.split("@")[0] || "";
   const currentUserDisplay = restoreDiacritics(emailName);
   const currentUserKey = normalize(currentUserDisplay);
-
-  const adminKey = normalize("Bartek");
-  const canManageMatches = currentUserKey === adminKey;
 
   const [showAll, setShowAll] = useState(false);
   const [rivalFilter, setRivalFilter] = useState<string | null>(null);
@@ -199,19 +192,16 @@ const MatchesScreen: React.FC = () => {
   };
 
   const handleAddMatch = () => {
-    if (!canManageMatches) return;
     setOpenAddDialog(true);
   };
 
   const handleEdit = (id: string) => {
-    if (!canManageMatches) return;
     const match = matches.find((m) => m.id === id) || null;
     setMatchToEdit(match);
     setOpenEditDialog(true);
   };
 
   const handleDelete = (id: string) => {
-    if (!canManageMatches) return;
     const match = matches.find((m) => m.id === id) || null;
     setMatchToDelete(match);
     setOpenDeleteDialog(true);
@@ -319,9 +309,7 @@ const MatchesScreen: React.FC = () => {
 
 const Matches: React.FC = () => (
   <NotificationProvider>
-    <MatchesProvider>
-      <MatchesScreen />
-    </MatchesProvider>
+    <MatchesScreen />
   </NotificationProvider>
 );
 

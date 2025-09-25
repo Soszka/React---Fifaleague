@@ -30,6 +30,7 @@
   "nav.menu.home": "Strona główna",
   "nav.menu.about": "O aplikacji",
   "nav.menu.matches": "Mecze",
+  "nav.menu.pending": "Oczekujące",
   "nav.menu.news": "Aktualności",
   "nav.menu.stats": "Statystyki",
   "nav.menu.table": "Tabela",
@@ -305,9 +306,9 @@
       "delete": "Usuń"
     },
     "tooltips": {
-      "add": "Tylko mistrz frontendu Bartek może dodać mecz.",
-      "edit": "Tylko mistrz frontendu Bartek może edytować mecz.",
-      "delete": "Tylko mistrz frontendu Bartek może usunąć mecz."
+      "queueAdd": "Twoja propozycja zostanie wysłana do akceptacji Bartka.",
+      "queueEdit": "Zmiana zostanie wysłana do akceptacji Bartka.",
+      "queueDelete": "Prośba trafi do akceptacji Bartka."
     },
     "card": {
       "players": "Gracze",
@@ -351,8 +352,52 @@
       "addSuccess": "Dodano mecz",
       "updateSuccess": "Pomyślnie zaktualizowano mecz",
       "deleteSuccess": "Usunięto mecz",
+      "queueSuccess": "Propozycja dodania czeka na akceptację administratora.",
+      "queueUpdate": "Zmiana czeka na akceptację administratora.",
+      "queueDelete": "Prośba o usunięcie czeka na akceptację administratora.",
       "error": "Wystąpił błąd",
       "empty": "Brak meczów"
+    }
+  },
+
+  "pending": {
+    "title": "Oczekujące",
+    "subtitle": "Tutaj trafiają wszystkie zmiany wymagające akceptacji administratora.",
+    "unknownUser": "Nieznany użytkownik",
+    "empty": "Brak oczekujących zmian.",
+    "actions": {
+      "approve": "Akceptuj",
+      "reject": "Odrzuć"
+    },
+    "messages": {
+      "approveSuccess": "Zmiana została zatwierdzona.",
+      "rejectSuccess": "Zmiana została odrzucona.",
+      "error": "Nie udało się przetworzyć żądania."
+    },
+    "tooltips": {
+      "adminOnly": "Tylko Bartek może akceptować lub odrzucać zmiany."
+    },
+    "card": {
+      "type": {
+        "create": "{{actor}} zaproponował dodanie meczu",
+        "update": "{{actor}} zaproponował aktualizację meczu",
+        "delete": "{{actor}} zaproponował usunięcie meczu"
+      },
+      "typeLabel": {
+        "create": "Dodanie",
+        "update": "Edycja",
+        "delete": "Usunięcie"
+      },
+      "submitted": "Zgłoszono {{date}}",
+      "details": "Szczegóły meczu",
+      "previous": "Obecny stan",
+      "proposed": "Proponowana zmiana",
+      "teams": "Drużyny",
+      "score": "Wynik",
+      "matchDate": "Data meczu",
+      "matchDateFormat": "DD.MM.YYYY",
+      "dateFormat": "DD.MM.YYYY HH:mm",
+      "vs": "vs"
     }
   },
 

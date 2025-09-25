@@ -35,8 +35,12 @@ const RemoveMatchDialog: React.FC<RemoveMatchDialogProps> = ({
     }
 
     try {
-      await removeMatch(match.id);
-      notify(t("matches.messages.deleteSuccess"), "success");
+      const result = await removeMatch(match.id);
+      if (result === "queued") {
+        notify(t("matches.messages.queueDelete"), "info");
+      } else {
+        notify(t("matches.messages.deleteSuccess"), "success");
+      }
     } catch {
       notify(t("matches.messages.error"), "error");
     }

@@ -87,8 +87,12 @@ const EditMetchDialog: React.FC<EditMatchDialogProps> = ({
       date: date.valueOf(),
     };
     try {
-      await updateMatch(updatedMatch);
-      notify(t("matches.messages.updateSuccess"), "success");
+      const result = await updateMatch(updatedMatch);
+      if (result === "queued") {
+        notify(t("matches.messages.queueUpdate"), "info");
+      } else {
+        notify(t("matches.messages.updateSuccess"), "success");
+      }
       onClose();
     } catch {
       notify(t("matches.messages.error"), "error");

@@ -2,6 +2,7 @@
   "nav.menu.home": "Inicio",
   "nav.menu.about": "Acerca de",
   "nav.menu.matches": "Partidos",
+  "nav.menu.pending": "Pendientes",
   "nav.menu.news": "Actualizaciones",
   "nav.menu.stats": "Estadísticas",
   "nav.menu.table": "Tabla",
@@ -309,9 +310,9 @@
       "delete": "Eliminar"
     },
     "tooltips": {
-      "add": "Solo el maestro del frontend Bartek puede añadir un partido.",
-      "edit": "Solo el maestro del frontend Bartek puede editar un partido.",
-      "delete": "Solo el maestro del frontend Bartek puede eliminar un partido."
+      "queueAdd": "Tu propuesta se enviará a Bartek para su aprobación.",
+      "queueEdit": "Esta modificación se enviará a Bartek para su aprobación.",
+      "queueDelete": "La solicitud de eliminación se enviará a Bartek para su aprobación."
     },
     "card": {
       "players": "Jugadores",
@@ -354,8 +355,52 @@
       "addSuccess": "Partido añadido",
       "updateSuccess": "Partido actualizado",
       "deleteSuccess": "Partido eliminado",
+      "queueSuccess": "La propuesta se envió para la aprobación del administrador.",
+      "queueUpdate": "La actualización se envió para la aprobación del administrador.",
+      "queueDelete": "La solicitud de eliminación se envió para la aprobación del administrador.",
       "error": "Ocurrió un error",
       "empty": "No hay partidos"
+    }
+  },
+
+  "pending": {
+    "title": "Pendientes",
+    "subtitle": "Todos los cambios de partidos a la espera de revisión del administrador.",
+    "unknownUser": "Usuario desconocido",
+    "empty": "No hay cambios pendientes.",
+    "actions": {
+      "approve": "Aprobar",
+      "reject": "Rechazar"
+    },
+    "messages": {
+      "approveSuccess": "Cambio aprobado.",
+      "rejectSuccess": "Cambio rechazado.",
+      "error": "No se pudo procesar la solicitud."
+    },
+    "tooltips": {
+      "adminOnly": "Solo Bartek puede aprobar o rechazar cambios."
+    },
+    "card": {
+      "type": {
+        "create": "{{actor}} propuso añadir un partido",
+        "update": "{{actor}} propuso actualizar un partido",
+        "delete": "{{actor}} propuso eliminar un partido"
+      },
+      "typeLabel": {
+        "create": "Alta",
+        "update": "Actualización",
+        "delete": "Eliminación"
+      },
+      "submitted": "Enviado el {{date}}",
+      "details": "Detalles del partido",
+      "previous": "Estado actual",
+      "proposed": "Cambio propuesto",
+      "teams": "Equipos",
+      "score": "Marcador",
+      "matchDate": "Fecha del partido",
+      "matchDateFormat": "DD/MM/YYYY",
+      "dateFormat": "DD/MM/YYYY HH:mm",
+      "vs": "vs"
     }
   },
 

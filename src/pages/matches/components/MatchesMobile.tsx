@@ -153,7 +153,7 @@ const MatchListMobile: React.FC<Props> = ({
                   title={
                     (canManageMatches
                       ? t("matches.actions.edit")
-                      : t("matches.tooltips.edit")) as string
+                      : t("matches.tooltips.queueEdit")) as string
                   }
                   disableHoverListener={canManageMatches}
                   disableFocusListener={canManageMatches}
@@ -163,7 +163,6 @@ const MatchListMobile: React.FC<Props> = ({
                     <IconButton
                       size="small"
                       onClick={() => onEdit(row.id)}
-                      disabled={!canManageMatches}
                       sx={{
                         color: theme.palette.primary.main,
                         "&:hover": {
@@ -179,7 +178,7 @@ const MatchListMobile: React.FC<Props> = ({
                   title={
                     (canManageMatches
                       ? t("matches.actions.delete")
-                      : t("matches.tooltips.delete")) as string
+                      : t("matches.tooltips.queueDelete")) as string
                   }
                   disableHoverListener={canManageMatches}
                   disableFocusListener={canManageMatches}
@@ -189,7 +188,6 @@ const MatchListMobile: React.FC<Props> = ({
                     <IconButton
                       size="small"
                       onClick={() => onDelete(row.id)}
-                      disabled={!canManageMatches}
                       sx={{
                         color: resultColor("LOSS"),
                         "&:hover": {
