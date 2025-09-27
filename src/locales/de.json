@@ -397,7 +397,8 @@
       "proposed": "Vorgeschlagene Änderung",
       "teams": "Teams",
       "score": "Ergebnis",
-      "matchDate": "Spieldatum",
+      "matchDate": "Spieldatum: {{date}}",
+      "matchDateUnknown": "Spieldatum: unbekannt",
       "matchDateFormat": "DD.MM.YYYY",
       "dateFormat": "DD.MM.YYYY HH:mm",
       "vs": "gegen"

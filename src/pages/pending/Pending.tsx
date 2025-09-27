@@ -14,6 +14,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
@@ -32,10 +33,22 @@ import { NotificationProvider } from "../../common/context/NotificationContext";
 const formatScore = (score: string) =>
   score.includes(":") ? score : score.replace(/-/g, " : ");
 
-const formatTeams = (match: PendingMatchData, t: (key: string) => string) => {
-  const teamA = `${match.player1} & ${match.player2}`;
-  const teamB = `${match.rival1} & ${match.rival2}`;
-  return `${teamA} ${t("pending.card.vs")} ${teamB}`;
+const normalizeTimestamp = (value: unknown): dayjs.Dayjs | null => {
+  if (value === null || value === undefined) {
+    return null;
+  }
+
+  const numeric =
+    typeof value === "string" ? Number.parseInt(value, 10) : (value as number);
+
+  if (Number.isNaN(numeric)) {
+    return null;
+  }
+
+  const normalizedValue = numeric < 1e12 ? numeric * 1000 : numeric;
+  const parsed = dayjs(normalizedValue);
+
+  return parsed.isValid() ? parsed : null;
 };
 
 const PendingSkeletonCard: React.FC = () => (
@@ -74,6 +87,7 @@ const PendingContent: React.FC = () => {
     usePendingMatches();
   const { notify } = useNotification();
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const typeVisuals = useMemo(
     () => ({
@@ -150,77 +164,159 @@ const PendingContent: React.FC = () => {
     }
   };
 
-  const renderMatchSection = (
+  const ensurePlayerName = (value: string) =>
+    value && value.trim().length ? value.trim() : t("pending.unknownUser");
+
+  const buildTeamLabels = (match: PendingMatchData) => {
+    const teamAPlayers = [
+      ensurePlayerName(match.player1),
+      ensurePlayerName(match.player2),
+    ];
+    const teamBPlayers = [
+      ensurePlayerName(match.rival1),
+      ensurePlayerName(match.rival2),
+    ];
+
+    return {
+      teamA: {
+        desktop: teamAPlayers.join(" & "),
+        mobile: teamAPlayers.join("\n&\n"),
+      },
+      teamB: {
+        desktop: teamBPlayers.join(" & "),
+        mobile: teamBPlayers.join("\n&\n"),
+      },
+    };
+  };
+
+  const formatMatchDate = (value: PendingMatchData["date"]) => {
+    const parsed = normalizeTimestamp(value);
+    return parsed ? parsed.format(t("pending.card.matchDateFormat")) : null;
+  };
+
+  const renderMatchOverview = (
     match: PendingMatchData,
     label: string,
     options: { highlight?: boolean; accentColor: string }
   ) => {
     const { highlight = false, accentColor } = options;
+    const { teamA, teamB } = buildTeamLabels(match);
+    const matchDate = formatMatchDate(match.date);
+    const dateLabel = matchDate
+      ? t("pending.card.matchDate", { date: matchDate })
+      : t("pending.card.matchDateUnknown");
+    const score = formatScore(match.result);
+
     const borderColor = alpha(
-      highlight ? accentColor : theme.palette.divider,
-      theme.palette.mode === "dark" ? 0.5 : highlight ? 0.35 : 0.8
+      accentColor,
+      theme.palette.mode === "dark"
+        ? highlight
+          ? 0.5
+          : 0.35
+        : highlight
+        ? 0.28
+        : 0.18
     );
-    const background = highlight
-      ? alpha(accentColor, theme.palette.mode === "dark" ? 0.12 : 0.1)
-      : alpha(theme.palette.background.paper, theme.palette.mode === "dark" ? 0.4 : 0.9);
-    const scoreTextColor = highlight
+    const backgroundColor = highlight
+      ? alpha(accentColor, theme.palette.mode === "dark" ? 0.22 : 0.12)
+      : alpha(
+          theme.palette.mode === "dark"
+            ? theme.palette.background.paper
+            : theme.palette.grey[100],
+          theme.palette.mode === "dark" ? 0.7 : 1
+        );
+    const scoreColor = highlight
       ? theme.palette.mode === "dark"
         ? theme.palette.common.white
-        : theme.palette.getContrastText(accentColor)
+        : accentColor
       : theme.palette.text.primary;
-    const subtleText = highlight
-      ? alpha(theme.palette.getContrastText(accentColor), 0.85)
-      : theme.palette.text.secondary;
 
     return (
-      <Paper
-        elevation={0}
-        sx={{
-          flex: 1,
-          borderRadius: 2,
-          border: `1px solid ${borderColor}`,
-          backgroundColor: background,
-          p: { xs: 1.75, md: 2 },
-          display: "grid",
-          gap: 1.25,
-          minWidth: 0,
-        }}
-      >
+      <Stack spacing={1.25} flex={1} minWidth={0}>
         <Typography
-          variant="caption"
-          fontWeight={600}
-          sx={{ textTransform: "uppercase", letterSpacing: 0.8, color: subtleText }}
+          variant="overline"
+          sx={{
+            letterSpacing: 1,
+            textTransform: "uppercase",
+            color: highlight
+              ? alpha(accentColor, 0.9)
+              : alpha(theme.palette.text.secondary, 0.9),
+            fontWeight: 700,
+          }}
         >
           {label}
         </Typography>
-        <Stack spacing={0.5}>
-          <Typography variant="subtitle2" color="text.secondary" fontWeight={600}>
-            {t("pending.card.teams")}
-          </Typography>
-          <Typography variant="body2" sx={{ whiteSpace: "pre-line", fontWeight: 600 }}>
-            {formatTeams(match, t)}
-          </Typography>
-        </Stack>
-        <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
-          <Box
+        <Paper
+          elevation={0}
+          sx={{
+            borderRadius: 2.5,
+            border: `1px solid ${borderColor}`,
+            backgroundColor,
+            px: { xs: 1.75, sm: 2.5 },
+            py: { xs: 1.5, sm: 1.9 },
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "minmax(0, 1fr) auto minmax(0, 1fr)",
+              sm: "minmax(0, 1fr) minmax(110px, 160px) minmax(0, 1fr)",
+            },
+            gap: { xs: 1.25, sm: 2.75 },
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            variant="subtitle1"
+            fontWeight={700}
+            title={teamA.desktop}
             sx={{
-              px: 1.25,
-              py: 0.65,
-              borderRadius: 1.5,
-              fontWeight: 700,
-              bgcolor: alpha(accentColor, theme.palette.mode === "dark" ? 0.2 : 0.12),
-              color: scoreTextColor,
+              minWidth: 0,
+              textAlign: { xs: "left", sm: "right" },
+              whiteSpace: { xs: "pre-line", sm: "nowrap" },
+              overflow: { xs: "visible", sm: "hidden" },
+              textOverflow: { xs: "clip", sm: "ellipsis" },
+              textTransform: { xs: "none", sm: "uppercase" },
             }}
           >
-            {formatScore(match.result)}
-          </Box>
-          <Typography variant="body2" color="text.secondary" fontWeight={500}>
-            {t("pending.card.matchDate", {
-              date: dayjs(match.date).format(t("pending.card.matchDateFormat")),
-            })}
+            {isSmallScreen ? teamA.mobile : teamA.desktop}
           </Typography>
-        </Stack>
-      </Paper>
+          <Stack spacing={0.5} alignItems="center" sx={{ textAlign: "center" }}>
+            <Typography
+              variant="h4"
+              fontWeight={800}
+              sx={{
+                letterSpacing: -0.8,
+                color: scoreColor,
+                textShadow: highlight
+                  ? `0 12px 26px ${alpha(accentColor, 0.25)}`
+                  : "none",
+              }}
+            >
+              {score}
+            </Typography>
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              sx={{ fontWeight: 600 }}
+            >
+              {dateLabel}
+            </Typography>
+          </Stack>
+          <Typography
+            variant="subtitle1"
+            fontWeight={700}
+            title={teamB.desktop}
+            sx={{
+              minWidth: 0,
+              textAlign: { xs: "right", sm: "left" },
+              whiteSpace: { xs: "pre-line", sm: "nowrap" },
+              overflow: { xs: "visible", sm: "hidden" },
+              textOverflow: { xs: "clip", sm: "ellipsis" },
+              textTransform: { xs: "none", sm: "uppercase" },
+            }}
+          >
+            {isSmallScreen ? teamB.mobile : teamB.desktop}
+          </Typography>
+        </Paper>
+      </Stack>
     );
   };
 
@@ -306,120 +402,202 @@ const PendingContent: React.FC = () => {
           <Card
             key={item.id}
             sx={{
+              position: "relative",
+              overflow: "hidden",
               borderRadius: 3,
-              border: `1px solid ${alpha(visual.color, theme.palette.mode === "dark" ? 0.4 : 0.25)}`,
-              boxShadow: theme.shadows[2],
-              transition: "transform 0.3s ease, box-shadow 0.3s ease",
-              "&:hover": {
-                transform: "translateY(-4px)",
-                boxShadow: theme.shadows[4],
-              },
+              border: `1px solid ${alpha(visual.color, theme.palette.mode === "dark" ? 0.5 : 0.22)}`,
+              backgroundColor:
+                theme.palette.mode === "dark"
+                  ? alpha(theme.palette.background.paper, 0.94)
+                  : theme.palette.common.white,
+              boxShadow:
+                theme.palette.mode === "dark"
+                  ? `0 18px 36px ${alpha(theme.palette.common.black, 0.45)}`
+                  : `0 18px 38px ${alpha(visual.color, 0.18)}`,
+              transition: "transform 0.4s ease, box-shadow 0.4s ease",
               display: "flex",
               flexDirection: "column",
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                inset: 0,
+                borderRadius: "inherit",
+                background: `linear-gradient(120deg, transparent 0%, ${alpha(
+                  visual.color,
+                  theme.palette.mode === "dark" ? 0.24 : 0.18
+                )} 55%, transparent 90%)`,
+                transform: "translateX(-120%) skewX(-16deg)",
+                transition: "transform 0.6s cubic-bezier(0.22, 1, 0.36, 1)",
+                pointerEvents: "none",
+              },
+              "&:hover": {
+                transform: "translateY(-6px)",
+                boxShadow: `0 28px 48px ${alpha(visual.color, 0.28)}`,
+              },
+              "&:hover::before": {
+                transform: "translateX(130%) skewX(-16deg)",
+              },
+              "&:hover .pending-card-icon": {
+                transform: "scale(1.08) rotate(4deg)",
+              },
+              "&:hover .pending-card-icon svg": {
+                transform: "scale(1.08)",
+              },
             }}
           >
-            <CardContent sx={{ p: { xs: 2.25, md: 2.75 }, flexGrow: 1 }}>
-              <Stack spacing={2.5}>
-                <Stack
-                  direction={{ xs: "column", sm: "row" }}
-                  spacing={2}
-                  alignItems={{ xs: "flex-start", sm: "center" }}
-                >
-                  <Stack direction="row" spacing={1.75} alignItems="center" flex={1} width="100%">
-                    <Avatar
-                      sx={{
-                        bgcolor: alpha(visual.color, theme.palette.mode === "dark" ? 0.25 : 0.15),
-                        color:
-                          theme.palette.mode === "dark"
-                            ? theme.palette.common.white
-                            : visual.color,
-                        width: 52,
-                        height: 52,
-                      }}
+            <CardContent
+              sx={{
+                p: { xs: 2.25, md: 2.75 },
+                flexGrow: 1,
+                position: "relative",
+                zIndex: 1,
+                display: "flex",
+                flexDirection: "column",
+                gap: { xs: 2.25, sm: 2.75 },
+              }}
+            >
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: { xs: "1fr auto", sm: "1fr auto" },
+                  columnGap: { xs: 1.5, sm: 2.5 },
+                  rowGap: { xs: 1.25, sm: 0.75 },
+                  alignItems: { xs: "flex-start", sm: "center" },
+                }}
+              >
+                <Stack spacing={{ xs: 1, sm: 1.1 }} sx={{ minWidth: 0 }}>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      letterSpacing: 1,
+                      textTransform: "uppercase",
+                      color: alpha(visual.color, 0.95),
+                      fontWeight: 700,
+                    }}
+                  >
+                    {t(`pending.card.typeLabel.${item.type}`)}
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    fontWeight={700}
+                    sx={{ lineHeight: 1.25, letterSpacing: -0.2 }}
+                  >
+                    {item.typeLabel}
+                  </Typography>
+                  <Stack
+                    direction="row"
+                    spacing={0.75}
+                    alignItems="center"
+                    sx={{ color: "text.secondary" }}
+                  >
+                    <AccessTimeRoundedIcon sx={{ fontSize: 18 }} />
+                    <Typography
+                      variant="caption"
+                      color="inherit"
+                      sx={{ fontWeight: 600 }}
                     >
-                      <Icon fontSize="medium" />
-                    </Avatar>
-                    <Stack spacing={0.75} flex={1} minWidth={0}>
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          letterSpacing: 0.8,
-                          textTransform: "uppercase",
-                          color: alpha(visual.color, 0.9),
-                          fontWeight: 600,
-                        }}
-                      >
-                        {t(`pending.card.typeLabel.${item.type}`)}
-                      </Typography>
-                      <Typography variant="h6" fontWeight={600} sx={{ lineHeight: 1.3 }}>
-                        {item.typeLabel}
-                      </Typography>
-                    </Stack>
-                  </Stack>
-                  <Stack direction="row" spacing={1} alignItems="center" sx={{ color: "text.secondary" }}>
-                    <AccessTimeRoundedIcon sx={{ fontSize: 20 }} />
-                    <Typography variant="body2" fontWeight={500}>
                       {t("pending.card.submitted", { date: item.submittedAt })}
                     </Typography>
                   </Stack>
                 </Stack>
-
-                <Stack
-                  direction={{ xs: "column", md: "row" }}
-                  spacing={2}
-                  alignItems="stretch"
+                <Avatar
+                  className="pending-card-icon"
+                  sx={{
+                    bgcolor: alpha(visual.color, theme.palette.mode === "dark" ? 0.22 : 0.12),
+                    color:
+                      theme.palette.mode === "dark"
+                        ? theme.palette.common.white
+                        : visual.color,
+                    width: { xs: 48, sm: 56 },
+                    height: { xs: 48, sm: 56 },
+                    border: `2px solid ${alpha(
+                      visual.color,
+                      theme.palette.mode === "dark" ? 0.45 : 0.28
+                    )}`,
+                    transition: "transform 0.45s ease",
+                    alignSelf: { xs: "flex-start", sm: "center" },
+                  }}
                 >
-                  {item.previousMatch
-                    ? renderMatchSection(item.previousMatch, t("pending.card.previous"), {
-                        highlight: false,
-                        accentColor: visual.color,
-                      })
-                    : null}
-                  {renderMatchSection(
-                    item.baseMatch,
-                    item.previousMatch
-                      ? t("pending.card.proposed")
-                      : t("pending.card.details"),
-                    {
-                      highlight: Boolean(item.previousMatch),
-                      accentColor: visual.color,
-                    }
-                  )}
-                </Stack>
+                  <Icon fontSize="large" sx={{ transition: "transform 0.45s ease" }} />
+                </Avatar>
+              </Box>
 
-                <Box display="flex" justifyContent="flex-end" gap={1.25} mt={0.5}>
-                  <Tooltip title={actionTooltip} disableHoverListener={isAdmin}>
-                    <span>
-                      <Button
-                        variant="outlined"
-                        color="inherit"
-                        startIcon={<CancelIcon />}
-                        onClick={() => handleReject(item.id)}
-                        disabled={disableActions}
-                        size="small"
-                        sx={{ fontWeight: 600, px: 2.5, minWidth: 120 }}
-                      >
-                        {t("pending.actions.reject")}
-                      </Button>
-                    </span>
-                  </Tooltip>
-                  <Tooltip title={actionTooltip} disableHoverListener={isAdmin}>
-                    <span>
-                      <Button
-                        variant="contained"
-                        color="success"
-                        startIcon={<CheckCircleIcon />}
-                        onClick={() => handleApprove(item.id)}
-                        disabled={disableActions}
-                        size="small"
-                        sx={{ fontWeight: 700, px: 2.75, minWidth: 140 }}
-                      >
-                        {t("pending.actions.approve")}
-                      </Button>
-                    </span>
-                  </Tooltip>
-                </Box>
+              <Stack
+                direction={{ xs: "column", md: item.previousMatch ? "row" : "column" }}
+                spacing={{ xs: 2, md: 2.5 }}
+              >
+                {item.previousMatch
+                  ? renderMatchOverview(item.previousMatch, t("pending.card.previous"), {
+                      highlight: false,
+                      accentColor: visual.color,
+                    })
+                  : null}
+                {renderMatchOverview(
+                  item.baseMatch,
+                  item.previousMatch
+                    ? t("pending.card.proposed")
+                    : t("pending.card.details"),
+                  {
+                    highlight: true,
+                    accentColor: visual.color,
+                  }
+                )}
               </Stack>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: { xs: "stretch", sm: "flex-end" },
+                  gap: 1.25,
+                  flexWrap: { xs: "wrap", sm: "nowrap" },
+                  mt: 0.5,
+                }}
+              >
+                <Tooltip title={actionTooltip} disableHoverListener={isAdmin}>
+                  <Box
+                    component="span"
+                    sx={{
+                      display: "inline-flex",
+                      flex: isSmallScreen ? "1 1 100%" : "0 0 auto",
+                    }}
+                  >
+                    <Button
+                      fullWidth={isSmallScreen}
+                      variant="outlined"
+                      color="inherit"
+                      startIcon={<CancelIcon />}
+                      onClick={() => handleReject(item.id)}
+                      disabled={disableActions}
+                      size="small"
+                      sx={{ fontWeight: 600, px: 2.5, minWidth: { xs: "100%", sm: 132 } }}
+                    >
+                      {t("pending.actions.reject")}
+                    </Button>
+                  </Box>
+                </Tooltip>
+                <Tooltip title={actionTooltip} disableHoverListener={isAdmin}>
+                  <Box
+                    component="span"
+                    sx={{
+                      display: "inline-flex",
+                      flex: isSmallScreen ? "1 1 100%" : "0 0 auto",
+                    }}
+                  >
+                    <Button
+                      fullWidth={isSmallScreen}
+                      variant="contained"
+                      color="success"
+                      startIcon={<CheckCircleIcon />}
+                      onClick={() => handleApprove(item.id)}
+                      disabled={disableActions}
+                      size="small"
+                      sx={{ fontWeight: 700, px: 2.75, minWidth: { xs: "100%", sm: 148 } }}
+                    >
+                      {t("pending.actions.approve")}
+                    </Button>
+                  </Box>
+                </Tooltip>
+              </Box>
             </CardContent>
           </Card>
         );

@@ -399,7 +399,8 @@
       "proposed": "Cambio propuesto",
       "teams": "Equipos",
       "score": "Marcador",
-      "matchDate": "Fecha del partido",
+      "matchDate": "Fecha del partido: {{date}}",
+      "matchDateUnknown": "Fecha del partido: por confirmar",
       "matchDateFormat": "DD/MM/YYYY",
       "dateFormat": "DD/MM/YYYY HH:mm",
       "vs": "vs"
