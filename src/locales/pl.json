@@ -119,7 +119,7 @@
       "questions": [
         {
           "question": "Jak mogę dodać nowy mecz do aplikacji?",
-          "answer": "Obecnie tylko mistrz frontendu Bartek ma możliwość dodania, edycji lub usunięcia nowego meczu z aplikacji, ponieważ jest adminem."
+          "answer": "Każdy zalogowany gracz w zakładce \"Mecze\" może dodać, edytować lub poprosić o usunięcie spotkania. Zmiany trafiają jednak do kolejki i dopiero Bartek je zatwierdza – wtedy tabela oraz statystyki aktualizują się automatycznie."
         },
         {
           "question": "Jakie statystyki mogę śledzić w aplikacji?",
@@ -352,9 +352,9 @@
       "addSuccess": "Dodano mecz",
       "updateSuccess": "Pomyślnie zaktualizowano mecz",
       "deleteSuccess": "Usunięto mecz",
-      "queueSuccess": "Propozycja dodania czeka na akceptację administratora.",
-      "queueUpdate": "Zmiana czeka na akceptację administratora.",
-      "queueDelete": "Prośba o usunięcie czeka na akceptację administratora.",
+      "queueSuccess": "Propozycja dodania czeka na akceptację Bartka.",
+      "queueUpdate": "Zmiana czeka na akceptację Bartka.",
+      "queueDelete": "Prośba o usunięcie czeka na akceptację Bartka.",
       "error": "Wystąpił błąd",
       "empty": "Brak meczów"
     }
@@ -362,9 +362,11 @@
 
   "pending": {
     "title": "Oczekujące",
-    "subtitle": "Tutaj trafiają wszystkie zmiany wymagające akceptacji administratora.",
+    "subtitle": "Zajrzyj do kolejki... Oczekujące",
     "unknownUser": "Nieznany użytkownik",
     "empty": "Brak oczekujących zmian.",
+    "emptyTitle": "Brak zmian w kolejce",
+    "emptyDescription": "Gdy gracze dodadzą, zaktualizują lub poproszą o usunięcie meczu, zgłoszenia pojawią się tutaj i będą czekały na akceptację Bartka.",
     "actions": {
       "approve": "Akceptuj",
       "reject": "Odrzuć"

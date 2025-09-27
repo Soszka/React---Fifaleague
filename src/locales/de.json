@@ -117,7 +117,7 @@
       "questions": [
         {
           "question": "Wie kann ich ein neues Spiel in der App hinzufügen?",
-          "answer": "Der Frontend-Meister Bartek kann derzeit als Administrator allein neue Spiele zur App hinzufügen, bearbeiten oder löschen."
+          "answer": "Jeder angemeldete Nutzer kann im Bereich \"Spiele\" ein Match hinzufügen, bearbeiten oder eine Löschung anstoßen. Die Änderung landet jedoch in Barteks Prüfschleife und erst nach seiner Freigabe aktualisieren sich Tabelle und Statistiken."
         },
         {
           "question": "Welche Statistiken kann ich in der App verfolgen?",
@@ -353,9 +353,9 @@
       "addSuccess": "Spiel hinzugefügt",
       "updateSuccess": "Spiel aktualisiert",
       "deleteSuccess": "Spiel entfernt",
-      "queueSuccess": "Der Vorschlag wurde zur Freigabe an den Administrator gesendet.",
-      "queueUpdate": "Die Aktualisierung wurde zur Freigabe an den Administrator gesendet.",
-      "queueDelete": "Die Löschanfrage wurde zur Freigabe an den Administrator gesendet.",
+      "queueSuccess": "Der Vorschlag wurde zur Freigabe an Bartek gesendet.",
+      "queueUpdate": "Die Aktualisierung wurde zur Freigabe an Bartek gesendet.",
+      "queueDelete": "Die Löschanfrage wurde zur Freigabe an Bartek gesendet.",
       "error": "Ein Fehler ist aufgetreten",
       "empty": "Keine Spiele"
     }
@@ -363,9 +363,11 @@
 
   "pending": {
     "title": "Ausstehend",
-    "subtitle": "Alle Spieländerungen, die auf die Prüfung des Administrators warten.",
+    "subtitle": "Sieh dir die Warteschlange an... Ausstehend",
     "unknownUser": "Unbekannter Benutzer",
     "empty": "Keine ausstehenden Änderungen.",
+    "emptyTitle": "Keine Anfragen in der Warteschlange",
+    "emptyDescription": "Wenn Spieler Spieländerungen einreichen, erscheinen sie hier, bis Bartek sie freigibt.",
     "actions": {
       "approve": "Genehmigen",
       "reject": "Ablehnen"

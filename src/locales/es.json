@@ -119,7 +119,7 @@
       "questions": [
         {
           "question": "¿Cómo puedo añadir un nuevo partido a la app?",
-          "answer": "Actualmente, solo el maestro del frontend Bartek puede añadir, editar o eliminar un partido en la aplicación, porque es el administrador."
+          "answer": "Cualquier usuario conectado puede añadir, editar o solicitar la eliminación de un partido desde la pestaña \"Partidos\". El cambio pasa a la cola de revisión de Bartek y la tabla solo se actualiza cuando él lo aprueba."
         },
         {
           "question": "¿Qué estadísticas puedo consultar en la app?",
@@ -355,9 +355,9 @@
       "addSuccess": "Partido añadido",
       "updateSuccess": "Partido actualizado",
       "deleteSuccess": "Partido eliminado",
-      "queueSuccess": "La propuesta se envió para la aprobación del administrador.",
-      "queueUpdate": "La actualización se envió para la aprobación del administrador.",
-      "queueDelete": "La solicitud de eliminación se envió para la aprobación del administrador.",
+      "queueSuccess": "La propuesta se envió para la aprobación de Bartek.",
+      "queueUpdate": "La actualización se envió para la aprobación de Bartek.",
+      "queueDelete": "La solicitud de eliminación se envió para la aprobación de Bartek.",
       "error": "Ocurrió un error",
       "empty": "No hay partidos"
     }
@@ -365,9 +365,11 @@
 
   "pending": {
     "title": "Pendientes",
-    "subtitle": "Todos los cambios de partidos a la espera de revisión del administrador.",
+    "subtitle": "Revisa la cola... Pendientes",
     "unknownUser": "Usuario desconocido",
     "empty": "No hay cambios pendientes.",
+    "emptyTitle": "Nada en espera de revisión",
+    "emptyDescription": "Cuando los jugadores envíen cambios de partidos aparecerán aquí hasta que Bartek los apruebe.",
     "actions": {
       "approve": "Aprobar",
       "reject": "Rechazar"

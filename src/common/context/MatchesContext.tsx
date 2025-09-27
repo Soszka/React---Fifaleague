@@ -18,6 +18,7 @@ import { useAuth } from "./AuthContext";
 import { restoreDiacritics } from "../utils/nameUtils";
 import { normalizeDateValue } from "../utils/dateUtils";
 import {
+  MatchActivityActor,
   MatchActivityPayload,
   MatchActivityType,
 } from "../types/matchActivity";
@@ -61,6 +62,10 @@ const ACTIVITY_LOG_KEY = "activityLogs";
 const ACTIVITY_LOG_PATH = `/${ACTIVITY_LOG_KEY}`;
 const PENDING_MATCHES_KEY = "pendingMatchRequests";
 const PENDING_MATCHES_PATH = `/${PENDING_MATCHES_KEY}`;
+
+export interface MatchActionOptions {
+  actorOverride?: MatchActivityActor;
+}
 
 type StoredMatch = Omit<Match, "id"> & { date: number | string };
 
@@ -146,9 +151,18 @@ const MatchesContext = createContext<{
   loading: boolean;
   error: Error | null;
   canManageMatches: boolean;
-  addMatch: (data: Omit<Match, "id">) => Promise<MatchActionResult>;
-  updateMatch: (match: Match) => Promise<MatchActionResult>;
-  removeMatch: (id: string) => Promise<MatchActionResult>;
+  addMatch: (
+    data: Omit<Match, "id">,
+    options?: MatchActionOptions
+  ) => Promise<MatchActionResult>;
+  updateMatch: (
+    match: Match,
+    options?: MatchActionOptions
+  ) => Promise<MatchActionResult>;
+  removeMatch: (
+    id: string,
+    options?: MatchActionOptions
+  ) => Promise<MatchActionResult>;
 } | null>(null);
 
 const matchesReducer = (state: State, action: Action): State => {
@@ -214,15 +228,16 @@ export const MatchesProvider: React.FC<{ children: ReactNode }> = ({
 
   const logActivity = async (
     type: MatchActivityType,
-    match: Match
+    match: Match,
+    actorOverride?: MatchActivityActor
   ): Promise<void> => {
     const payload: MatchActivityPayload = {
       matchId: match.id,
       type,
       timestamp: Date.now(),
       actor: {
-        id: actorId,
-        displayName: actorDisplayName,
+        id: actorOverride?.id ?? actorId,
+        displayName: actorOverride?.displayName ?? actorDisplayName,
       },
       matchSnapshot: {
         ...match,
@@ -263,7 +278,8 @@ export const MatchesProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const addMatch = async (
-    matchData: Omit<Match, "id">
+    matchData: Omit<Match, "id">,
+    options?: MatchActionOptions
   ): Promise<MatchActionResult> => {
     const newRef = push(ref(rtdb, "/"));
     const newId = newRef.key;
@@ -313,7 +329,7 @@ export const MatchesProvider: React.FC<{ children: ReactNode }> = ({
     }
 
     try {
-      await logActivity("create", newMatch);
+      await logActivity("create", newMatch, options?.actorOverride);
     } catch (err) {
       const error = ensureError(err, "Failed to log match creation");
       await remove(newRef);
@@ -326,7 +342,8 @@ export const MatchesProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const updateMatch = async (
-    updatedMatch: Match
+    updatedMatch: Match,
+    options?: MatchActionOptions
   ): Promise<MatchActionResult> => {
     const current = state.matches.find((m) => m.id === updatedMatch.id);
     const matchRef = ref(rtdb, `/${updatedMatch.id}`);
@@ -370,7 +387,7 @@ export const MatchesProvider: React.FC<{ children: ReactNode }> = ({
     }
 
     try {
-      await logActivity("update", normalizedMatch);
+      await logActivity("update", normalizedMatch, options?.actorOverride);
     } catch (err) {
       const error = ensureError(err, "Failed to log match update");
       if (current) {
@@ -384,7 +401,10 @@ export const MatchesProvider: React.FC<{ children: ReactNode }> = ({
     return "completed";
   };
 
-  const removeMatch = async (id: string): Promise<MatchActionResult> => {
+  const removeMatch = async (
+    id: string,
+    options?: MatchActionOptions
+  ): Promise<MatchActionResult> => {
     const existing = state.matches.find((m) => m.id === id);
     if (!existing) return "completed";
 
@@ -417,7 +437,7 @@ export const MatchesProvider: React.FC<{ children: ReactNode }> = ({
     }
 
     try {
-      await logActivity("delete", existing);
+      await logActivity("delete", existing, options?.actorOverride);
     } catch (err) {
       const error = ensureError(err, "Failed to log match removal");
       await set(matchRef, matchToPayload(existing));

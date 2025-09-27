@@ -119,7 +119,7 @@
       "questions": [
         {
           "question": "How can I add a new match to the app?",
-          "answer": "Currently, only the frontend master Bartek can add, edit, or delete a match in the app because he is the admin."
+          "answer": "Anyone logged in can add, edit or request to remove a match from the Matches tab. The change goes into Bartek’s review queue and the table updates only after he approves it."
         },
         {
           "question": "What statistics can I track in the app?",
@@ -354,9 +354,9 @@
       "addSuccess": "Match added",
       "updateSuccess": "Match updated",
       "deleteSuccess": "Match removed",
-      "queueSuccess": "Match proposal sent for administrator approval.",
-      "queueUpdate": "Update sent for administrator approval.",
-      "queueDelete": "Removal request sent for administrator approval.",
+      "queueSuccess": "Match proposal sent for Bartek’s approval.",
+      "queueUpdate": "Update sent for Bartek’s approval.",
+      "queueDelete": "Removal request sent for Bartek’s approval.",
       "error": "An error occurred",
       "empty": "No matches"
     }
@@ -364,9 +364,11 @@
 
   "pending": {
     "title": "Pending",
-    "subtitle": "All match changes awaiting administrator review.",
+    "subtitle": "Review the queue... Pending",
     "unknownUser": "Unknown user",
     "empty": "No pending changes.",
+    "emptyTitle": "Nothing waiting for review",
+    "emptyDescription": "When players submit match changes, they appear here until Bartek approves them.",
     "actions": {
       "approve": "Approve",
       "reject": "Reject"

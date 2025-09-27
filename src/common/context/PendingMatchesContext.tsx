@@ -165,7 +165,7 @@ export const PendingMatchesProvider: React.FC<{ children: ReactNode }> = ({
 
   const ensureAdmin = useCallback(() => {
     if (!isAdmin) {
-      throw new Error("Only administrator can manage pending matches");
+      throw new Error("Only Bartek can manage pending matches");
     }
   }, [isAdmin]);
 
@@ -180,13 +180,15 @@ export const PendingMatchesProvider: React.FC<{ children: ReactNode }> = ({
     const payload = request.payload;
     try {
       let result: MatchActionResult = "completed";
+      const actorOverride = request.actor;
+
       if (payload.type === "create") {
-        result = await addMatch(payload.match);
+        result = await addMatch(payload.match, { actorOverride });
       } else if (payload.type === "update") {
         const match: Match = { id: payload.matchId, ...payload.match };
-        result = await updateMatch(match);
+        result = await updateMatch(match, { actorOverride });
       } else if (payload.type === "delete") {
-        result = await removeMatch(payload.matchId);
+        result = await removeMatch(payload.matchId, { actorOverride });
       }
 
       if (result === "queued") {
