@@ -4,7 +4,6 @@ import SportsScoreIcon from "@mui/icons-material/SportsScore";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { usePlayerStats } from "../../../common/hooks/usePlayerStats";
