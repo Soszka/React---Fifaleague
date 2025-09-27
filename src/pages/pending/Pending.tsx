@@ -5,9 +5,7 @@ import {
   Box,
   Button,
   Card,
-  CardActions,
   CardContent,
-  Divider,
   Paper,
   Skeleton,
   Stack,
@@ -44,32 +42,25 @@ const PendingSkeletonCard: React.FC = () => (
   <Card
     variant="outlined"
     sx={{
-      borderRadius: 4,
+      borderRadius: 3,
       borderColor: "divider",
-      opacity: 0.7,
       overflow: "hidden",
-      position: "relative",
     }}
   >
-    <CardContent sx={{ p: { xs: 2.5, md: 3 } }}>
-      <Stack spacing={2.5}>
+    <CardContent sx={{ p: { xs: 2.25, md: 2.75 } }}>
+      <Stack spacing={2}>
         <Stack direction="row" spacing={2}>
-          <Skeleton variant="circular" width={56} height={56} />
-          <Stack spacing={1} flex={1}>
-            <Skeleton variant="text" width="35%" height={18} />
-            <Skeleton variant="text" width="72%" height={30} />
-            <Skeleton variant="text" width="45%" height={18} />
+          <Skeleton variant="circular" width={48} height={48} />
+          <Stack spacing={0.75} flex={1}>
+            <Skeleton variant="text" width="40%" height={16} />
+            <Skeleton variant="text" width="70%" height={24} />
+            <Skeleton variant="text" width="30%" height={16} />
           </Stack>
         </Stack>
-        <Skeleton
-          variant="rectangular"
-          height={96}
-          sx={{ borderRadius: 3 }}
-        />
-        <Divider sx={{ borderStyle: "dashed" }} />
-        <Stack direction="row" spacing={1.5} justifyContent="flex-end">
-          <Skeleton variant="rounded" width={104} height={40} />
-          <Skeleton variant="rounded" width={132} height={40} />
+        <Skeleton variant="rounded" height={72} />
+        <Stack direction="row" spacing={1} justifyContent="flex-end">
+          <Skeleton variant="rounded" width={96} height={36} />
+          <Skeleton variant="rounded" width={120} height={36} />
         </Stack>
       </Stack>
     </CardContent>
@@ -165,25 +156,20 @@ const PendingContent: React.FC = () => {
     options: { highlight?: boolean; accentColor: string }
   ) => {
     const { highlight = false, accentColor } = options;
-    const borderColor = highlight
-      ? alpha(accentColor, theme.palette.mode === "dark" ? 0.6 : 0.35)
-      : alpha(theme.palette.text.secondary, theme.palette.mode === "dark" ? 0.4 : 0.22);
+    const borderColor = alpha(
+      highlight ? accentColor : theme.palette.divider,
+      theme.palette.mode === "dark" ? 0.5 : highlight ? 0.35 : 0.8
+    );
     const background = highlight
-      ? `linear-gradient(135deg, ${alpha(
-          accentColor,
-          theme.palette.mode === "dark" ? 0.24 : 0.16
-        )} 0%, ${alpha(accentColor, theme.palette.mode === "dark" ? 0.12 : 0.08)} 100%)`
-      : `linear-gradient(135deg, ${alpha(
-          theme.palette.background.paper,
-          theme.palette.mode === "dark" ? 0.9 : 0.96
-        )} 0%, ${alpha(theme.palette.background.default, 0.9)} 100%)`;
-    const primaryText = highlight
+      ? alpha(accentColor, theme.palette.mode === "dark" ? 0.12 : 0.1)
+      : alpha(theme.palette.background.paper, theme.palette.mode === "dark" ? 0.4 : 0.9);
+    const scoreTextColor = highlight
       ? theme.palette.mode === "dark"
-        ? theme.palette.grey[50]
-        : theme.palette.grey[900]
+        ? theme.palette.common.white
+        : theme.palette.getContrastText(accentColor)
       : theme.palette.text.primary;
     const subtleText = highlight
-      ? alpha(primaryText, 0.75)
+      ? alpha(theme.palette.getContrastText(accentColor), 0.85)
       : theme.palette.text.secondary;
 
     return (
@@ -191,106 +177,48 @@ const PendingContent: React.FC = () => {
         elevation={0}
         sx={{
           flex: 1,
-          borderRadius: 3,
+          borderRadius: 2,
           border: `1px solid ${borderColor}`,
-          background,
-          p: { xs: 2, md: 2.5 },
-          position: "relative",
-          overflow: "hidden",
+          backgroundColor: background,
+          p: { xs: 1.75, md: 2 },
+          display: "grid",
+          gap: 1.25,
           minWidth: 0,
-          "&::before": highlight
-            ? {
-                content: '""',
-                position: "absolute",
-                inset: 0,
-                background: `linear-gradient(120deg, ${alpha(
-                  accentColor,
-                  theme.palette.mode === "dark" ? 0.3 : 0.18
-                )} 0%, transparent 65%)`,
-                opacity: 0.9,
-                pointerEvents: "none",
-              }
-            : undefined,
         }}
       >
-        <Stack spacing={1.6} sx={{ position: "relative", zIndex: 1 }}>
-          <Typography
-            variant="overline"
+        <Typography
+          variant="caption"
+          fontWeight={600}
+          sx={{ textTransform: "uppercase", letterSpacing: 0.8, color: subtleText }}
+        >
+          {label}
+        </Typography>
+        <Stack spacing={0.5}>
+          <Typography variant="subtitle2" color="text.secondary" fontWeight={600}>
+            {t("pending.card.teams")}
+          </Typography>
+          <Typography variant="body2" sx={{ whiteSpace: "pre-line", fontWeight: 600 }}>
+            {formatTeams(match, t)}
+          </Typography>
+        </Stack>
+        <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+          <Box
             sx={{
+              px: 1.25,
+              py: 0.65,
+              borderRadius: 1.5,
               fontWeight: 700,
-              letterSpacing: 1.2,
-              color: subtleText,
+              bgcolor: alpha(accentColor, theme.palette.mode === "dark" ? 0.2 : 0.12),
+              color: scoreTextColor,
             }}
           >
-            {label}
+            {formatScore(match.result)}
+          </Box>
+          <Typography variant="body2" color="text.secondary" fontWeight={500}>
+            {t("pending.card.matchDate", {
+              date: dayjs(match.date).format(t("pending.card.matchDateFormat")),
+            })}
           </Typography>
-          <Stack spacing={0.75}>
-            <Typography
-              variant="caption"
-              sx={{
-                fontWeight: 700,
-                letterSpacing: 1,
-                textTransform: "uppercase",
-                color: subtleText,
-              }}
-            >
-              {t("pending.card.teams")}
-            </Typography>
-            <Typography
-              variant="body1"
-              fontWeight={600}
-              color={primaryText}
-              sx={{ whiteSpace: "pre-line" }}
-            >
-              {formatTeams(match, t)}
-            </Typography>
-          </Stack>
-          <Stack spacing={0.75}>
-            <Typography
-              variant="caption"
-              sx={{
-                fontWeight: 700,
-                letterSpacing: 1,
-                textTransform: "uppercase",
-                color: subtleText,
-              }}
-            >
-              {t("pending.card.score")}
-            </Typography>
-            <Box
-              sx={{
-                display: "inline-flex",
-                alignItems: "baseline",
-                gap: 1,
-                px: 1.8,
-                py: 0.9,
-                borderRadius: 999,
-                bgcolor: highlight
-                  ? alpha(accentColor, theme.palette.mode === "dark" ? 0.35 : 0.2)
-                  : alpha(
-                      theme.palette.text.secondary,
-                      theme.palette.mode === "dark" ? 0.2 : 0.12
-                    ),
-                color: primaryText,
-                boxShadow: highlight
-                  ? `0 10px 24px ${alpha(accentColor, 0.25)}`
-                  : `0 10px 24px ${alpha(
-                      theme.palette.common.black,
-                      theme.palette.mode === "dark" ? 0.4 : 0.08
-                    )}`,
-                fontWeight: 700,
-              }}
-            >
-              <Typography variant="subtitle1" fontWeight={700} sx={{ letterSpacing: 0.5 }}>
-                {formatScore(match.result)}
-              </Typography>
-              <Typography variant="body2" sx={{ color: subtleText, fontWeight: 600 }}>
-                {t("pending.card.matchDate", {
-                  date: dayjs(match.date).format(t("pending.card.matchDateFormat")),
-                })}
-              </Typography>
-            </Box>
-          </Stack>
         </Stack>
       </Paper>
     );
@@ -378,115 +306,67 @@ const PendingContent: React.FC = () => {
           <Card
             key={item.id}
             sx={{
-              position: "relative",
-              overflow: "hidden",
-              borderRadius: 4,
-              border: `1px solid ${alpha(
-                visual.color,
-                theme.palette.mode === "dark" ? 0.55 : 0.25
-              )}`,
-              background: `linear-gradient(135deg, ${alpha(
-                visual.color,
-                theme.palette.mode === "dark" ? 0.16 : 0.12
-              )} 0%, ${alpha(
-                theme.palette.background.paper,
-                theme.palette.mode === "dark" ? 0.94 : 0.98
-              )} 38%, ${alpha(theme.palette.background.default, 0.94)} 100%)`,
-              boxShadow:
-                theme.palette.mode === "dark"
-                  ? `0 22px 42px ${alpha(visual.color, 0.32)}`
-                  : `0 20px 48px ${alpha(visual.color, 0.24)}`,
-              transition: "transform 0.45s ease, box-shadow 0.45s ease",
-              "&::after": {
-                content: '""',
-                position: "absolute",
-                inset: 0,
-                borderRadius: "inherit",
-                background: `radial-gradient(circle at 20% -10%, ${alpha(
-                  visual.color,
-                  theme.palette.mode === "dark" ? 0.35 : 0.18
-                )} 0%, transparent 55%)`,
-                opacity: 0.9,
-                pointerEvents: "none",
-                mixBlendMode: "soft-light",
-              },
+              borderRadius: 3,
+              border: `1px solid ${alpha(visual.color, theme.palette.mode === "dark" ? 0.4 : 0.25)}`,
+              boxShadow: theme.shadows[2],
+              transition: "transform 0.3s ease, box-shadow 0.3s ease",
               "&:hover": {
-                transform: "translateY(-8px)",
-                boxShadow: `0 26px 60px ${alpha(visual.color, 0.32)}`,
+                transform: "translateY(-4px)",
+                boxShadow: theme.shadows[4],
               },
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            <CardContent sx={{ p: { xs: 2.75, md: 3.25 }, position: "relative", zIndex: 1 }}>
-              <Stack spacing={3}>
+            <CardContent sx={{ p: { xs: 2.25, md: 2.75 }, flexGrow: 1 }}>
+              <Stack spacing={2.5}>
                 <Stack
                   direction={{ xs: "column", sm: "row" }}
-                  spacing={2.25}
+                  spacing={2}
                   alignItems={{ xs: "flex-start", sm: "center" }}
                 >
-                  <Avatar
-                    sx={{
-                      bgcolor: alpha(
-                        visual.color,
-                        theme.palette.mode === "dark" ? 0.28 : 0.18
-                      ),
-                      color:
-                        theme.palette.mode === "dark"
-                          ? theme.palette.common.white
-                          : visual.color,
-                      width: 62,
-                      height: 62,
-                      boxShadow: `0 14px 32px ${alpha(visual.color, 0.28)}`,
-                    }}
-                  >
-                    <Icon fontSize="large" />
-                  </Avatar>
-                  <Stack spacing={1} flex={1} minWidth={0}>
-                    <Typography
-                      variant="overline"
+                  <Stack direction="row" spacing={1.75} alignItems="center" flex={1} width="100%">
+                    <Avatar
                       sx={{
-                        color: alpha(
-                          visual.color,
-                          theme.palette.mode === "dark" ? 0.9 : 0.8
-                        ),
-                        fontWeight: 700,
-                        letterSpacing: 1.6,
-                      }}
-                    >
-                      {t(`pending.card.typeLabel.${item.type}`)}
-                    </Typography>
-                    <Typography
-                      variant="h6"
-                      fontWeight={700}
-                      sx={{
-                        lineHeight: 1.2,
+                        bgcolor: alpha(visual.color, theme.palette.mode === "dark" ? 0.25 : 0.15),
                         color:
                           theme.palette.mode === "dark"
-                            ? theme.palette.grey[50]
-                            : theme.palette.grey[900],
+                            ? theme.palette.common.white
+                            : visual.color,
+                        width: 52,
+                        height: 52,
                       }}
                     >
-                      {item.typeLabel}
-                    </Typography>
-                    <Stack direction="row" spacing={1.2} alignItems="center">
-                      <AccessTimeRoundedIcon
+                      <Icon fontSize="medium" />
+                    </Avatar>
+                    <Stack spacing={0.75} flex={1} minWidth={0}>
+                      <Typography
+                        variant="caption"
                         sx={{
-                          fontSize: 20,
-                          color: alpha(
-                            visual.color,
-                            theme.palette.mode === "dark" ? 0.8 : 0.65
-                          ),
+                          letterSpacing: 0.8,
+                          textTransform: "uppercase",
+                          color: alpha(visual.color, 0.9),
+                          fontWeight: 600,
                         }}
-                      />
-                      <Typography variant="body2" color="text.secondary" fontWeight={500}>
-                        {t("pending.card.submitted", { date: item.submittedAt })}
+                      >
+                        {t(`pending.card.typeLabel.${item.type}`)}
+                      </Typography>
+                      <Typography variant="h6" fontWeight={600} sx={{ lineHeight: 1.3 }}>
+                        {item.typeLabel}
                       </Typography>
                     </Stack>
+                  </Stack>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ color: "text.secondary" }}>
+                    <AccessTimeRoundedIcon sx={{ fontSize: 20 }} />
+                    <Typography variant="body2" fontWeight={500}>
+                      {t("pending.card.submitted", { date: item.submittedAt })}
+                    </Typography>
                   </Stack>
                 </Stack>
 
                 <Stack
                   direction={{ xs: "column", md: "row" }}
-                  spacing={2.25}
+                  spacing={2}
                   alignItems="stretch"
                 >
                   {item.previousMatch
@@ -506,66 +386,41 @@ const PendingContent: React.FC = () => {
                     }
                   )}
                 </Stack>
+
+                <Box display="flex" justifyContent="flex-end" gap={1.25} mt={0.5}>
+                  <Tooltip title={actionTooltip} disableHoverListener={isAdmin}>
+                    <span>
+                      <Button
+                        variant="outlined"
+                        color="inherit"
+                        startIcon={<CancelIcon />}
+                        onClick={() => handleReject(item.id)}
+                        disabled={disableActions}
+                        size="small"
+                        sx={{ fontWeight: 600, px: 2.5, minWidth: 120 }}
+                      >
+                        {t("pending.actions.reject")}
+                      </Button>
+                    </span>
+                  </Tooltip>
+                  <Tooltip title={actionTooltip} disableHoverListener={isAdmin}>
+                    <span>
+                      <Button
+                        variant="contained"
+                        color="success"
+                        startIcon={<CheckCircleIcon />}
+                        onClick={() => handleApprove(item.id)}
+                        disabled={disableActions}
+                        size="small"
+                        sx={{ fontWeight: 700, px: 2.75, minWidth: 140 }}
+                      >
+                        {t("pending.actions.approve")}
+                      </Button>
+                    </span>
+                  </Tooltip>
+                </Box>
               </Stack>
             </CardContent>
-            <CardActions
-              sx={{
-                justifyContent: { xs: "stretch", sm: "space-between" },
-                flexDirection: { xs: "column", sm: "row" },
-                alignItems: { xs: "stretch", sm: "center" },
-                gap: { xs: 1, sm: 1.5 },
-                px: { xs: 2.75, md: 3.25 },
-                py: { xs: 2.25, md: 2.5 },
-                position: "relative",
-                zIndex: 1,
-                backgroundColor: alpha(
-                  visual.color,
-                  theme.palette.mode === "dark" ? 0.12 : 0.06
-                ),
-                backdropFilter: "blur(8px)",
-              }}
-            >
-              <Tooltip title={actionTooltip} disableHoverListener={isAdmin}>
-                <span>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    startIcon={<CancelIcon />}
-                    onClick={() => handleReject(item.id)}
-                    disabled={disableActions}
-                    sx={{
-                      minWidth: 160,
-                      fontWeight: 600,
-                      px: { xs: 2.5, sm: 3 },
-                    }}
-                  >
-                    {t("pending.actions.reject")}
-                  </Button>
-                </span>
-              </Tooltip>
-              <Tooltip title={actionTooltip} disableHoverListener={isAdmin}>
-                <span>
-                  <Button
-                    variant="contained"
-                    color="success"
-                    startIcon={<CheckCircleIcon />}
-                    onClick={() => handleApprove(item.id)}
-                    disabled={disableActions}
-                    sx={{
-                      minWidth: 180,
-                      fontWeight: 700,
-                      px: { xs: 2.75, sm: 3.25 },
-                      boxShadow: `0 12px 28px ${alpha(
-                        visual.color,
-                        theme.palette.mode === "dark" ? 0.32 : 0.26
-                      )}`,
-                    }}
-                  >
-                    {t("pending.actions.approve")}
-                  </Button>
-                </span>
-              </Tooltip>
-            </CardActions>
           </Card>
         );
       })}
