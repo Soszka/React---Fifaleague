@@ -214,8 +214,20 @@ const PendingContent: React.FC = () => {
     }
   };
 
-  const ensurePlayerName = (value: string) =>
-    value && value.trim().length ? value.trim() : t("pending.unknownUser");
+  const formatPersonName = (value: string) =>
+    value
+      .split(" ")
+      .filter(Boolean)
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+      .join(" ");
+
+  const ensurePlayerName = (value: string) => {
+    if (!value || !value.trim().length) {
+      return t("pending.unknownUser");
+    }
+
+    return formatPersonName(value.trim());
+  };
 
   const buildTeamLabels = (match: PendingMatchData) => {
     const teamAPlayers = [
@@ -246,7 +258,6 @@ const PendingContent: React.FC = () => {
 
   const renderMatchOverview = (
     match: PendingMatchData,
-    label: string,
     options: { highlight?: boolean; accentColor: string }
   ) => {
     const { highlight = false, accentColor } = options;
@@ -280,28 +291,15 @@ const PendingContent: React.FC = () => {
       : alpha(accentColor, theme.palette.mode === "dark" ? 0.85 : 0.9);
 
     return (
-      <Stack spacing={1.25} flex={1} minWidth={0}>
-        <Typography
-          variant="overline"
-          sx={{
-            letterSpacing: 1,
-            textTransform: "uppercase",
-            color: highlight
-              ? alpha(accentColor, 0.9)
-              : alpha(theme.palette.text.secondary, 0.9),
-            fontWeight: 700,
-          }}
-        >
-          {label}
-        </Typography>
+      <Stack spacing={1} flex={1} minWidth={0}>
         <Paper
           elevation={0}
           sx={{
             borderRadius: 2.5,
             border: `1px solid ${borderColor}`,
             backgroundColor,
-            px: { xs: 1.75, sm: 2.5 },
-            py: { xs: 1.5, sm: 1.9 },
+            px: { xs: 1.6, sm: 2.2 },
+            py: { xs: 1.35, sm: 1.7 },
             display: "grid",
             gridTemplateColumns: {
               xs: "minmax(0, 1fr) auto minmax(0, 1fr)",
@@ -321,7 +319,6 @@ const PendingContent: React.FC = () => {
               whiteSpace: { xs: "pre-line", sm: "nowrap" },
               overflow: { xs: "visible", sm: "hidden" },
               textOverflow: { xs: "clip", sm: "ellipsis" },
-              textTransform: { xs: "none", sm: "uppercase" },
             }}
           >
             {isSmallScreen ? teamA.mobile : teamA.desktop}
@@ -359,7 +356,6 @@ const PendingContent: React.FC = () => {
               whiteSpace: { xs: "pre-line", sm: "nowrap" },
               overflow: { xs: "visible", sm: "hidden" },
               textOverflow: { xs: "clip", sm: "ellipsis" },
-              textTransform: { xs: "none", sm: "uppercase" },
             }}
           >
             {isSmallScreen ? teamB.mobile : teamB.desktop}
@@ -497,13 +493,13 @@ const PendingContent: React.FC = () => {
           >
             <CardContent
               sx={{
-                p: { xs: 2.25, md: 2.75 },
+                p: { xs: 2, md: 2.5 },
                 flexGrow: 1,
                 position: "relative",
                 zIndex: 1,
                 display: "flex",
                 flexDirection: "column",
-                gap: { xs: 2.25, sm: 2.75 },
+                gap: { xs: 1.9, sm: 2.2 },
               }}
             >
               <Box
@@ -515,18 +511,7 @@ const PendingContent: React.FC = () => {
                   alignItems: { xs: "flex-start", sm: "center" },
                 }}
               >
-                <Stack spacing={{ xs: 1, sm: 1.1 }} sx={{ minWidth: 0 }}>
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      letterSpacing: 1,
-                      textTransform: "uppercase",
-                      color: alpha(visual.color, 0.95),
-                      fontWeight: 700,
-                    }}
-                  >
-                    {t(`pending.card.typeLabel.${item.type}`)}
-                  </Typography>
+                <Stack spacing={{ xs: 0.75, sm: 0.9 }} sx={{ minWidth: 0 }}>
                   <Typography
                     variant="h6"
                     fontWeight={700}
@@ -539,15 +524,15 @@ const PendingContent: React.FC = () => {
                         actor: (
                           <Box
                             component="span"
-                            sx={{
-                              color: visual.color,
-                              fontWeight: 800,
-                              display: "inline",
-                              mr: { xs: 0.5, sm: 0.35 },
-                              textShadow: `0 4px 14px ${alpha(visual.color, 0.25)}`,
-                            }}
-                          />
-                        ),
+                          sx={{
+                            color: visual.color,
+                            fontWeight: 800,
+                            display: "inline",
+                            mr: { xs: 0.5, sm: 0.35 },
+                            textShadow: `0 2px 6px ${alpha(visual.color, 0.2)}`,
+                          }}
+                        />
+                      ),
                       }}
                     />
                   </Typography>
@@ -594,21 +579,15 @@ const PendingContent: React.FC = () => {
                 spacing={{ xs: 2, md: 2.5 }}
               >
                 {item.previousMatch
-                  ? renderMatchOverview(item.previousMatch, t("pending.card.previous"), {
+                  ? renderMatchOverview(item.previousMatch, {
                       highlight: false,
                       accentColor: visual.color,
                     })
                   : null}
-                {renderMatchOverview(
-                  item.baseMatch,
-                  item.previousMatch
-                    ? t("pending.card.proposed")
-                    : t("pending.card.details"),
-                  {
-                    highlight: true,
-                    accentColor: visual.color,
-                  }
-                )}
+                {renderMatchOverview(item.baseMatch, {
+                  highlight: true,
+                  accentColor: visual.color,
+                })}
               </Stack>
 
               <Box

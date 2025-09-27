@@ -196,10 +196,7 @@ const HomeStats: React.FC<HomeStatsProps> = ({
         color: theme.palette.text.secondary,
       }}
     >
-      <PauseCircleOutlineIcon sx={{ fontSize: { xs: "2rem", sm: "2.35rem" } }} />
-      <Typography component="span" variant="subtitle1" sx={{ fontWeight: 600 }}>
-        {t("homeStats.noMatches")}
-      </Typography>
+      -
     </Box>
   );
 
