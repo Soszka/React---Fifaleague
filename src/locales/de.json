@@ -100,7 +100,8 @@
     "lastResult": "Ergebnis des letzten Spiels",
     "weekMatches": "Spiele diese Woche",
     "winPercent": "Siegquote",
-    "avgGoals": "Ø Tore pro Spiel"
+    "avgGoals": "Ø Tore pro Spiel",
+    "noMatches": "Noch kein Spiel"
   },
 
   "about": {
@@ -363,7 +364,7 @@
 
   "pending": {
     "title": "Ausstehend",
-    "subtitle": "Sieh dir die Warteschlange an... Ausstehend",
+    "subtitle": "Sieh dir die Warteschlange an...",
     "unknownUser": "Unbekannter Benutzer",
     "empty": "Keine ausstehenden Änderungen.",
     "emptyTitle": "Keine Anfragen in der Warteschlange",
@@ -382,9 +383,9 @@
     },
     "card": {
       "type": {
-        "create": "{{actor}} hat vorgeschlagen, ein Spiel hinzuzufügen",
-        "update": "{{actor}} hat vorgeschlagen, ein Spiel zu aktualisieren",
-        "delete": "{{actor}} hat vorgeschlagen, ein Spiel zu löschen"
+        "create": "<actor>{{actor}}</actor> hat vorgeschlagen, ein Spiel hinzuzufügen",
+        "update": "<actor>{{actor}}</actor> hat vorgeschlagen, ein Spiel zu aktualisieren",
+        "delete": "<actor>{{actor}}</actor> hat vorgeschlagen, ein Spiel zu löschen"
       },
       "typeLabel": {
         "create": "Erstellung",
@@ -402,6 +403,10 @@
       "matchDateFormat": "DD.MM.YYYY",
       "dateFormat": "DD.MM.YYYY HH:mm",
       "vs": "gegen"
+    },
+    "pagination": {
+      "label": "Einträge pro Seite",
+      "option": "{{count}} Einträge"
     }
   },
 

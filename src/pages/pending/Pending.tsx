@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Alert,
   Avatar,
@@ -6,9 +6,14 @@ import {
   Button,
   Card,
   CardContent,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Pagination,
   Paper,
   Skeleton,
   Stack,
+  Select,
   Tooltip,
   Typography,
   useTheme,
@@ -23,12 +28,16 @@ import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
 import HourglassEmptyRoundedIcon from "@mui/icons-material/HourglassEmptyRounded";
 import dayjs from "dayjs";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import Title from "../../common/UI/Title";
 import { usePendingMatches } from "../../common/context/PendingMatchesContext";
 import { useNotification } from "../../common/context/NotificationContext";
-import { PendingMatchData } from "../../common/types/pendingMatchRequest";
+import type {
+  PendingMatchData,
+  PendingMatchRequestPayload,
+} from "../../common/types/pendingMatchRequest";
 import { NotificationProvider } from "../../common/context/NotificationContext";
+import type { SelectChangeEvent } from "@mui/material/Select";
 
 const formatScore = (score: string) =>
   score.includes(":") ? score : score.replace(/-/g, " : ");
@@ -80,6 +89,15 @@ const PendingSkeletonCard: React.FC = () => (
   </Card>
 );
 
+type PendingCardItem = {
+  id: string;
+  type: PendingMatchRequestPayload["type"];
+  actorName: string;
+  submittedAt: string;
+  baseMatch: PendingMatchData;
+  previousMatch: PendingMatchData | null;
+};
+
 const PendingContent: React.FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -87,7 +105,11 @@ const PendingContent: React.FC = () => {
     usePendingMatches();
   const { notify } = useNotification();
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(6);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const pageSizeOptions = useMemo(() => [6, 10, 15, 20], []);
 
   const typeVisuals = useMemo(
     () => ({
@@ -107,7 +129,7 @@ const PendingContent: React.FC = () => {
     [theme]
   );
 
-  const mappedRequests = useMemo(
+  const mappedRequests = useMemo<PendingCardItem[]>(
     () =>
       requests.map((request) => {
         const baseMatch = request.payload.match;
@@ -117,23 +139,51 @@ const PendingContent: React.FC = () => {
           request.actor.displayName === "Unknown"
             ? t("pending.unknownUser")
             : request.actor.displayName;
-        const typeLabel = t(`pending.card.type.${request.payload.type}`, {
-          actor: actorName,
-        });
         const submittedAt = dayjs(request.timestamp).format(
           t("pending.card.dateFormat")
         );
         return {
           id: request.id,
           type: request.payload.type,
-          typeLabel,
+          actorName,
           submittedAt,
           baseMatch,
-          previousMatch,
+          previousMatch: previousMatch ?? null,
         };
       }),
     [requests, t]
   );
+
+  const totalPages = useMemo(
+    () =>
+      Math.max(1, mappedRequests.length ? Math.ceil(mappedRequests.length / rowsPerPage) : 1),
+    [mappedRequests.length, rowsPerPage]
+  );
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
+
+  const paginatedRequests = useMemo<PendingCardItem[]>(
+    () => {
+      if (!mappedRequests.length) return [];
+      const start = (page - 1) * rowsPerPage;
+      return mappedRequests.slice(start, start + rowsPerPage);
+    },
+    [mappedRequests, page, rowsPerPage]
+  );
+
+  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
+
+  const handleRowsPerPageChange = (event: SelectChangeEvent) => {
+    const value = Number(event.target.value);
+    setRowsPerPage(value);
+    setPage(1);
+  };
 
   const handleApprove = async (requestId: string) => {
     const request = requests.find((item) => item.id === requestId);
@@ -225,11 +275,9 @@ const PendingContent: React.FC = () => {
             : theme.palette.grey[100],
           theme.palette.mode === "dark" ? 0.7 : 1
         );
-    const scoreColor = highlight
-      ? theme.palette.mode === "dark"
-        ? theme.palette.common.white
-        : accentColor
-      : theme.palette.text.primary;
+    const accentTextColor = highlight
+      ? accentColor
+      : alpha(accentColor, theme.palette.mode === "dark" ? 0.85 : 0.9);
 
     return (
       <Stack spacing={1.25} flex={1} minWidth={0}>
@@ -284,10 +332,11 @@ const PendingContent: React.FC = () => {
               fontWeight={800}
               sx={{
                 letterSpacing: -0.8,
-                color: scoreColor,
-                textShadow: highlight
-                  ? `0 12px 26px ${alpha(accentColor, 0.25)}`
-                  : "none",
+                color: accentTextColor,
+                textShadow: `0 6px 18px ${alpha(
+                  accentColor,
+                  highlight ? 0.28 : 0.18
+                )}`,
               }}
             >
               {score}
@@ -349,14 +398,16 @@ const PendingContent: React.FC = () => {
           textAlign: "center",
           position: "relative",
           overflow: "hidden",
-          border: `1px dashed ${alpha(
-            theme.palette.primary.main,
-            theme.palette.mode === "dark" ? 0.5 : 0.35
-          )}`,
           background: `linear-gradient(140deg, ${alpha(
             theme.palette.primary.main,
             theme.palette.mode === "dark" ? 0.2 : 0.14
           )} 0%, ${alpha(theme.palette.background.paper, 0.94)} 50%, transparent 100%)`,
+          boxShadow: `0 6px 20px ${alpha(
+            theme.palette.mode === "dark"
+              ? theme.palette.common.black
+              : theme.palette.primary.main,
+            theme.palette.mode === "dark" ? 0.3 : 0.16
+          )}`,
         }}
       >
         <Stack spacing={2} alignItems="center" sx={{ position: "relative", zIndex: 1 }}>
@@ -369,7 +420,6 @@ const PendingContent: React.FC = () => {
               color: theme.palette.primary.contrastText,
               width: 64,
               height: 64,
-              boxShadow: `0 18px 32px ${alpha(theme.palette.primary.main, 0.25)}`,
             }}
           >
             <HourglassEmptyRoundedIcon fontSize="large" />
@@ -391,7 +441,7 @@ const PendingContent: React.FC = () => {
 
   return (
     <Stack spacing={2.5} sx={{ mt: 2 }}>
-      {mappedRequests.map((item) => {
+      {paginatedRequests.map((item) => {
         const disableActions = !isAdmin || processingId === item.id;
         const actionTooltip = isAdmin
           ? undefined
@@ -482,7 +532,24 @@ const PendingContent: React.FC = () => {
                     fontWeight={700}
                     sx={{ lineHeight: 1.25, letterSpacing: -0.2 }}
                   >
-                    {item.typeLabel}
+                    <Trans
+                      i18nKey={`pending.card.type.${item.type}`}
+                      values={{ actor: item.actorName }}
+                      components={{
+                        actor: (
+                          <Box
+                            component="span"
+                            sx={{
+                              color: visual.color,
+                              fontWeight: 800,
+                              display: "inline",
+                              mr: { xs: 0.5, sm: 0.35 },
+                              textShadow: `0 4px 14px ${alpha(visual.color, 0.25)}`,
+                            }}
+                          />
+                        ),
+                      }}
+                    />
                   </Typography>
                   <Stack
                     direction="row"
@@ -602,6 +669,50 @@ const PendingContent: React.FC = () => {
           </Card>
         );
       })}
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        spacing={2}
+        justifyContent="space-between"
+        alignItems={{ xs: "stretch", sm: "center" }}
+        sx={{ pt: 1 }}
+      >
+        <FormControl
+          size="small"
+          sx={{ minWidth: { xs: "100%", sm: 220 } }}
+        >
+          <InputLabel id="pending-pagination-select">
+            {t("pending.pagination.label")}
+          </InputLabel>
+          <Select
+            labelId="pending-pagination-select"
+            value={rowsPerPage.toString()}
+            label={t("pending.pagination.label")}
+            onChange={handleRowsPerPageChange}
+          >
+            {pageSizeOptions.map((option) => (
+              <MenuItem key={option} value={option.toString()}>
+                {t("pending.pagination.option", { count: option })}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: { xs: "center", sm: "flex-end" },
+          }}
+        >
+          <Pagination
+            count={totalPages}
+            page={page}
+            color="primary"
+            shape="rounded"
+            onChange={handlePageChange}
+            siblingCount={1}
+            boundaryCount={1}
+          />
+        </Box>
+      </Stack>
     </Stack>
   );
 };

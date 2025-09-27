@@ -4,6 +4,7 @@ import SportsScoreIcon from "@mui/icons-material/SportsScore";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { usePlayerStats } from "../../../common/hooks/usePlayerStats";
@@ -140,7 +141,8 @@ const HomeStats: React.FC<HomeStatsProps> = ({
   }
 
   const iconSizes = { xs: "2.8rem", sm: "4rem", md: "5rem", lg: "6rem" };
-  const lastOutcome = (stats.lastOutcome || "DRAW") as ResultOption;
+  const hasLastMatch = stats.lastOutcome !== null && stats.lastResult !== "-";
+  const lastOutcome = (stats.lastOutcome ?? "DRAW") as ResultOption;
 
   const resultColor = (r: ResultOption) => {
     if (theme.palette.mode === "dark") {
@@ -161,10 +163,11 @@ const HomeStats: React.FC<HomeStatsProps> = ({
   const lastLetter = letterMap[currentLang][lastOutcome];
   const lastBg = resultColor(lastOutcome);
   const lastFg = theme.palette.getContrastText(lastBg);
+  const normalizedScore = stats.lastResult.replace(/\s*:\s*/, ":");
 
-  const lastResultValue = (
+  const lastResultValue = hasLastMatch ? (
     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-      <Box component="span">{stats.lastResult.replace(/\s*:\s*/, ":")}</Box>
+      <Box component="span">{normalizedScore}</Box>
       <Box
         component="span"
         sx={{
@@ -183,6 +186,20 @@ const HomeStats: React.FC<HomeStatsProps> = ({
       >
         {lastLetter}
       </Box>
+    </Box>
+  ) : (
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 1,
+        color: theme.palette.text.secondary,
+      }}
+    >
+      <PauseCircleOutlineIcon sx={{ fontSize: { xs: "2rem", sm: "2.35rem" } }} />
+      <Typography component="span" variant="subtitle1" sx={{ fontWeight: 600 }}>
+        {t("homeStats.noMatches")}
+      </Typography>
     </Box>
   );
 

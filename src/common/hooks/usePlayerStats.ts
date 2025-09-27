@@ -21,7 +21,7 @@ interface RawMatch {
 
 export interface PlayerStats {
   lastResult: string; // np. "5 : 3"
-  lastOutcome: ResultOption; // "WIN" | "DRAW" | "LOSS"
+  lastOutcome: ResultOption | null;
   weekMatches: number;
   winPercent: number;
   avgGoals: number;
@@ -82,7 +82,7 @@ export const usePlayerStats = (player: string, dbPath: string = "/") => {
       if (!snap.exists()) {
         setStats({
           lastResult: "-",
-          lastOutcome: "DRAW",
+          lastOutcome: null,
           weekMatches: 0,
           winPercent: 0,
           avgGoals: 0,
@@ -104,7 +104,7 @@ export const usePlayerStats = (player: string, dbPath: string = "/") => {
       if (!myMatches.length) {
         setStats({
           lastResult: "-",
-          lastOutcome: "DRAW",
+          lastOutcome: null,
           weekMatches: 0,
           winPercent: 0,
           avgGoals: 0,
@@ -131,7 +131,7 @@ export const usePlayerStats = (player: string, dbPath: string = "/") => {
       if (!lastMatchEntry) {
         setStats({
           lastResult: "-",
-          lastOutcome: "DRAW",
+          lastOutcome: null,
           weekMatches: 0,
           winPercent: 0,
           avgGoals: 0,
@@ -146,7 +146,7 @@ export const usePlayerStats = (player: string, dbPath: string = "/") => {
       if (!parsedLastScore) {
         setStats({
           lastResult: "-",
-          lastOutcome: "DRAW",
+          lastOutcome: null,
           weekMatches: 0,
           winPercent: 0,
           avgGoals: 0,
@@ -179,17 +179,17 @@ export const usePlayerStats = (player: string, dbPath: string = "/") => {
         if (myGoals > rivalGoals) wins += 1;
       });
 
-      if (!countedMatches) {
-        setStats({
-          lastResult: "-",
-          lastOutcome: "DRAW",
-          weekMatches: 0,
-          winPercent: 0,
-          avgGoals: 0,
-        });
-        setLoading(false);
-        return;
-      }
+        if (!countedMatches) {
+          setStats({
+            lastResult: "-",
+            lastOutcome: null,
+            weekMatches: 0,
+            winPercent: 0,
+            avgGoals: 0,
+          });
+          setLoading(false);
+          return;
+        }
 
       const isLastHome = [lastMatch.player1, lastMatch.player2].some((n) =>
         eq(n, player)

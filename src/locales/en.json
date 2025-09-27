@@ -100,7 +100,8 @@
     "lastResult": "Last match result",
     "weekMatches": "Matches played this week",
     "winPercent": "Win percentage",
-    "avgGoals": "Average goals per match"
+    "avgGoals": "Average goals per match",
+    "noMatches": "No match yet"
   },
 
   "about": {
@@ -364,7 +365,7 @@
 
   "pending": {
     "title": "Pending",
-    "subtitle": "Review the queue... Pending",
+    "subtitle": "Review the queue...",
     "unknownUser": "Unknown user",
     "empty": "No pending changes.",
     "emptyTitle": "Nothing waiting for review",
@@ -383,9 +384,9 @@
     },
     "card": {
       "type": {
-        "create": "{{actor}} proposed adding a match",
-        "update": "{{actor}} proposed updating a match",
-        "delete": "{{actor}} proposed deleting a match"
+        "create": "<actor>{{actor}}</actor> proposed adding a match",
+        "update": "<actor>{{actor}}</actor> proposed updating a match",
+        "delete": "<actor>{{actor}}</actor> proposed deleting a match"
       },
       "typeLabel": {
         "create": "Creation",
@@ -403,6 +404,10 @@
       "matchDateFormat": "DD.MM.YYYY",
       "dateFormat": "DD.MM.YYYY HH:mm",
       "vs": "vs"
+    },
+    "pagination": {
+      "label": "Entries per page",
+      "option": "{{count}} entries"
     }
   },
 

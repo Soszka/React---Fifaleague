@@ -100,7 +100,8 @@
     "lastResult": "Wynik ostatniego meczu",
     "weekMatches": "Mecze w tym tygodniu",
     "winPercent": "Procent wygranych spotkań",
-    "avgGoals": "Średnia zdobytych goli na mecz"
+    "avgGoals": "Średnia zdobytych goli na mecz",
+    "noMatches": "Jeszcze bez meczu"
   },
 
   "about": {
@@ -362,7 +363,7 @@
 
   "pending": {
     "title": "Oczekujące",
-    "subtitle": "Zajrzyj do kolejki... Oczekujące",
+    "subtitle": "Zajrzyj do kolejki...",
     "unknownUser": "Nieznany użytkownik",
     "empty": "Brak oczekujących zmian.",
     "emptyTitle": "Brak zmian w kolejce",
@@ -381,9 +382,9 @@
     },
     "card": {
       "type": {
-        "create": "{{actor}} zaproponował dodanie meczu",
-        "update": "{{actor}} zaproponował aktualizację meczu",
-        "delete": "{{actor}} zaproponował usunięcie meczu"
+        "create": "<actor>{{actor}}</actor> zaproponował dodanie meczu",
+        "update": "<actor>{{actor}}</actor> zaproponował aktualizację meczu",
+        "delete": "<actor>{{actor}}</actor> zaproponował usunięcie meczu"
       },
       "typeLabel": {
         "create": "Dodanie",
@@ -401,6 +402,10 @@
       "matchDateFormat": "DD.MM.YYYY",
       "dateFormat": "DD.MM.YYYY HH:mm",
       "vs": "vs"
+    },
+    "pagination": {
+      "label": "Wpisów na stronie",
+      "option": "{{count}} wpisów"
     }
   },
 

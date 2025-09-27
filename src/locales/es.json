@@ -100,7 +100,8 @@
     "lastResult": "Resultado del último partido",
     "weekMatches": "Partidos jugados esta semana",
     "winPercent": "Porcentaje de victorias",
-    "avgGoals": "Goles promedio por partido"
+    "avgGoals": "Goles promedio por partido",
+    "noMatches": "Aún sin partido"
   },
 
   "about": {
@@ -365,7 +366,7 @@
 
   "pending": {
     "title": "Pendientes",
-    "subtitle": "Revisa la cola... Pendientes",
+    "subtitle": "Revisa la cola...",
     "unknownUser": "Usuario desconocido",
     "empty": "No hay cambios pendientes.",
     "emptyTitle": "Nada en espera de revisión",
@@ -384,9 +385,9 @@
     },
     "card": {
       "type": {
-        "create": "{{actor}} propuso añadir un partido",
-        "update": "{{actor}} propuso actualizar un partido",
-        "delete": "{{actor}} propuso eliminar un partido"
+        "create": "<actor>{{actor}}</actor> propuso añadir un partido",
+        "update": "<actor>{{actor}}</actor> propuso actualizar un partido",
+        "delete": "<actor>{{actor}}</actor> propuso eliminar un partido"
       },
       "typeLabel": {
         "create": "Alta",
@@ -404,6 +405,10 @@
       "matchDateFormat": "DD/MM/YYYY",
       "dateFormat": "DD/MM/YYYY HH:mm",
       "vs": "vs"
+    },
+    "pagination": {
+      "label": "Entradas por página",
+      "option": "{{count}} entradas"
     }
   },
 
