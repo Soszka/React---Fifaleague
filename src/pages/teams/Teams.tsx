@@ -109,12 +109,17 @@ const buildTeams = (matches: MatchUi[]): TeamData[] => {
     t.winPercentage = t.matches ? (t.wins / t.matches) * 100 : 0;
     t.goalsDiff = t.goalsFor - t.goalsAgainst;
   });
-  const list = Array.from(map.values()).sort(
-    (a, b) =>
-      b.points - a.points ||
-      b.goalsDiff - a.goalsDiff ||
-      b.goalsFor - a.goalsFor
-  );
+  const list = Array.from(map.values()).sort((a, b) => {
+    const ppmDiff = b.pointsPerMatch - a.pointsPerMatch;
+    if (ppmDiff !== 0) return ppmDiff;
+    const pointsDiff = b.points - a.points;
+    if (pointsDiff !== 0) return pointsDiff;
+    const goalsDiff = b.goalsDiff - a.goalsDiff;
+    if (goalsDiff !== 0) return goalsDiff;
+    const goalsForDiff = b.goalsFor - a.goalsFor;
+    if (goalsForDiff !== 0) return goalsForDiff;
+    return a.players.localeCompare(b.players);
+  });
   list.forEach((t, i) => {
     if (i === 0) t.trophy = "🥇";
     else if (i === 1) t.trophy = "🥈";

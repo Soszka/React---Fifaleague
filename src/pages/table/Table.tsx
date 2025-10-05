@@ -214,14 +214,51 @@ const TablePage: React.FC = () => {
     return out;
   };
 
-  const sortData = (data: Team[]) =>
-    [...data].sort((a, b) => {
-      const A = a[orderBy] as number | string;
-      const B = b[orderBy] as number | string;
-      if (A < B) return order === "asc" ? -1 : 1;
-      if (A > B) return order === "asc" ? 1 : -1;
-      return 0;
+  const sortData = (data: Team[]) => {
+    const compareNumbers = (x: number, y: number) =>
+      x === y ? 0 : x < y ? -1 : 1;
+    const compareStrings = (x: string, y: string) => x.localeCompare(y);
+    const applyOrder = (value: number) => (order === "asc" ? value : -value);
+    const alphabeticalFallback = (a: Team, b: Team) =>
+      order === "asc"
+        ? compareStrings(a.players, b.players)
+        : compareStrings(b.players, a.players);
+
+    return [...data].sort((a, b) => {
+      if (orderBy === "pointsPerMatch") {
+        const ppmDiff = compareNumbers(a.pointsPerMatch, b.pointsPerMatch);
+        if (ppmDiff !== 0) return applyOrder(ppmDiff);
+        const pointsDiff = compareNumbers(a.points, b.points);
+        if (pointsDiff !== 0) return applyOrder(pointsDiff);
+        return alphabeticalFallback(a, b);
+      }
+
+      if (orderBy === "points") {
+        const pointsDiff = compareNumbers(a.points, b.points);
+        if (pointsDiff !== 0) return applyOrder(pointsDiff);
+        const ppmDiff = compareNumbers(a.pointsPerMatch, b.pointsPerMatch);
+        if (ppmDiff !== 0) return applyOrder(ppmDiff);
+        return alphabeticalFallback(a, b);
+      }
+
+      const valueA = a[orderBy];
+      const valueB = b[orderBy];
+
+      if (typeof valueA === "number" && typeof valueB === "number") {
+        const diff = compareNumbers(valueA, valueB);
+        if (diff !== 0) return applyOrder(diff);
+      } else if (typeof valueA === "string" && typeof valueB === "string") {
+        const diff = compareStrings(valueA, valueB);
+        if (diff !== 0) return order === "asc" ? diff : -diff;
+      }
+
+      const ppmDiff = compareNumbers(a.pointsPerMatch, b.pointsPerMatch);
+      if (ppmDiff !== 0) return applyOrder(ppmDiff);
+      const pointsDiff = compareNumbers(a.points, b.points);
+      if (pointsDiff !== 0) return applyOrder(pointsDiff);
+      return alphabeticalFallback(a, b);
     });
+  };
 
   const processed = useMemo(() => {
     const filtered = applyFilters(teams);
