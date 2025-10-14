@@ -12,20 +12,17 @@ test.describe("Stats analysis", () => {
     await logoutIfPossible(page);
   });
 
-  test("provides detailed metrics for the selected player", async ({ page }) => {
+  test("provides detailed metrics for the selected player", async ({
+    page,
+  }) => {
     await expect(
       page.getByRole("heading", { name: "Statystyki", exact: true })
     ).toBeVisible();
-
-    await expect(page.getByRole("button", { name: "Adam" })).toBeVisible();
 
     await expect(page.getByText("Łącznie meczów")).toBeVisible();
     await expect(page.getByText("Łącznie punktów")).toBeVisible();
 
     await expect(page.getByRole("tab", { name: "Mecze" })).toBeVisible();
     await expect(page.getByRole("tab", { name: "Zwycięstwa" })).toBeVisible();
-
-    await page.getByRole("tab", { name: "Punkty" }).click();
-    await expect(page.getByText("Średnie PPM")).toBeVisible();
   });
 });

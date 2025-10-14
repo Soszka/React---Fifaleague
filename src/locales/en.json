@@ -414,6 +414,9 @@
   "stats": {
     "title": "Statistics",
     "subtitle": "Verify your ...",
+    "select": {
+      "player": "Select player"
+    },
     "tabs": {
       "matches": "Matches",
       "wins": "Wins",

@@ -72,13 +72,17 @@ const FilterSelect: React.FC<{
   options: readonly string[];
 }> = ({ value, onChange, label, options }) => {
   const { t } = useTranslation();
+  const labelId = React.useId();
+  const selectId = `${labelId}-select`;
   return (
     <FormControl
       size="small"
       sx={{ minWidth: 180, width: { xs: "100%", md: "auto" } }}
     >
-      <InputLabel>{label}</InputLabel>
+      <InputLabel id={labelId}>{label}</InputLabel>
       <Select
+        labelId={labelId}
+        id={selectId}
         label={label}
         value={value ?? ""}
         onChange={(e) => onChange(e.target.value || null)}

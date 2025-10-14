@@ -69,6 +69,8 @@ const MatchesFilters: React.FC<Props> = ({
   const [open, setOpen] = useState(false);
   const controlWidth = isMobile ? "100%" : FILTER_WIDTH;
   const buttonWidth = isMobile ? "100%" : "auto";
+  const resultFilterLabelId = React.useId();
+  const resultFilterSelectId = `${resultFilterLabelId}-select`;
 
   const tooltipAddTitle = canManageMatches
     ? (t("matches.actions.add") as string)
@@ -156,8 +158,12 @@ const MatchesFilters: React.FC<Props> = ({
           sx={{ width: controlWidth }}
           data-testid="matches-result-filter"
         >
-          <InputLabel>{t("matches.filters.result")}</InputLabel>
+          <InputLabel id={resultFilterLabelId}>
+            {t("matches.filters.result")}
+          </InputLabel>
           <Select
+            labelId={resultFilterLabelId}
+            id={resultFilterSelectId}
             value={resultFilter}
             label={t("matches.filters.result")}
             onChange={(e) =>

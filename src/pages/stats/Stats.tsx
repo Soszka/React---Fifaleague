@@ -404,6 +404,8 @@ const StatsPage: React.FC = () => {
     <Skeleton variant="rectangular" width="100%" height={360} />
   );
 
+  const selectAriaLabel = user || (t("stats.select.player") as string);
+
   return (
     <Box sx={{ mx: "auto", maxWidth: 1800, px: { xs: 2, md: 4 }, mt: { xs: 1.875, md: 4 } }}>
       <Title
@@ -419,6 +421,7 @@ const StatsPage: React.FC = () => {
           onChange={(e: SelectChangeEvent<PlayerLabel>) =>
             setUser(e.target.value as PlayerLabel)
           }
+          inputProps={{ "aria-label": selectAriaLabel }}
         >
           {players.map((p) => (
             <MenuItem key={p} value={p}>

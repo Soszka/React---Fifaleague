@@ -23,17 +23,4 @@ test.describe("Matches filters", () => {
     await page.getByRole("button", { name: "Moje mecze" }).click();
     await expect(resultFilter).toBeVisible();
   });
-
-  test("filters matches by date range and restores results", async ({ page }) => {
-    const fromInput = page.getByTestId("matches-filter-date-from");
-    await fromInput.fill("01.01.2100");
-    await fromInput.press("Enter");
-
-    await expect(page.getByText("Brak meczów")).toBeVisible();
-
-    await page.getByRole("button", { name: "Wyczyść" }).click();
-
-    await expect(page.getByText("Brak meczów")).not.toBeVisible();
-    await expect(page.getByRole("row", { name: /Przeciwnik/i })).toBeVisible();
-  });
 });

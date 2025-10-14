@@ -413,6 +413,9 @@
   "stats": {
     "title": "Statistiken",
     "subtitle": "Überprüfen Sie Ihre...",
+    "select": {
+      "player": "Spieler auswählen"
+    },
     "tabs": {
       "matches": "Spiele",
       "wins": "Siege",
