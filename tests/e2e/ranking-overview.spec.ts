@@ -27,7 +27,9 @@ test.describe("Player rankings", () => {
     ];
 
     for (const header of columnHeaders) {
-      await expect(page.getByRole("columnheader", { name: header })).toBeVisible();
+      await expect(
+        page.getByRole("columnheader", { name: header, exact: true })
+      ).toBeVisible();
     }
 
     await expect(page.getByLabel("Gracz")).toBeVisible();

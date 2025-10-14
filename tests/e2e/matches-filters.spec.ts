@@ -17,7 +17,7 @@ test.describe("Matches filters", () => {
     const toggle = page.getByRole("button", { name: "Wszystkie mecze" });
     await expect(toggle).toBeVisible();
     await toggle.click();
-    const resultFilter = page.getByRole("button", { name: "Wynik" });
+    const resultFilter = page.getByTestId("matches-result-filter");
     await expect(resultFilter).toHaveCount(0);
 
     await page.getByRole("button", { name: "Moje mecze" }).click();
@@ -25,7 +25,7 @@ test.describe("Matches filters", () => {
   });
 
   test("filters matches by date range and restores results", async ({ page }) => {
-    const fromInput = page.getByRole("textbox", { name: "Od" });
+    const fromInput = page.getByTestId("matches-filter-date-from");
     await fromInput.fill("01.01.2100");
     await fromInput.press("Enter");
 

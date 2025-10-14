@@ -27,7 +27,9 @@ test.describe("Team standings", () => {
     ];
 
     for (const header of columnHeaders) {
-      await expect(page.getByRole("columnheader", { name: header })).toBeVisible();
+      await expect(
+        page.getByRole("columnheader", { name: header, exact: true })
+      ).toBeVisible();
     }
 
     const filterLabels = ["Gracz", "Mecze", "Punkty", "Pkt/Mecz"];

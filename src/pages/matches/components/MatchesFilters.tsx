@@ -151,7 +151,11 @@ const MatchesFilters: React.FC<Props> = ({
       />
 
       {!showAll && (
-        <FormControl size="small" sx={{ width: controlWidth }}>
+        <FormControl
+          size="small"
+          sx={{ width: controlWidth }}
+          data-testid="matches-result-filter"
+        >
           <InputLabel>{t("matches.filters.result")}</InputLabel>
           <Select
             value={resultFilter}
@@ -159,6 +163,7 @@ const MatchesFilters: React.FC<Props> = ({
             onChange={(e) =>
               onResultFilterChange(e.target.value as FilterResultOption)
             }
+            inputProps={{ "data-testid": "matches-result-filter-input" }}
           >
             <MenuItem value="">{t("matches.filters.none")}</MenuItem>
             <MenuItem value="WIN">{t("matches.outcome.win")}</MenuItem>
@@ -179,7 +184,11 @@ const MatchesFilters: React.FC<Props> = ({
             if (dateTo && v && v.isAfter(dateTo)) onDateToChange(v);
           }}
           slotProps={{
-            textField: { size: "small", sx: { width: controlWidth } },
+            textField: {
+              size: "small",
+              sx: { width: controlWidth },
+              inputProps: { "data-testid": "matches-filter-date-from" },
+            },
           }}
         />
         <DatePicker
@@ -192,7 +201,11 @@ const MatchesFilters: React.FC<Props> = ({
             if (dateFrom && v && v.isBefore(dateFrom)) onDateFromChange(v);
           }}
           slotProps={{
-            textField: { size: "small", sx: { width: controlWidth } },
+            textField: {
+              size: "small",
+              sx: { width: controlWidth },
+              inputProps: { "data-testid": "matches-filter-date-to" },
+            },
           }}
         />
       </LocalizationProvider>

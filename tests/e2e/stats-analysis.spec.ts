@@ -13,7 +13,9 @@ test.describe("Stats analysis", () => {
   });
 
   test("provides detailed metrics for the selected player", async ({ page }) => {
-    await expect(page.getByRole("heading", { name: /Statystyki/ })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Statystyki", exact: true })
+    ).toBeVisible();
 
     await expect(page.getByRole("button", { name: "Adam" })).toBeVisible();
 
