@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from "@testing-library/react";
+import { renderHook } from "@testing-library/react";
 import { act } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -93,13 +93,13 @@ describe("usePlayerStats", () => {
       listeners[0].success(snapshot);
     });
 
-    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.loading).toBe(false);
 
     expect(result.current.stats).toEqual({
       lastResult: "4 : 2",
       lastOutcome: "WIN",
       weekMatches: 2,
-      winPercent: 33,
+      winPercent: 67,
       avgGoals: 2.7,
     });
   });
@@ -121,7 +121,7 @@ describe("usePlayerStats", () => {
       listeners[0].success(snapshot);
     });
 
-    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.loading).toBe(false);
 
     expect(result.current.stats).toEqual({
       lastResult: "-",

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, beforeEach, it, vi } from "vitest";
 import type { User } from "firebase/auth";
@@ -51,12 +51,16 @@ describe("AuthContext", () => {
     expect(authListener).toBeDefined();
 
     const fakeUser = { uid: "123", email: "tester@example.com" } as User;
-    authListener?.(fakeUser);
+    await act(async () => {
+      authListener?.(fakeUser);
+    });
 
     expect(screen.getByTestId("loading").textContent).toBe("no");
     expect(screen.getByTestId("user").textContent).toBe("tester@example.com");
 
-    authListener?.(null);
+    await act(async () => {
+      authListener?.(null);
+    });
     expect(screen.getByTestId("user").textContent).toBe("none");
   });
 
