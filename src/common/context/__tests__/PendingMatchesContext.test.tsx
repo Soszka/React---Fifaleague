@@ -20,7 +20,9 @@ const onValueMock = vi.fn(
     return vi.fn();
   }
 );
-const removeMock = vi.fn(() => Promise.resolve());
+const removeMock = vi.fn<(refValue: { path?: string }) => Promise<void>>(
+  () => Promise.resolve()
+);
 
 vi.mock("firebase/database", () => ({
   ref: (...args: Parameters<typeof refMock>) => refMock(...args),
@@ -49,7 +51,7 @@ vi.mock("../MatchesContext", () => ({
 
 import { PendingMatchesProvider, usePendingMatches } from "../PendingMatchesContext";
 
-const wrapper = ({ children }: PropsWithChildren): JSX.Element => (
+const wrapper = ({ children }: PropsWithChildren) => (
   <PendingMatchesProvider>{children}</PendingMatchesProvider>
 );
 
@@ -140,9 +142,13 @@ describe("PendingMatchesContext", () => {
       actorOverride: requestRecord.actor,
     });
 
-    const removalCall = removeMock.mock.calls.find(
-      ([ref]) => typeof ref === "object" && ref?.path === "/pendingMatchRequests/req1"
-    );
+    const removalCall = removeMock.mock.calls.find(([ref]) => {
+      const refWithPath = ref as { path?: string } | undefined;
+      return (
+        typeof refWithPath === "object" &&
+        refWithPath?.path === "/pendingMatchRequests/req1"
+      );
+    });
     expect(removalCall).toBeDefined();
   });
 
@@ -180,9 +186,13 @@ describe("PendingMatchesContext", () => {
       await result.current.rejectRequest("req1");
     });
 
-    const removalCall = removeMock.mock.calls.find(
-      ([ref]) => typeof ref === "object" && ref?.path === "/pendingMatchRequests/req1"
-    );
+    const removalCall = removeMock.mock.calls.find(([ref]) => {
+      const refWithPath = ref as { path?: string } | undefined;
+      return (
+        typeof refWithPath === "object" &&
+        refWithPath?.path === "/pendingMatchRequests/req1"
+      );
+    });
     expect(removalCall).toBeDefined();
   });
 });

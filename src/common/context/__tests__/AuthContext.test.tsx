@@ -68,7 +68,7 @@ describe("AuthContext", () => {
     const user = userEvent.setup();
     listenAuthMock.mockImplementation(() => vi.fn());
     loginMock.mockResolvedValue({} as never);
-    logoutMock.mockResolvedValue();
+    logoutMock.mockResolvedValue(undefined);
 
     const TestConsumer = () => {
       const { login, logout } = useAuth();

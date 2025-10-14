@@ -19,8 +19,12 @@ const pushMock = vi.fn((refValue: { path: string }) => {
     path: `${refValue.path}/${key}`,
   };
 });
-const setMock = vi.fn(() => Promise.resolve());
-const removeMock = vi.fn(() => Promise.resolve());
+const setMock = vi.fn<
+  (refValue: { path?: string }, value?: unknown) => Promise<void>
+>(() => Promise.resolve());
+const removeMock = vi.fn<(refValue: { path?: string }) => Promise<void>>(
+  () => Promise.resolve()
+);
 const onValueMock = vi.fn(
   (
     _ref: unknown,
@@ -51,7 +55,7 @@ vi.mock("../AuthContext", () => ({
 
 import { MatchesProvider, useMatches } from "../MatchesContext";
 
-const wrapper = ({ children }: PropsWithChildren): JSX.Element => (
+const wrapper = ({ children }: PropsWithChildren) => (
   <MatchesProvider>{children}</MatchesProvider>
 );
 
@@ -135,14 +139,23 @@ describe("MatchesContext", () => {
       expect(outcome).toBe("queued");
     });
 
-    const pendingCall = setMock.mock.calls.find(
-      ([ref]) => typeof ref === "object" && ref?.path?.startsWith("/pendingMatchRequests/")
-    );
+    const pendingCall = setMock.mock.calls.find(([ref]) => {
+      const refWithPath = ref as { path?: string } | undefined;
+      return (
+        typeof refWithPath === "object" &&
+        refWithPath?.path?.startsWith("/pendingMatchRequests/")
+      );
+    });
     expect(pendingCall).toBeDefined();
 
-    const directMatchPersist = setMock.mock.calls.find(
-      ([ref]) => typeof ref === "object" && ref?.path?.includes("generated-") && ref?.path?.startsWith("//")
-    );
+    const directMatchPersist = setMock.mock.calls.find(([ref]) => {
+      const refWithPath = ref as { path?: string } | undefined;
+      return (
+        typeof refWithPath === "object" &&
+        refWithPath?.path?.includes("generated-") &&
+        refWithPath?.path?.startsWith("//")
+      );
+    });
     expect(directMatchPersist).toBeUndefined();
   });
 
@@ -179,17 +192,24 @@ describe("MatchesContext", () => {
       result: "2-1",
     });
 
-    const matchPersistCall = setMock.mock.calls.find(
-      ([ref]) => typeof ref === "object" && ref?.path?.includes("generated-") && ref?.path?.startsWith("//")
-    );
+    const matchPersistCall = setMock.mock.calls.find(([ref]) => {
+      const refWithPath = ref as { path?: string } | undefined;
+      return (
+        typeof refWithPath === "object" &&
+        refWithPath?.path?.includes("generated-") &&
+        refWithPath?.path?.startsWith("//")
+      );
+    });
     expect(matchPersistCall).toBeDefined();
 
-    const activityCall = setMock.mock.calls.find(
-      ([ref]) =>
-        typeof ref === "object" &&
-        typeof ref?.path === "string" &&
-        ref.path.startsWith("/activityLogs/")
-    );
+    const activityCall = setMock.mock.calls.find(([ref]) => {
+      const refWithPath = ref as { path?: string } | undefined;
+      return (
+        typeof refWithPath === "object" &&
+        typeof refWithPath?.path === "string" &&
+        refWithPath.path.startsWith("/activityLogs/")
+      );
+    });
     expect(activityCall).toBeDefined();
   });
 });
