@@ -71,12 +71,13 @@ This modular structure keeps Firebase interactions, UI primitives, and domain lo
 
 ## Environment & Firebase Setup
 
-The project ships with a sample Firebase configuration (`src/common/services/firebase.ts`). Replace those values with your own project credentials or refactor the file to source from `import.meta.env` variables (e.g., `VITE_FIREBASE_API_KEY`) to keep secrets out of source control.
+The project ships with a sample Firebase configuration (`src/common/services/firebase.ts`). Replace those values with your own project credentials or refactor the file to source from `import.meta.env` variables (e.g., `VITE_FIREBASE_API_KEY`) to keep secrets out of source control. A `.env.example` file lists every Firebase environment variable you must provide locally—copy it to `.env` and fill in your Firebase project details before running the app.
 
 1. Create a Firebase project with **Authentication (Email/Password)** and the **Realtime Database** enabled.
 2. Generate a web app within Firebase and copy the config keys.
-3. Update the configuration in `src/common/services/firebase.ts` or inject them via environment variables before building.
-4. Seed the Realtime Database with the collections expected by the contexts:
+3. Duplicate `.env.example` to `.env` and populate the Firebase keys listed there (they are required for running the app locally).
+4. Update the configuration in `src/common/services/firebase.ts` or inject them via environment variables before building.
+5. Seed the Realtime Database with the collections expected by the contexts:
    - `matches` – played match records consumed by `MatchesContext`.
    - `pendingMatchRequests` – submissions awaiting moderator review.
    - `activityLogs` – optional feed of match-related events.
