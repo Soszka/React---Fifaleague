@@ -10,36 +10,36 @@
 ### Framework, język i bundler
 
 - Projekt korzysta z React 19, TypeScriptu i Vite; skrypty npm obejmują uruchamianie serwera deweloperskiego, build oraz linting.
-- Nawigacja oparta jest o React Router z dedykowaną konfiguracją tras oraz osadzeniem układu aplikacji w komponencie `Navigation` po zalogowaniu.
+- Nawigacja wykorzystuje router reagujący na stan zalogowania użytkownika, udostępniający publiczne i prywatne widoki w ramach jednego układu.
 
 ### UI i warstwa prezentacji
 
-- Material UI odpowiada za komponenty i system tematyczny, a przełączanie między motywem jasnym i ciemnym odbywa się centralnie w `App` dzięki `ThemeProvider` i własnej konfiguracji motywu.
-- Biblioteka Emotion (zależności `@emotion/react` i `@emotion/styled`) współpracuje z MUI, a warstwa styli uzupełniona jest przez modułowe pliki SCSS i globalne style ładowane przy starcie aplikacji.
-- Animacje oraz miękkie przejścia zapewnia Framer Motion używany m.in. na stronie głównej i w tabeli wyników, a komponenty dat bazują na `@mui/x-date-pickers` i `dayjs` w widokach meczów i zgłoszeń.
+- Material UI zapewnia bibliotekę komponentów oraz mechanizmy budowania motywów, co umożliwia łatwe przełączanie trybów kolorystycznych.
+- Stylowanie łączy możliwości Emotion i modułowych arkuszy stylów, co daje elastyczność przy tworzeniu widoków oraz zarządzaniu stylami globalnymi.
+- Animacje i mikrointerakcje realizuje Framer Motion, a obsługa kalendarzy i dat opiera się na pakietach towarzyszących ekosystemowi MUI.
 
 ### Formularze, UX i lokalizacja
 
-- Formularz logowania zbudowany jest na React Hook Form z walidacją pól oraz przyciskiem odsłaniania hasła.
-- System powiadomień opiera się na kontekście `NotificationProvider`, który wyświetla komunikaty MUI `Snackbar` i `Alert` w reakcji na zdarzenia użytkownika.
-- Lokalizacja realizowana jest przez i18next z czterema pakietami językowymi (pl, en, es, de) i przełącznikiem języka na ekranie logowania.
-- Wizualizacje statystyk generowane są przy użyciu React ApexCharts, a dane gracza dobierane dynamicznie na podstawie dostępnych etykiet zawodników.
+- Formularze zarządzane są przez React Hook Form z walidacją pól oraz udogodnieniami poprawiającymi ergonomię (np. odsłanianie hasła).
+- System powiadomień bazuje na kontekście globalnym, który wyświetla komunikaty w oparciu o komponenty Material UI.
+- Lokalizacja wykorzystuje i18next z kilkoma pakietami językowymi (pl, en, es, de) i przełącznikiem języka dostępnym na etapie logowania.
+- Wizualizacje statystyk tworzone są przy pomocy React ApexCharts, integrujących się z danymi meczowymi pozyskiwanymi na żywo.
 
 ## Logika biznesowa i warstwa danych
 
-- Firebase zapewnia uwierzytelnianie (Email/Password) oraz Realtime Database; konfiguracja i pomocnicze funkcje logowania zostały zebrane w module `firebase.ts`.
-- Kontekst `AuthProvider` nasłuchuje zmian stanu logowania w Firebase, udostępnia metody `login`/`logout` i sygnalizuje stan ładowania komponentom potomnym.
-- Dostęp do tras aplikacji chronionych wymusza obecność użytkownika poprzez komponent `RequireAuth` w konfiguracji routera.
-- `MatchesProvider` synchronizuje listę meczów z Realtime Database, obsługuje dodawanie, aktualizacje, usuwanie oraz loguje aktywność, jednocześnie kolejkając żądania od zwykłych graczy jako zgłoszenia oczekujące.
-- `PendingMatchesProvider` pobiera i sortuje zgłoszenia z kolejki, rozróżnia uprawnienia administratora („Bartek”) i pozwala na akceptację lub odrzucenie żądań, współpracując z `MatchesProvider`.
-- Hook `useAllMatches` udostępnia zunifikowane dane meczowe na potrzeby tabeli, rankingów i wykresów, normalizując strukturę wpisów z bazy.
+- Firebase dostarcza mechanizmy uwierzytelniania (Email/Password) oraz Realtime Database, a konfiguracja projektu dzieli odpowiedzialności na osobne moduły pomocnicze.
+- Globalny kontekst autoryzacji nasłuchuje zmian w stanie logowania, udostępnia metody wejścia/wyjścia oraz informuje komponenty o stanie ładowania.
+- Ochrona tras prywatnych wykorzystuje warstwę sprawdzającą obecność zalogowanego użytkownika przed renderowaniem docelowego widoku.
+- Konteksty odpowiedzialne za mecze oraz zgłoszenia synchronizują się z Realtime Database, obsługują operacje CRUD i kolejkują propozycje zmian od graczy.
+- Mechanizm kolejkowania rozróżnia uprawnienia administracyjne i udostępnia akcje zatwierdzania lub odrzucania zgłoszeń.
+- Dedykowane hooki agregują i normalizują dane meczowe na potrzeby tabel, rankingów oraz wykresów analitycznych.
 
 ## Kluczowe moduły funkcjonalne
 
-- `Navigation` zarządza layoutem aplikacji po zalogowaniu, łącząc pasek aplikacji, szufladę z modułami oraz osadzając konteksty meczów, zgłoszeń i dziennika aktywności dla widoków potomnych.
-- Widok `Matches` (z dialogami dodawania/edycji) wykorzystuje komponenty MUI Date Picker oraz `dayjs` do filtrowania meczów po zakresie dat.
-- Strona `Pending` prezentuje zgłoszenia zmian meczów z możliwością akceptacji i odrzucania oraz filtrami liczby rekordów na stronę.
-- Widok `Table` buduje klasyfikację zespołów z wyników meczów, umożliwiając sortowanie, filtrowanie i paginację w oparciu o dane `useAllMatches`.
+- Layout po zalogowaniu łączy nawigację boczną, pasek górny oraz wspólne konteksty danych, które udostępniają informacje widokom potomnym.
+- Widok meczów umożliwia filtrowanie po zakresie dat, przegląd wyników oraz obsługę formularzy dodawania i edycji.
+- Sekcja zgłoszeń prezentuje propozycje aktualizacji wyników wraz z filtrami liczby rekordów oraz akcjami akceptacji i odrzucania.
+- Widok tabeli ligowej buduje klasyfikację na podstawie danych z meczów, udostępniając sortowanie, filtrowanie i paginację.
 
 ## Narzędzia developerskie i procesy
 

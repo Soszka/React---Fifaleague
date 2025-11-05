@@ -1,40 +1,40 @@
-# REST API Plan
+# Plan API REST
 
-> **Context:** React frontend using Firebase Authentication with email/password and the Firebase Realtime Database (RTDB). All game data lives in a single shared RTDB namespace (no per-user partitioning). The app keeps long-lived realtime subscriptions to reflect database changes instantly.
+> **Kontekst:** Frontend w React, korzystający z Firebase Authentication (logowanie hasłem) oraz Firebase Realtime Database (RTDB). Wszystkie dane meczowe żyją we wspólnej przestrzeni nazw RTDB (bez podziału na użytkowników). Aplikacja utrzymuje długotrwałe subskrypcje w czasie rzeczywistym, aby natychmiast odzwierciedlać zmiany w bazie danych.
 
-## 1. Resources
+## 1. Zasoby
 
-| Resource                | RTDB Path                                                          | Notes                                                                                                                                                                                                      |
-| ----------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Match**               | `/{matchId}` (legacy aliases under `/matches/{matchId}` also read) | Core match records. Each entry holds two teams (two players per side), a textual score, and a match date saved as UNIX ms or ISO string. Stored with RTDB push IDs.                                        |
-| **MatchActivityLog**    | `/activityLogs/{logId}`                                            | Timeline of match CRUD actions. Entries capture actor info, action type (`create\|update\|delete`), timestamp, and a snapshot of the match state at that moment.                                           |
-| **PendingMatchRequest** | `/pendingMatchRequests/{requestId}`                                | Queue of change requests submitted by non-admin users. Each entry stores actor metadata, submission timestamp, and a payload describing the desired `create\|update\|delete` action (with match snapshot). |
+| Zasób                   | Ścieżka w RTDB                                              | Uwagi                                                                                                                                                                                                                                        |
+| ----------------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Match**               | `/{matchId}` (dziedziczone aliasy pod `/matches/{matchId}`) | Podstawowe rekordy meczów. Każdy wpis przechowuje dwa zespoły (po dwóch graczy na stronę), wynik tekstowy oraz datę meczu zapisaną jako UNIX ms lub ciąg ISO. Identyfikatory generowane przez RTDB (push IDs).                               |
+| **MatchActivityLog**    | `/activityLogs/{logId}`                                     | Oś czasu działań CRUD na meczach. Wpisy zawierają informacje o wykonawcy, typ akcji (`create\|update\|delete`), znacznik czasu oraz zrzut stanu meczu w danym momencie.                                                                      |
+| **PendingMatchRequest** | `/pendingMatchRequests/{requestId}`                         | Kolejka zgłoszeń zmian przesyłanych przez użytkowników niebędących administratorami. Każdy wpis przechowuje metadane wykonawcy, znacznik czasu zgłoszenia oraz ładunek opisujący pożądaną akcję `create\|update\|delete` (ze zrzutem meczu). |
 
-**Indexing & query hints**
+**Wskazówki dotyczące indeksowania i zapytań**
 
-- `Match` collection: client code orders by the `date` child when computing player statistics, so expose an `.indexOn: ["date"]` rule for any node that stores match lists. 【F:src/common/hooks/usePlayerStats.ts†L1-L220】
-- `MatchActivityLog` and `PendingMatchRequest` collections are displayed newest-first; indexing on `timestamp` keeps pagination efficient. 【F:src/common/context/MatchActivityContext.tsx†L1-L144】【F:src/common/context/PendingMatchesContext.tsx†L1-L227】
+- Kolekcja `Match`: kod kliencki sortuje według pola podrzędnego `date` podczas obliczania statystyk graczy, dlatego należy udostępnić regułę `.indexOn: ["date"]` dla każdego węzła przechowującego listy meczów.
+- Kolekcje `MatchActivityLog` oraz `PendingMatchRequest` są wyświetlane od najnowszych; indeksowanie po `timestamp` utrzymuje wydajne stronicowanie.
 
-## 2. Endpoints
+## 2. Endpointy
 
-All endpoints assume Firebase ID token authentication (`Authorization: Bearer <token>`). Responses wrap payloads in `{ "data": ... }` unless otherwise noted. Server timestamps are in UNIX milliseconds.
+Wszystkie endpointy zakładają uwierzytelnianie tokenem ID Firebase (`Authorization: Bearer <token>`). Odpowiedzi zawijają dane w `{ "data": ... }`, o ile nie wskazano inaczej. Znaczniki czasu serwera są w milisekundach UNIX.
 
-### 2.1 Authentication
+### 2.1 Uwierzytelnianie
 
-Firebase Authentication handles login/logout directly from the client via `signInWithEmailAndPassword`, `signOut`, and the auth state listener. Expose matching REST helpers only if needed for non-Firebase clients; otherwise reuse Firebase SDK endpoints. 【F:src/common/services/firebase.ts†L1-L32】【F:src/common/context/AuthContext.tsx†L1-L55】
+Firebase Authentication obsługuje logowanie/wylogowanie bezpośrednio z klienta poprzez `signInWithEmailAndPassword`, `signOut` oraz nasłuchiwanie stanu. Wystawiaj pomocnicze endpointy REST tylko wtedy, gdy są potrzebne klientom innym niż Firebase; w przeciwnym razie używaj istniejących endpointów SDK Firebase.
 
-### 2.2 Matches
+### 2.2 Mecze
 
-These endpoints manage match records and mirror the optimistic update logic already present in the React context.
+Te endpointy zarządzają rekordami meczów i odzwierciedlają optymistyczną logikę aktualizacji obecną w kontekście Reacta.
 
 #### GET `/v1/matches`
 
-- **Query params:**
-  - `startDate`, `endDate` (optional; milliseconds or ISO strings) to filter by match date.
-  - `orderBy` in `{date}` (default `date`), `direction` in `{asc,desc}` (default `desc`).
-  - `limit` (1–500, default 100) and `pageToken` for pagination.
-- **Description:** Returns matches stored at both the RTDB root and the legacy `/matches` bucket, de-duplicated and sorted by date descending to match the frontend expectations. 【F:src/common/context/MatchesContext.tsx†L105-L136】
-- **Response 200**
+- **Parametry zapytania:**
+  - `startDate`, `endDate` (opcjonalne; milisekundy lub ciągi ISO) do filtrowania po dacie meczu.
+  - `orderBy` w `{date}` (domyślnie `date`), `direction` w `{asc,desc}` (domyślnie `desc`).
+  - `limit` (1–500, domyślnie 100) oraz `pageToken` do paginacji.
+- **Opis:** Zwraca mecze przechowywane zarówno w korzeniu RTDB, jak i w starszym kubełku `/matches`, usuwa duplikaty i sortuje malejąco po dacie, aby dopasować oczekiwania frontendu.
+- **Odpowiedź 200**
 
 ```json
 {
@@ -55,14 +55,14 @@ These endpoints manage match records and mirror the optimistic update logic alre
 
 #### GET `/v1/matches/{id}`
 
-- **Description:** Fetches a single match from either top-level `/{id}` or `/matches/{id}`.
-- **Response 200:** `{ "data": { ...Match } }`
-- **Errors:** 404 if the match ID is unknown.
+- **Opis:** Pobiera pojedynczy mecz z `/{id}` lub `/matches/{id}`.
+- **Odpowiedź 200:** `{ "data": { ...Match } }`
+- **Błędy:** 404, jeśli identyfikator meczu nie istnieje.
 
 #### POST `/v1/matches`
 
-- **Description:** Creates a match. Only the admin user (see §3) may execute immediately; other users receive HTTP 202 with a `pendingRequestId` (see §2.3). Mirrors the client behaviour of queueing non-admin requests. 【F:src/common/context/MatchesContext.tsx†L280-L341】
-- **Request**
+- **Opis:** Tworzy mecz. Tylko użytkownik administrator (zob. §3) może wykonać operację natychmiast; pozostali użytkownicy otrzymują HTTP 202 z `pendingRequestId` (patrz §2.3). Odtwarza zachowanie klienta polegające na kolejkowaniu żądań nieadministrowanych.
+- **Żądanie**
 
 ```json
 {
@@ -75,52 +75,47 @@ These endpoints manage match records and mirror the optimistic update logic alre
 }
 ```
 
-- **Response 201 (admin):** `{ "data": { "id": "-Nxyz123", ... } }`
-- **Response 202 (non-admin):** `{ "data": { "pendingRequestId": "-Nreq456" } }`
-- **Errors:** 400 for validation failures.
+- **Odpowiedź 201 (administrator):** `{ "data": { "id": "-Nxyz123", ... } }`
+- **Odpowiedź 202 (nie-admin):** `{ "data": { "pendingRequestId": "-Nreq456" } }`
+- **Błędy:** 400 w razie błędów walidacji.
 
 #### PATCH `/v1/matches/{id}`
 
-- **Description:** Partial update (same admin vs. non-admin flow as POST). Supports optimistic concurrency via `If-Match: "<timestamp>"` header referencing the `updatedAt` field (if surfaced). 【F:src/common/context/MatchesContext.tsx†L344-L402】
-- **Errors:** 400 (validation), 404 (missing match), 409/412 (conflict), 202 for queued updates.
+- **Opis:** Częściowa aktualizacja (ten sam podział admin vs. nie-admin co w POST). Obsługuje optymistyczną współbieżność poprzez nagłówek `If-Match: "<timestamp>"` odnoszący się do pola `updatedAt` (jeśli jest udostępnione).
+- **Błędy:** 400 (walidacja), 404 (brak meczu), 409/412 (konflikt), 202 dla zakolejkowanych aktualizacji.
 
 #### DELETE `/v1/matches/{id}`
 
-- **Description:** Removes a match. Non-admins trigger a pending delete request. 【F:src/common/context/MatchesContext.tsx†L404-L449】
-- **Response 204** (admin) or **202** with `{ "data": { "pendingRequestId": "..." } }` for non-admins.
+- **Opis:** Usuwa mecz. Dla użytkowników niebędących administratorami wywołuje dodanie żądania oczekującego.
+- **Odpowiedź 204** (administrator) lub **202** z `{ "data": { "pendingRequestId": "..." } }` dla nie-adminów.
 
-#### Realtime subscription `/v1/matches:stream`
+#### Subskrypcja w czasie rzeczywistym `/v1/matches:stream`
 
-- **Description:** Optional server-sent events (SSE) or WebSocket stream mirroring `onValue(ref(rtdb))` so the UI can stay in sync without polling. Emit the same payload as `GET /v1/matches` whenever data changes. 【F:src/common/context/MatchesContext.tsx†L209-L227】
+- **Opis:** Opcjonalne strumienie SSE lub WebSocket odzwierciedlające `onValue(ref(rtdb))`, aby interfejs mógł pozostawać zsynchronizowany bez odpytywania. Wysyłają ten sam ładunek co `GET /v1/matches` przy każdej zmianie danych.
 
-### 2.3 Pending Match Requests
+### 2.3 Oczekujące żądania meczowe
 
-Non-admin interactions are stored as pending requests and require admin approval.
+Interakcje użytkowników bez uprawnień administratora są zapisywane jako żądania oczekujące i wymagają zatwierdzenia przez admina.
 
 #### GET `/v1/pending-match-requests`
 
-- **Query params:** `direction` (default `desc`), `limit`, `pageToken`.
-- **Description:** Lists pending items sorted by `timestamp` descending. 【F:src/common/context/PendingMatchesContext.tsx†L142-L156】
-- **Response 200**
+- **Parametry zapytania:** `limit`, `pageToken`, `direction` (domyślnie `desc`), opcjonalnie filtr `type` lub `matchId`.
+- **Opis:** Zwraca żądania oczekujące w porządku malejącym według `timestamp`. Każdy wpis zawiera metadane wykonawcy, typ akcji oraz aktualny status.
+- **Odpowiedź 200**
 
 ```json
 {
   "data": [
     {
       "id": "-Nreq456",
-      "actor": { "id": "uid123", "displayName": "Adam" },
+      "type": "update",
+      "status": "pending",
       "timestamp": 1733110000000,
+      "actor": {
+        "id": "uid123",
+        "displayName": "Adam"
+      },
       "payload": {
-        "type": "update",
-        "matchId": "-Nxyz123",
-        "match": {
-          "player1": "Adam",
-          "player2": "Bartek",
-          "rival1": "Marek",
-          "rival2": "Łukasz",
-          "result": "4-4",
-          "date": 1733193600000
-        },
         "previousMatch": {
           "player1": "Adam",
           "player2": "Bartek",
@@ -137,8 +132,8 @@ Non-admin interactions are stored as pending requests and require admin approval
 
 #### POST `/v1/pending-match-requests`
 
-- **Description:** Queues a non-admin request. Server derives `actor` from the authenticated user and stamps `timestamp`. Payload must match the shapes used in the frontend. 【F:src/common/context/MatchesContext.tsx†L260-L311】
-- **Request** (example for create)
+- **Opis:** Dodaje żądanie nie-admina do kolejki. Serwer wyprowadza `actor` z uwierzytelnionego użytkownika i nadaje znacznik czasu `timestamp`. Ładunek musi odpowiadać strukturom używanym na froncie.
+- **Żądanie** (przykład dla utworzenia)
 
 ```json
 {
@@ -154,33 +149,33 @@ Non-admin interactions are stored as pending requests and require admin approval
 }
 ```
 
-- **Response 201:** `{ "data": { "id": "-Nreq456" } }`
-- **Errors:** 400 for malformed payloads.
+- **Odpowiedź 201:** `{ "data": { "id": "-Nreq456" } }`
+- **Błędy:** 400 dla niepoprawnych ładunków.
 
 #### POST `/v1/pending-match-requests/{id}:approve`
 
-- **Description:** Admin-only. Executes the stored action by delegating to the match endpoints with the original actor recorded for auditing. Removes the pending item on success. 【F:src/common/context/PendingMatchesContext.tsx†L166-L205】
-- **Response 200:** `{ "data": { "status": "completed" } }`
-- **Errors:** 403 (non-admin), 409 (underlying match conflict).
+- **Opis:** Tylko dla administratora. Wykonuje zapisaną akcję, delegując do endpointów meczu z zachowaniem oryginalnego wykonawcy do celów audytu. W razie sukcesu usuwa element oczekujący.
+- **Odpowiedź 200:** `{ "data": { "status": "completed" } }`
+- **Błędy:** 403 (brak uprawnień administratora), 409 (konflikt dotyczący meczu).
 
 #### POST `/v1/pending-match-requests/{id}:reject`
 
-- **Description:** Admin-only; deletes the pending item. 【F:src/common/context/PendingMatchesContext.tsx†L206-L215】
-- **Response 200:** `{ "data": { "status": "rejected" } }`
+- **Opis:** Tylko dla administratora; usuwa element oczekujący.
+- **Odpowiedź 200:** `{ "data": { "status": "rejected" } }`
 
-#### Realtime subscription `/v1/pending-match-requests:stream`
+#### Subskrypcja w czasie rzeczywistym `/v1/pending-match-requests:stream`
 
-- **Description:** Streams queue changes for the admin dashboard, mirroring the existing `onValue(ref(rtdb, "/pendingMatchRequests"))`. 【F:src/common/context/PendingMatchesContext.tsx†L142-L164】
+- **Opis:** Strumień zmian kolejki dla panelu administratora, odzwierciedlający istniejące `onValue(ref(rtdb, "/pendingMatchRequests"))`.
 
-### 2.4 Match Activity Logs
+### 2.4 Dzienniki aktywności meczów
 
-Logs are read-only for clients; the backend should emit them automatically whenever a match mutation succeeds.
+Dzienniki są tylko do odczytu dla klientów; backend powinien emitować je automatycznie przy każdej udanej modyfikacji meczu.
 
 #### GET `/v1/match-activity`
 
-- **Query params:** `limit`, `pageToken`, `direction` (default `desc`), optional `matchId` filter.
-- **Description:** Returns activity entries sorted by timestamp descending. Each entry includes the actor metadata and the match snapshot captured when the action ran. 【F:src/common/context/MatchActivityContext.tsx†L107-L144】
-- **Response 200**
+- **Parametry zapytania:** `limit`, `pageToken`, `direction` (domyślnie `desc`), opcjonalny filtr `matchId`.
+- **Opis:** Zwraca wpisy aktywności posortowane malejąco według znacznika czasu. Każdy wpis zawiera metadane wykonawcy oraz zrzut meczu zapisany w momencie działania.
+- **Odpowiedź 200**
 
 ```json
 {
@@ -205,24 +200,24 @@ Logs are read-only for clients; the backend should emit them automatically whene
 }
 ```
 
-#### Realtime subscription `/v1/match-activity:stream`
+#### Subskrypcja w czasie rzeczywistym `/v1/match-activity:stream`
 
-- **Description:** Optional SSE/WebSocket feed broadcasting activity log changes in near real time. 【F:src/common/context/MatchActivityContext.tsx†L107-L138】
+- **Opis:** Opcjonalne strumienie SSE/WebSocket przekazujące zmiany dziennika aktywności w niemal rzeczywistym czasie.
 
-## 3. Authentication & Authorization
+## 3. Uwierzytelnianie i autoryzacja
 
-- **Mechanism:** Firebase Authentication; clients authenticate with email/password, obtain an ID token, and reuse it for REST calls. 【F:src/common/services/firebase.ts†L1-L32】
-- **Admin privilege:** Only the user whose normalized display name matches `Bartek` may apply match changes immediately. All other users must submit pending requests. 【F:src/common/context/MatchesContext.tsx†L201-L313】【F:src/common/context/PendingMatchesContext.tsx†L135-L205】
-- **Audit trail:** Successful match mutations write a log entry capturing the actor, action type, and full match snapshot. 【F:src/common/context/MatchesContext.tsx†L229-L340】
+- **Mechanizm:** Firebase Authentication; klienci uwierzytelniają się za pomocą e-maila i hasła, otrzymują token ID i używają go w wywołaniach REST.
+- **Uprawnienia administratora:** Tylko użytkownik, którego znormalizowana nazwa wyświetlana to `Bartek`, może natychmiast stosować zmiany meczowe. Wszyscy pozostali użytkownicy muszą wysłać żądania oczekujące.
+- **Ścieżka audytu:** Udane modyfikacje meczu tworzą wpis dziennika zawierający wykonawcę, typ akcji oraz pełny zrzut meczu.
 
-## 4. Validation & Business Rules
+## 4. Walidacja i zasady biznesowe
 
-- **Match payloads** must include `player1`, `player2`, `rival1`, `rival2`, `result`, and `date`. `date` accepts either a millisecond timestamp or ISO string; the backend should normalize to a millisecond number for storage. The frontend rejects invalid dates. 【F:src/common/context/MatchesContext.tsx†L280-L338】
-- **Pending requests** preserve the original actor and desired change. Approvals execute the stored payload exactly; failures should leave the request untouched so the admin can retry. 【F:src/common/context/PendingMatchesContext.tsx†L176-L205】
-- **Activity logs** are append-only and should be generated server-side to prevent tampering. Log entries mirror the structure currently written by the client. 【F:src/common/context/MatchesContext.tsx†L229-L339】【F:src/common/context/MatchActivityContext.tsx†L47-L127】
-- **Realtime expectations:** The UI relies on live RTDB subscriptions for matches, pending requests, and activity logs. Any REST replacement must expose equivalent streaming or polling-friendly endpoints to avoid regressing UX. 【F:src/common/context/MatchesContext.tsx†L209-L227】【F:src/common/context/PendingMatchesContext.tsx†L142-L164】【F:src/common/context/MatchActivityContext.tsx†L107-L138】
-- **Stats features** (player stats, rankings, etc.) depend on consistent `date` ordering. Ensure match listings can be filtered or sorted by `date` and that RTDB indexes support `orderByChild("date")`. 【F:src/common/hooks/usePlayerStats.ts†L1-L220】
+- **Ładunki meczu** muszą zawierać `player1`, `player2`, `rival1`, `rival2`, `result` oraz `date`. Pole `date` akceptuje znacznik czasu w milisekundach lub ciąg ISO; backend powinien normalizować do liczby milisekund przy zapisie. Frontend odrzuca niepoprawne daty.
+- **Żądania oczekujące** zachowują oryginalnego wykonawcę i pożądaną zmianę. Zatwierdzenia wykonują zapisany ładunek dokładnie; w przypadku błędów żądanie powinno pozostać nienaruszone, aby administrator mógł ponowić próbę.
+- **Dzienniki aktywności** są tylko dopisywane i powinny być generowane po stronie serwera, aby zapobiec manipulacjom. Wpisy odzwierciedlają strukturę aktualnie zapisywaną przez klienta.
+- **Oczekiwania dotyczące czasu rzeczywistego:** Interfejs polega na żywych subskrypcjach RTDB dla meczów, żądań oczekujących i dzienników aktywności. Każde zastąpienie REST musi udostępniać równoważne strumienie lub endpointy przyjazne odpytywaniu, by nie pogorszyć UX.
+- **Funkcje statystyk** (statystyki graczy, rankingi itp.) zależą od spójnego sortowania według `date`. Zapewnij, by listy meczów można było filtrować lub sortować po `date` oraz by indeksy RTDB wspierały `orderByChild("date")`.
 
 ---
 
-This plan mirrors the current Firebase interactions so a Cloud Functions or HTTPS service can replace the direct RTDB access without changing frontend behaviour.
+Plan ten odzwierciedla obecne interakcje z Firebase, dzięki czemu Cloud Functions lub usługa HTTPS mogą zastąpić bezpośredni dostęp do RTDB bez zmiany zachowania frontendu.
