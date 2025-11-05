@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatDateValue, normalizeDateValue } from "../dateUtils";
+import { formatDateValue, normalizeDateValue } from "../utils/dateUtils";
 
 describe("normalizeDateValue", () => {
   it("returns the same value for numeric timestamps", () => {

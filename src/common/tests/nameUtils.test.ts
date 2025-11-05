@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { formatDisplayName, restoreDiacritics, stripDiacritics } from "../nameUtils";
+import {
+  formatDisplayName,
+  restoreDiacritics,
+  stripDiacritics,
+} from "../utils/nameUtils";
 
 describe("name utils", () => {
   it("strips diacritics consistently", () => {
