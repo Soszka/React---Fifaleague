@@ -16,6 +16,16 @@ const config = {
     setupFiles: "./src/setupTests.ts",
     globals: true,
     css: true,
+    include: [
+      "src/**/*.test.{js,ts,jsx,tsx}",
+      "src/**/*.spec.{js,ts,jsx,tsx}",
+      "tests/**/*.test.{js,ts,jsx,tsx}",
+      "tests/**/*.spec.{js,ts,jsx,tsx}",
+    ],
+    exclude: [
+      "node_modules/**",
+      "tests/e2e/**",
+    ],
     coverage: {
       reporter: ["text", "html"],
     },
